@@ -361,6 +361,90 @@ class EnhancedCarousel {
 }
 
 /* ========================================
+   MOBILE NAVIGATION WITH ENHANCED ANIMATIONS
+   ======================================== */
+
+class MobileNavigation {
+    constructor() {
+        this.mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        this.mobileNav = document.querySelector('.mobile-nav');
+        this.mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
+        this.mobileNavClose = document.querySelector('.mobile-nav-close');
+        this.mobileNavLinks = document.querySelectorAll('.mobile-nav-menu a');
+        this.isOpen = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.addAnimationDelays();
+    }
+    
+    setupEventListeners() {
+        // Open mobile navigation
+        if (this.mobileMenuToggle) {
+            this.mobileMenuToggle.addEventListener('click', () => this.openNav());
+        }
+        
+        // Close mobile navigation
+        if (this.mobileNavClose) {
+            this.mobileNavClose.addEventListener('click', () => this.closeNav());
+        }
+        
+        if (this.mobileNavOverlay) {
+            this.mobileNavOverlay.addEventListener('click', () => this.closeNav());
+        }
+        
+        // Close nav when clicking links
+        this.mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (!link.classList.contains('disabled')) {
+                    this.closeNav();
+                }
+            });
+        });
+        
+        // Handle escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.closeNav();
+            }
+        });
+    }
+    
+    addAnimationDelays() {
+        this.mobileNavLinks.forEach((link, index) => {
+            link.style.setProperty('--animation-delay', `${index * 0.1}s`);
+        });
+    }
+    
+    openNav() {
+        if (this.isOpen) return;
+        
+        this.isOpen = true;
+        this.mobileNav.classList.add('active');
+        this.mobileNavOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Add active class to toggle button for animation
+        this.mobileMenuToggle.classList.add('active');
+    }
+    
+    closeNav() {
+        if (!this.isOpen) return;
+        
+        this.isOpen = false;
+        this.mobileNav.classList.remove('active');
+        this.mobileNavOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Remove active class from toggle button
+        this.mobileMenuToggle.classList.remove('active');
+    }
+}
+
+/* ========================================
    FIREBASE NEWSLETTER INTEGRATION 
    Enhanced with better UX and error handling
    ======================================== */
