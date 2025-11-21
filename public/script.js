@@ -127,6 +127,11 @@ class HeroImage {
    Universal carousel for products and bundles with responsive behavior
    ======================================== */
 
+/* ========================================
+   ENHANCED CAROUSEL CLASS
+   With proper mobile swipe/gesture support
+   ======================================== */
+
 class EnhancedCarousel {
     constructor(config) {
         this.carousel = document.querySelector(config.carouselSelector);
@@ -135,227 +140,273 @@ class EnhancedCarousel {
         this.rightArrow = document.querySelector(config.rightArrowSelector);
         this.carouselType = config.type || 'product';
         
-        if (!this.carousel || !this.track) return;
+        if (!this.carousel || !this.track) {
+            console.warn('Carousel elements not found');
+            return;
+        }
         
-        // Disable JavaScript carousel on mobile to allow CSS scroll snap
-        this.isMobile = () => window.innerWidth <= 768;
-        if (this.isMobile()) {
-            this.enableMobileScrollSnap();
+        this.cards = Array.from(this.track.children);
+        this.totalCards = this.cards.length;
+        
+        if (this.totalCards === 0) {
+            console.warn('No cards found in carousel');
             return;
         }
         
         this.currentIndex = 0;
-        this.visibleCards = this.getVisibleCards();
-        this.totalCards = this.track.children.length;
-        this.touchStartX = 0;
-        this.touchEndX = 0;
-        this.isAnimating = false;
-        this.gap = 0;
+        this.gap = 16;
+        this.cardWidth = 0;
+        
+        // Touch/swipe state
+        this.isDragging = false;
+        this.startX = 0;
+        this.startTranslate = 0;
+        this.currentTranslate = 0;
         
         this.init();
     }
     
-    enableMobileScrollSnap() {
-        // Remove any existing transforms and let CSS scroll snap take over
-        this.track.style.transform = '';
-        this.track.style.transition = '';
-        
-        // Add resize listener to switch back to JS carousel on desktop
-        window.addEventListener('resize', () => {
-            if (!this.isMobile() && !this.initialized) {
-                this.initialized = true;
-                this.currentIndex = 0;
-                this.visibleCards = this.getVisibleCards();
-                this.totalCards = this.track.children.length;
-                this.touchStartX = 0;
-                this.touchEndX = 0;
-                this.isAnimating = false;
-                this.gap = 0;
-                this.init();
-            } else if (this.isMobile() && this.initialized) {
-                this.initialized = false;
-                this.track.style.transform = '';
-                this.track.style.transition = '';
-            }
-        });
+    getVisibleCards() {
+        const w = window.innerWidth;
+        if (w <= 768) return 1;
+        if (w <= 1024) return 2;
+        return 3;
     }
     
     init() {
-        this.calculateDimensions();
-        this.setupEventListeners();
-        this.updateArrows();
-        
-        // Smooth transitions
-        this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        // Wait for images to load to get correct dimensions
+        this.waitForImages().then(() => {
+            this.calculateDimensions();
+            this.setupTouchEvents();
+            this.setupArrowEvents();
+            this.setupResizeHandler();
+            this.updateArrows();
+            
+            // Set initial cursor
+            this.track.style.cursor = 'grab';
+            
+            console.log(`✅ Carousel initialized: ${this.totalCards} cards, ${this.cardWidth}px width`);
+        });
     }
     
-    getVisibleCards() {
-        const width = window.innerWidth;
-        if (width < 768) return 1;      // Mobile: 1 card
-        if (width < 1024) return 2;     // Tablet: 2 cards
-        return 3;                        // Desktop: 3 cards
+    waitForImages() {
+        const images = this.track.querySelectorAll('img');
+        const promises = Array.from(images).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(resolve => {
+                img.onload = resolve;
+                img.onerror = resolve;
+            });
+        });
+        return Promise.all(promises);
     }
     
     calculateDimensions() {
-        const firstCard = this.track.children[0];
+        const firstCard = this.cards[0];
         if (!firstCard) return;
         
-        // Get gap from CSS
+        // Get computed gap
         const trackStyle = window.getComputedStyle(this.track);
-        this.gap = parseInt(trackStyle.gap) || 24;
+        this.gap = parseInt(trackStyle.gap) || parseInt(trackStyle.columnGap) || 16;
         
-        // Update visible cards based on viewport
+        // Get card width including any margins
+        const cardStyle = window.getComputedStyle(firstCard);
+        const marginLeft = parseInt(cardStyle.marginLeft) || 0;
+        const marginRight = parseInt(cardStyle.marginRight) || 0;
+        this.cardWidth = firstCard.offsetWidth + marginLeft + marginRight;
+        
+        // If cardWidth is still 0, use a fallback
+        if (this.cardWidth === 0) {
+            this.cardWidth = this.carousel.offsetWidth * 0.85; // 85% of container
+        }
+        
         this.visibleCards = this.getVisibleCards();
         
-        // Ensure we don't exceed available cards
-        this.visibleCards = Math.min(this.visibleCards, this.totalCards);
-        
-        // Reset index if needed
-        const maxIndex = Math.max(0, this.totalCards - this.visibleCards);
+        // Clamp current index
+        const maxIndex = this.getMaxIndex();
         if (this.currentIndex > maxIndex) {
             this.currentIndex = maxIndex;
-            this.updatePosition();
         }
         
-        this.updateArrows();
+        this.updatePosition(false);
     }
     
-    setupEventListeners() {
-        // Skip setup if mobile (using CSS scroll snap instead)
-        if (this.isMobile()) return;
-        
-        // Arrow click handlers
-        if (this.leftArrow) {
-            this.leftArrow.addEventListener('click', () => this.slideLeft());
-        }
-        
-        if (this.rightArrow) {
-            this.rightArrow.addEventListener('click', () => this.slideRight());
-        }
-        
-        // Touch support
-        if (responsive.touchDevice) {
-            this.addTouchSupport();
-        }
-        
-        // Keyboard support
-        this.carousel.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
+    getMaxIndex() {
+        return Math.max(0, this.totalCards - this.visibleCards);
+    }
+    
+    setupTouchEvents() {
+        // Touch events for mobile
+        this.track.addEventListener('touchstart', (e) => this.onDragStart(e.touches[0].clientX), { passive: true });
+        this.track.addEventListener('touchmove', (e) => {
+            this.onDragMove(e.touches[0].clientX);
+            // Prevent page scroll when swiping carousel
+            if (this.isDragging) {
                 e.preventDefault();
-                this.slideLeft();
-            } else if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                this.slideRight();
+            }
+        }, { passive: false });
+        this.track.addEventListener('touchend', () => this.onDragEnd());
+        this.track.addEventListener('touchcancel', () => this.onDragEnd());
+        
+        // Mouse events for desktop
+        this.track.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            this.onDragStart(e.clientX);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (this.isDragging) {
+                this.onDragMove(e.clientX);
             }
         });
+        document.addEventListener('mouseup', () => this.onDragEnd());
         
-        // Resize handler
+        // Prevent image dragging
+        this.cards.forEach(card => {
+            card.querySelectorAll('img').forEach(img => {
+                img.draggable = false;
+            });
+            // Prevent click events during drag
+            card.addEventListener('click', (e) => {
+                if (this.wasDragging) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }, true);
+        });
+    }
+    
+    setupArrowEvents() {
+        if (this.leftArrow) {
+            this.leftArrow.addEventListener('click', () => this.slidePrev());
+        }
+        if (this.rightArrow) {
+            this.rightArrow.addEventListener('click', () => this.slideNext());
+        }
+    }
+    
+    setupResizeHandler() {
+        let resizeTimer;
         window.addEventListener('resize', () => {
-            clearTimeout(this.resizeTimeout);
-            this.resizeTimeout = setTimeout(() => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
                 this.calculateDimensions();
+                this.updateArrows();
             }, 150);
         });
     }
     
-    addTouchSupport() {
-        // Only add touch support for desktop/tablet, not mobile
-        if (this.isMobile()) return;
+    onDragStart(clientX) {
+        this.isDragging = true;
+        this.wasDragging = false;
+        this.startX = clientX;
+        this.startTranslate = this.currentTranslate;
         
-        this.carousel.addEventListener('touchstart', (e) => {
-            this.touchStartX = e.changedTouches[0].screenX;
-        });
-        
-        this.carousel.addEventListener('touchmove', (e) => {
-            // Prevent default scrolling while swiping
-            if (Math.abs(e.changedTouches[0].screenX - this.touchStartX) > 10) {
-                e.preventDefault();
-            }
-        });
-        
-        this.carousel.addEventListener('touchend', (e) => {
-            this.touchEndX = e.changedTouches[0].screenX;
-            this.handleSwipe();
-        });
+        // Remove transition during drag
+        this.track.style.transition = 'none';
+        this.track.style.cursor = 'grabbing';
     }
     
-    handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = this.touchStartX - this.touchEndX;
+    onDragMove(clientX) {
+        if (!this.isDragging) return;
         
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-                this.slideRight();
-            } else {
-                this.slideLeft();
-            }
+        const diff = clientX - this.startX;
+        
+        // Mark as dragging if moved more than 5px
+        if (Math.abs(diff) > 5) {
+            this.wasDragging = true;
         }
-    }
-    
-
-    
-    slideLeft() {
-        if (this.currentIndex > 0 && !this.isAnimating) {
-            this.isAnimating = true;
-            this.currentIndex--;
-            this.updatePosition();
-            this.updateArrows();
-            
-            setTimeout(() => {
-                this.isAnimating = false;
-            }, 600);
+        
+        let newTranslate = this.startTranslate + diff;
+        
+        // Calculate bounds
+        const minTranslate = -(this.getMaxIndex() * (this.cardWidth + this.gap));
+        const maxTranslate = 0;
+        
+        // Add rubber band effect at edges
+        if (newTranslate > maxTranslate) {
+            const overscroll = newTranslate - maxTranslate;
+            newTranslate = maxTranslate + overscroll * 0.3;
+        } else if (newTranslate < minTranslate) {
+            const overscroll = minTranslate - newTranslate;
+            newTranslate = minTranslate - overscroll * 0.3;
         }
+        
+        this.currentTranslate = newTranslate;
+        this.track.style.transform = `translateX(${this.currentTranslate}px)`;
     }
     
-    slideRight() {
-        const maxIndex = Math.max(0, this.totalCards - this.visibleCards);
-        if (this.currentIndex < maxIndex && !this.isAnimating) {
-            this.isAnimating = true;
+    onDragEnd() {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.track.style.cursor = 'grab';
+        
+        const movedBy = this.currentTranslate - this.startTranslate;
+        
+        // Lower threshold for easier swiping (15% of card width or 50px minimum)
+        const threshold = Math.min(this.cardWidth * 0.15, 50);
+        
+        console.log(`Swipe: moved ${movedBy}px, threshold ${threshold}px, cardWidth ${this.cardWidth}px`);
+        
+        if (movedBy < -threshold && this.currentIndex < this.getMaxIndex()) {
+            // Swiped left - go to next
             this.currentIndex++;
-            this.updatePosition();
+            console.log('Sliding to next:', this.currentIndex);
+        } else if (movedBy > threshold && this.currentIndex > 0) {
+            // Swiped right - go to prev
+            this.currentIndex--;
+            console.log('Sliding to prev:', this.currentIndex);
+        }
+        
+        // Snap to position with animation
+        this.updatePosition(true);
+        this.updateArrows();
+    }
+    
+    slidePrev() {
+        if (this.currentIndex > 0) {
+            this.currentIndex--;
+            this.updatePosition(true);
             this.updateArrows();
-            
-            setTimeout(() => {
-                this.isAnimating = false;
-            }, 600);
         }
     }
     
-    updatePosition() {
-        const firstCard = this.track.children[0];
-        if (!firstCard) return;
+    slideNext() {
+        if (this.currentIndex < this.getMaxIndex()) {
+            this.currentIndex++;
+            this.updatePosition(true);
+            this.updateArrows();
+        }
+    }
+    
+    updatePosition(animate = true) {
+        if (animate) {
+            this.track.style.transition = 'transform 0.3s ease-out';
+        } else {
+            this.track.style.transition = 'none';
+        }
         
-        const cardWidth = firstCard.offsetWidth;
-        const translateX = -(this.currentIndex * (cardWidth + this.gap));
-        this.track.style.transform = `translateX(${translateX}px)`;
+        this.currentTranslate = -(this.currentIndex * (this.cardWidth + this.gap));
+        this.track.style.transform = `translateX(${this.currentTranslate}px)`;
+        
+        console.log(`Position updated: index ${this.currentIndex}, translate ${this.currentTranslate}px`);
     }
     
     updateArrows() {
-        // Update left arrow
+        const maxIndex = this.getMaxIndex();
+        
         if (this.leftArrow) {
-            if (this.currentIndex === 0) {
-                this.leftArrow.disabled = true;
-                this.leftArrow.setAttribute('aria-disabled', 'true');
-                this.carousel.classList.remove('has-overflow-left');
-            } else {
-                this.leftArrow.disabled = false;
-                this.leftArrow.setAttribute('aria-disabled', 'false');
-                this.carousel.classList.add('has-overflow-left');
-            }
+            const isDisabled = this.currentIndex === 0;
+            this.leftArrow.disabled = isDisabled;
+            this.leftArrow.style.opacity = isDisabled ? '0.3' : '1';
+            this.leftArrow.style.pointerEvents = isDisabled ? 'none' : 'auto';
         }
         
-        // Update right arrow
         if (this.rightArrow) {
-            const maxIndex = Math.max(0, this.totalCards - this.visibleCards);
-            if (this.currentIndex >= maxIndex || this.totalCards <= this.visibleCards) {
-                this.rightArrow.disabled = true;
-                this.rightArrow.setAttribute('aria-disabled', 'true');
-                this.carousel.classList.remove('has-overflow-right');
-            } else {
-                this.rightArrow.disabled = false;
-                this.rightArrow.setAttribute('aria-disabled', 'false');
-                this.carousel.classList.add('has-overflow-right');
-            }
+            const isDisabled = this.currentIndex >= maxIndex;
+            this.rightArrow.disabled = isDisabled;
+            this.rightArrow.style.opacity = isDisabled ? '0.3' : '1';
+            this.rightArrow.style.pointerEvents = isDisabled ? 'none' : 'auto';
         }
     }
 }
