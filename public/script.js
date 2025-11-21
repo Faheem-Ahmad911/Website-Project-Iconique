@@ -137,6 +137,13 @@ class EnhancedCarousel {
         
         if (!this.carousel || !this.track) return;
         
+        // Disable JavaScript carousel on mobile to allow CSS scroll snap
+        this.isMobile = () => window.innerWidth <= 768;
+        if (this.isMobile()) {
+            this.enableMobileScrollSnap();
+            return;
+        }
+        
         this.currentIndex = 0;
         this.visibleCards = this.getVisibleCards();
         this.totalCards = this.track.children.length;
@@ -146,6 +153,31 @@ class EnhancedCarousel {
         this.gap = 0;
         
         this.init();
+    }
+    
+    enableMobileScrollSnap() {
+        // Remove any existing transforms and let CSS scroll snap take over
+        this.track.style.transform = '';
+        this.track.style.transition = '';
+        
+        // Add resize listener to switch back to JS carousel on desktop
+        window.addEventListener('resize', () => {
+            if (!this.isMobile() && !this.initialized) {
+                this.initialized = true;
+                this.currentIndex = 0;
+                this.visibleCards = this.getVisibleCards();
+                this.totalCards = this.track.children.length;
+                this.touchStartX = 0;
+                this.touchEndX = 0;
+                this.isAnimating = false;
+                this.gap = 0;
+                this.init();
+            } else if (this.isMobile() && this.initialized) {
+                this.initialized = false;
+                this.track.style.transform = '';
+                this.track.style.transition = '';
+            }
+        });
     }
     
     init() {
@@ -189,6 +221,9 @@ class EnhancedCarousel {
     }
     
     setupEventListeners() {
+        // Skip setup if mobile (using CSS scroll snap instead)
+        if (this.isMobile()) return;
+        
         // Arrow click handlers
         if (this.leftArrow) {
             this.leftArrow.addEventListener('click', () => this.slideLeft());
@@ -224,6 +259,9 @@ class EnhancedCarousel {
     }
     
     addTouchSupport() {
+        // Only add touch support for desktop/tablet, not mobile
+        if (this.isMobile()) return;
+        
         this.carousel.addEventListener('touchstart', (e) => {
             this.touchStartX = e.changedTouches[0].screenX;
         });
