@@ -70,53 +70,54 @@ const responsive = new ResponsiveHelper();
    No pause on hover - slides continuously
    ======================================== */
 
-class HeroSlider {
+class HeroImage {
     constructor() {
-        this.track = document.querySelector('.hero-track');
-        this.slides = document.querySelectorAll('.hero-slide');
-
-        if (!this.track || this.slides.length === 0) return;
-
-        this.currentIndex = 0;
-        this.slideWidth = this.slides[0].offsetWidth;
-        this.speed = 3000; // slide change every 3 seconds
-
-        this.cloneSlides();
-        this.startSlider();
-        window.addEventListener('resize', () => this.handleResize());
+        this.heroImage = document.querySelector('.hero-image');
+        this.heroContainer = document.querySelector('.hero-image-container');
+        
+        if (!this.heroImage || !this.heroContainer) {
+            console.warn('Hero image elements not found');
+            return;
+        }
+        
+        this.init();
     }
-
-    cloneSlides() {
-        // Append all slides again to make an infinite loop
-        this.slides.forEach(slide => {
-            let clone = slide.cloneNode(true);
-            this.track.appendChild(clone);
-        });
+    
+    init() {
+        // Handle image loading
+        if (this.heroImage.complete && this.heroImage.naturalHeight !== 0) {
+            this.onImageLoad();
+        } else {
+            this.heroImage.addEventListener('load', () => {
+                this.onImageLoad();
+            });
+            
+            this.heroImage.addEventListener('error', () => {
+                this.onImageError();
+            });
+        }
+        
+        // Add hover effect for desktop only
+        if (window.innerWidth > 768 && !('ontouchstart' in window)) {
+            this.heroImage.addEventListener('mouseenter', () => {
+                this.heroImage.style.transform = 'scale(1.02)';
+            });
+            
+            this.heroImage.addEventListener('mouseleave', () => {
+                this.heroImage.style.transform = 'scale(1)';
+            });
+        }
     }
-
-    startSlider() {
-        setInterval(() => {
-            this.currentIndex++;
-
-            this.track.style.transition = "transform 0.6s ease";
-            this.track.style.transform = `translateX(-${this.slideWidth * this.currentIndex}px)`;
-
-            // Reset after reaching original slide length
-            if (this.currentIndex >= this.slides.length) {
-                setTimeout(() => {
-                    this.track.style.transition = "none";
-                    this.currentIndex = 0;
-                    this.track.style.transform = `translateX(0px)`;
-                }, 600);
-            }
-
-        }, this.speed);
+    
+    onImageLoad() {
+        this.heroContainer.classList.add('loaded');
+        console.log('Hero image loaded successfully');
     }
-
-    handleResize() {
-        this.slideWidth = this.slides[0].offsetWidth;
-        this.track.style.transition = "none";
-        this.track.style.transform = `translateX(-${this.slideWidth * this.currentIndex}px)`;
+    
+    onImageError() {
+        console.error('Hero image failed to load:', this.heroImage.src);
+        // Keep the background gradient visible as fallback
+        this.heroImage.style.display = 'none';
     }
 }
 
@@ -136,13 +137,13 @@ class EnhancedCarousel {
         
         if (!this.carousel || !this.track) return;
         
-        this.currentPosition = 0;
-        this.cardWidth = 0;
-        this.visibleCards = 0;
+        this.currentIndex = 0;
+        this.visibleCards = this.getVisibleCards();
         this.totalCards = this.track.children.length;
         this.touchStartX = 0;
         this.touchEndX = 0;
         this.isAnimating = false;
+        this.gap = 0;
         
         this.init();
     }
@@ -152,32 +153,35 @@ class EnhancedCarousel {
         this.setupEventListeners();
         this.updateArrows();
         
-        // Add CSS for smooth transitions
-        this.track.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        // Smooth transitions
+        this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+    }
+    
+    getVisibleCards() {
+        const width = window.innerWidth;
+        if (width < 768) return 1;      // Mobile: 1 card
+        if (width < 1024) return 2;     // Tablet: 2 cards
+        return 3;                        // Desktop: 3 cards
     }
     
     calculateDimensions() {
         const firstCard = this.track.children[0];
         if (!firstCard) return;
         
-        const cardStyle = window.getComputedStyle(firstCard);
-        const marginRight = parseInt(cardStyle.marginRight || 0);
-        this.cardWidth = firstCard.offsetWidth + marginRight;
+        // Get gap from CSS
+        const trackStyle = window.getComputedStyle(this.track);
+        this.gap = parseInt(trackStyle.gap) || 24;
         
-        // Responsive visible cards calculation
-        this.visibleCards = responsive.getVisibleCards(
-            this.carousel.offsetWidth, 
-            this.cardWidth, 
-            1
-        );
+        // Update visible cards based on viewport
+        this.visibleCards = this.getVisibleCards();
         
         // Ensure we don't exceed available cards
         this.visibleCards = Math.min(this.visibleCards, this.totalCards);
         
-        // Reset position if needed
-        const maxPosition = Math.max(0, this.totalCards - this.visibleCards);
-        if (this.currentPosition > maxPosition) {
-            this.currentPosition = maxPosition;
+        // Reset index if needed
+        const maxIndex = Math.max(0, this.totalCards - this.visibleCards);
+        if (this.currentIndex > maxIndex) {
+            this.currentIndex = maxIndex;
             this.updatePosition();
         }
         
@@ -251,62 +255,66 @@ class EnhancedCarousel {
     }
     
     slideLeft() {
-        if (this.currentPosition > 0 && !this.isAnimating) {
+        if (this.currentIndex > 0 && !this.isAnimating) {
             this.isAnimating = true;
-            this.currentPosition--;
+            this.currentIndex--;
             this.updatePosition();
             this.updateArrows();
             
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 300);
+            }, 600);
         }
     }
     
     slideRight() {
-        const maxPosition = Math.max(0, this.totalCards - this.visibleCards);
-        if (this.currentPosition < maxPosition && !this.isAnimating) {
+        const maxIndex = Math.max(0, this.totalCards - this.visibleCards);
+        if (this.currentIndex < maxIndex && !this.isAnimating) {
             this.isAnimating = true;
-            this.currentPosition++;
+            this.currentIndex++;
             this.updatePosition();
             this.updateArrows();
             
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 300);
+            }, 600);
         }
     }
     
     updatePosition() {
-        const translateX = -this.currentPosition * this.cardWidth;
+        const firstCard = this.track.children[0];
+        if (!firstCard) return;
+        
+        const cardWidth = firstCard.offsetWidth;
+        const translateX = -(this.currentIndex * (cardWidth + this.gap));
         this.track.style.transform = `translateX(${translateX}px)`;
     }
     
     updateArrows() {
         // Update left arrow
         if (this.leftArrow) {
-            if (this.currentPosition === 0) {
-                this.leftArrow.classList.add('disabled');
-                this.leftArrow.style.opacity = '0.3';
+            if (this.currentIndex === 0) {
                 this.leftArrow.disabled = true;
+                this.leftArrow.setAttribute('aria-disabled', 'true');
+                this.carousel.classList.remove('has-overflow-left');
             } else {
-                this.leftArrow.classList.remove('disabled');
-                this.leftArrow.style.opacity = '1';
                 this.leftArrow.disabled = false;
+                this.leftArrow.setAttribute('aria-disabled', 'false');
+                this.carousel.classList.add('has-overflow-left');
             }
         }
         
         // Update right arrow
         if (this.rightArrow) {
-            const maxPosition = Math.max(0, this.totalCards - this.visibleCards);
-            if (this.currentPosition >= maxPosition || this.totalCards <= this.visibleCards) {
-                this.rightArrow.classList.add('disabled');
-                this.rightArrow.style.opacity = '0.3';
+            const maxIndex = Math.max(0, this.totalCards - this.visibleCards);
+            if (this.currentIndex >= maxIndex || this.totalCards <= this.visibleCards) {
                 this.rightArrow.disabled = true;
+                this.rightArrow.setAttribute('aria-disabled', 'true');
+                this.carousel.classList.remove('has-overflow-right');
             } else {
-                this.rightArrow.classList.remove('disabled');
-                this.rightArrow.style.opacity = '1';
                 this.rightArrow.disabled = false;
+                this.rightArrow.setAttribute('aria-disabled', 'false');
+                this.carousel.classList.add('has-overflow-right');
             }
         }
     }
@@ -531,7 +539,26 @@ class ProductInteractions {
         this.productCards = document.querySelectorAll('.product-card');
         this.bundleCards = document.querySelectorAll('.bundle-card');
         this.cartIcon = document.querySelector('.cart-icon');
+        this.searchIcon = document.querySelector('.search-icon');
+        this.searchOverlay = document.querySelector('.search-overlay');
+        this.searchModal = document.querySelector('.search-modal');
+        this.searchClose = document.querySelector('.search-close');
+        this.searchInput = document.querySelector('#searchInput');
+        this.searchBtn = document.querySelector('.search-btn');
+        this.searchResults = document.querySelector('#searchResults');
         this.cartCount = 0;
+        
+        // Sample product data for search
+        this.products = [
+            { id: 1, name: 'Luxe Lipstick', price: '$29.99', image: 'images/productimages/product1.jpg', category: 'lipstick' },
+            { id: 2, name: 'Radiant Foundation', price: '$45.99', image: 'images/bundle2.jpg', category: 'foundation' },
+            { id: 3, name: 'Glow Serum', price: '$59.99', image: 'images/bundle3.jpg', category: 'serum' },
+            { id: 4, name: 'Eyeshadow Palette', price: '$39.99', image: 'images/bundle4.jpg', category: 'eyeshadow' },
+            { id: 5, name: 'Mascara Pro', price: '$24.99', image: 'images/bundle5.jpg', category: 'mascara' },
+            { id: 6, name: 'Blush Duo', price: '$19.99', image: 'images/bundle6.jpg', category: 'blush' },
+            { id: 7, name: 'Setting Spray', price: '$27.99', image: 'images/herosectionimages/1.jpg', category: 'setting' },
+            { id: 8, name: 'Highlighter Stick', price: '$22.99', image: 'images/herosectionimages/2.jpg', category: 'highlighter' }
+        ];
         
         this.init();
     }
@@ -540,6 +567,7 @@ class ProductInteractions {
         this.setupProductCardHandlers();
         this.setupBundleCardHandlers();
         this.setupCartHandler();
+        this.setupSearchHandler();
     }
     
     setupProductCardHandlers() {
@@ -661,8 +689,191 @@ class ProductInteractions {
             cartCountElement.classList.add('bounce');
             setTimeout(() => {
                 cartCountElement.classList.remove('bounce');
-            }, 600);
+            }, 300);
         }
+    }
+    
+    setupSearchHandler() {
+        if (this.searchIcon && this.searchOverlay) {
+            // Open search modal
+            this.searchIcon.addEventListener('click', () => {
+                this.openSearchModal();
+            });
+            
+            // Close search modal
+            if (this.searchClose) {
+                this.searchClose.addEventListener('click', () => {
+                    this.closeSearchModal();
+                });
+            }
+            
+            // Close on overlay click
+            this.searchOverlay.addEventListener('click', (e) => {
+                if (e.target === this.searchOverlay) {
+                    this.closeSearchModal();
+                }
+            });
+            
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this.searchOverlay.classList.contains('active')) {
+                    this.closeSearchModal();
+                }
+            });
+            
+            // Search input handler
+            if (this.searchInput) {
+                this.searchInput.addEventListener('input', (e) => {
+                    this.handleSearch(e.target.value);
+                });
+                
+                this.searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.handleSearch(e.target.value);
+                    }
+                });
+            }
+            
+            // Search button handler
+            if (this.searchBtn) {
+                this.searchBtn.addEventListener('click', () => {
+                    this.handleSearch(this.searchInput.value);
+                });
+            }
+            
+            // Popular search tags
+            this.setupSearchTags();
+        }
+    }
+    
+    openSearchModal() {
+        this.searchOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on search input
+        setTimeout(() => {
+            if (this.searchInput) {
+                this.searchInput.focus();
+            }
+        }, 300);
+        
+        console.log('Search modal opened');
+    }
+    
+    closeSearchModal() {
+        this.searchOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Clear search
+        if (this.searchInput) {
+            this.searchInput.value = '';
+        }
+        if (this.searchResults) {
+            this.searchResults.innerHTML = '';
+        }
+        
+        console.log('Search modal closed');
+    }
+    
+    setupSearchTags() {
+        const searchTags = document.querySelectorAll('.search-tag');
+        searchTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                const query = tag.textContent;
+                if (this.searchInput) {
+                    this.searchInput.value = query;
+                }
+                this.handleSearch(query);
+            });
+        });
+    }
+    
+    handleSearch(query) {
+        if (!query || query.trim().length < 2) {
+            this.searchResults.innerHTML = '';
+            return;
+        }
+        
+        const filteredProducts = this.products.filter(product => 
+            product.name.toLowerCase().includes(query.toLowerCase()) ||
+            product.category.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        this.displaySearchResults(filteredProducts, query);
+    }
+    
+    displaySearchResults(products, query) {
+        if (products.length === 0) {
+            this.searchResults.innerHTML = `
+                <div class="no-results">
+                    <p>No products found for "${query}"</p>
+                    <p>Try searching for: Lipstick, Foundation, Serum, Eyeshadow</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const resultsHTML = products.map(product => `
+            <div class="search-result-item" data-product-id="${product.id}">
+                <img src="${product.image}" alt="${product.name}" class="search-result-image">
+                <div class="search-result-info">
+                    <h4>${product.name}</h4>
+                    <p>${product.price}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        this.searchResults.innerHTML = `
+            <h4>Search Results (${products.length})</h4>
+            ${resultsHTML}
+        `;
+        
+        // Add click handlers to search results
+        const resultItems = this.searchResults.querySelectorAll('.search-result-item');
+        resultItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const productId = item.dataset.productId;
+                this.handleProductClick(productId);
+            });
+        });
+    }
+    
+    handleProductClick(productId) {
+        const product = this.products.find(p => p.id == productId);
+        if (product) {
+            console.log(`Selected product: ${product.name}`);
+            this.showProductNotification(product);
+            this.closeSearchModal();
+        }
+    }
+    
+    showProductNotification(product) {
+        const notification = document.createElement('div');
+        notification.className = 'product-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <img src="${product.image}" alt="${product.name}">
+                <div>
+                    <h4>${product.name}</h4>
+                    <p>${product.price}</p>
+                    <small>Product details coming soon!</small>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
     }
 }
 
@@ -804,7 +1015,7 @@ class TheIconiqueApp {
             const firebaseReady = initializeFirebase();
             
             // Initialize core components
-            this.components.heroSlider = new HeroSlider();
+            this.components.heroImage = new HeroImage();
             this.components.mobileNav = new MobileNavigation();
             this.components.scrollEffects = new ScrollEffects();
             this.components.productInteractions = new ProductInteractions();
