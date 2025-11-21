@@ -254,6 +254,8 @@ class EnhancedCarousel {
         }
     }
     
+
+    
     slideLeft() {
         if (this.currentIndex > 0 && !this.isAnimating) {
             this.isAnimating = true;
