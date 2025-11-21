@@ -137,13 +137,8 @@ class EnhancedCarousel {
         
         if (!this.carousel || !this.track) return;
         
-        // Disable JavaScript carousel on mobile to allow CSS scroll snap
+        // Enable carousel functionality on both mobile and desktop
         this.isMobile = () => window.innerWidth <= 768;
-        if (this.isMobile()) {
-            this.enableMobileScrollSnap();
-            return;
-        }
-        
         this.currentIndex = 0;
         this.visibleCards = this.getVisibleCards();
         this.totalCards = this.track.children.length;
@@ -151,42 +146,32 @@ class EnhancedCarousel {
         this.touchEndX = 0;
         this.isAnimating = false;
         this.gap = 0;
+        this.initialized = false;
         
         this.init();
     }
     
-    enableMobileScrollSnap() {
-        // Remove any existing transforms and let CSS scroll snap take over
-        this.track.style.transform = '';
-        this.track.style.transition = '';
-        
-        // Add resize listener to switch back to JS carousel on desktop
-        window.addEventListener('resize', () => {
-            if (!this.isMobile() && !this.initialized) {
-                this.initialized = true;
-                this.currentIndex = 0;
-                this.visibleCards = this.getVisibleCards();
-                this.totalCards = this.track.children.length;
-                this.touchStartX = 0;
-                this.touchEndX = 0;
-                this.isAnimating = false;
-                this.gap = 0;
-                this.init();
-            } else if (this.isMobile() && this.initialized) {
-                this.initialized = false;
-                this.track.style.transform = '';
-                this.track.style.transition = '';
-            }
-        });
-    }
+
     
     init() {
         this.calculateDimensions();
         this.setupEventListeners();
         this.updateArrows();
+        this.initialized = true;
         
-        // Smooth transitions
-        this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        // Smooth transitions with faster mobile timing
+        const transitionSpeed = this.isMobile() ? '0.4s' : '0.6s';
+        this.track.style.transition = `transform ${transitionSpeed} cubic-bezier(0.4, 0, 0.2, 1)`;
+        
+        // Add resize listener for responsive behavior
+        window.addEventListener('resize', () => {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+                this.calculateDimensions();
+                const newTransitionSpeed = this.isMobile() ? '0.4s' : '0.6s';
+                this.track.style.transition = `transform ${newTransitionSpeed} cubic-bezier(0.4, 0, 0.2, 1)`;
+            }, 150);
+        });
     }
     
     getVisibleCards() {
@@ -221,10 +206,7 @@ class EnhancedCarousel {
     }
     
     setupEventListeners() {
-        // Skip setup if mobile (using CSS scroll snap instead)
-        if (this.isMobile()) return;
-        
-        // Arrow click handlers
+        // Arrow click handlers - work on all devices
         if (this.leftArrow) {
             this.leftArrow.addEventListener('click', () => this.slideLeft());
         }
@@ -233,12 +215,12 @@ class EnhancedCarousel {
             this.rightArrow.addEventListener('click', () => this.slideRight());
         }
         
-        // Touch support
-        if (responsive.touchDevice) {
+        // Touch/swipe support for all touch devices
+        if (responsive.touchDevice || this.isMobile()) {
             this.addTouchSupport();
         }
         
-        // Keyboard support
+        // Keyboard support for accessibility
         this.carousel.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
@@ -248,35 +230,40 @@ class EnhancedCarousel {
                 this.slideRight();
             }
         });
-        
-        // Resize handler
-        window.addEventListener('resize', () => {
-            clearTimeout(this.resizeTimeout);
-            this.resizeTimeout = setTimeout(() => {
-                this.calculateDimensions();
-            }, 150);
-        });
     }
     
     addTouchSupport() {
-        // Only add touch support for desktop/tablet, not mobile
-        if (this.isMobile()) return;
+        let startY = 0;
+        let startX = 0;
+        let isHorizontalSwipe = false;
         
         this.carousel.addEventListener('touchstart', (e) => {
             this.touchStartX = e.changedTouches[0].screenX;
-        });
+            startY = e.changedTouches[0].screenY;
+            startX = e.changedTouches[0].screenX;
+            isHorizontalSwipe = false;
+        }, { passive: true });
         
         this.carousel.addEventListener('touchmove', (e) => {
-            // Prevent default scrolling while swiping
-            if (Math.abs(e.changedTouches[0].screenX - this.touchStartX) > 10) {
+            const currentX = e.changedTouches[0].screenX;
+            const currentY = e.changedTouches[0].screenY;
+            const deltaX = Math.abs(currentX - startX);
+            const deltaY = Math.abs(currentY - startY);
+            
+            // Determine if this is a horizontal swipe
+            if (deltaX > deltaY && deltaX > 10) {
+                isHorizontalSwipe = true;
+                // Prevent vertical scrolling during horizontal swipe
                 e.preventDefault();
             }
-        });
+        }, { passive: false });
         
         this.carousel.addEventListener('touchend', (e) => {
-            this.touchEndX = e.changedTouches[0].screenX;
-            this.handleSwipe();
-        });
+            if (isHorizontalSwipe) {
+                this.touchEndX = e.changedTouches[0].screenX;
+                this.handleSwipe();
+            }
+        }, { passive: true });
     }
     
     handleSwipe() {
