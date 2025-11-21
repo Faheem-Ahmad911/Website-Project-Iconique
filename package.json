@@ -1,0 +1,26 @@
+{
+  "name": "website-project-iconique",
+  "version": "1.0.0",
+  "description": "Iconique - Premium Fashion Website",
+  "main": "public/index.html",
+  "scripts": {
+    "dev": "serve public",
+    "start": "serve public",
+    "build": "echo 'No build process needed for static site'",
+    "preview": "serve public"
+  },
+  "keywords": [
+    "fashion",
+    "website",
+    "static",
+    "iconique"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
