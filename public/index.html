@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TheIconique - Premium Cosmetic Products">
+    <title>TheIconique - Premium Cosmetics</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="images/faviconimages/favicon.jpg">
+    
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nata+Sans:wght@100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ========================================
+         HEADER SECTION - White background with logo and navigation
+         ======================================== -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/faviconimages/favicon.jpg" alt="TheIconique Logo">
+                    </a>
+                    <span class="logo-text">TheIconique</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="nav-desktop">
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="active">Home</a></li>
+                        <li><a href="#" class="disabled">Collection</a></li>
+                        <li><a href="#" class="disabled">About Us</a></li>
+                        <li><a href="#" class="disabled">Blogs</a></li>
+                        <li><a href="#" class="disabled">Contact</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Shopping Cart Icon -->
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                
+                <!-- Mobile Menu Toggle Button -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ========================================
+         MOBILE NAVIGATION SIDEBAR - Slides from right
+         ======================================== -->
+    <div class="mobile-nav-overlay"></div>
+    <nav class="mobile-nav">
+        <button class="mobile-nav-close" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul class="mobile-nav-menu">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="#" class="disabled">Collection</a></li>
+            <li><a href="#" class="disabled">About Us</a></li>
+            <li><a href="#" class="disabled">Blogs</a></li>
+            <li><a href="#" class="disabled">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <!-- ========================================
+         HERO SECTION - Auto-scrolling image carousel
+         Displays cosmetic promotional images from herosectionimages folder
+         Images automatically transition every 3 seconds
+         ======================================== -->
+    <section class="hero-section">
+        <div class="hero-carousel">
+            <div class="hero-track">
+                <!-- Hero slides - auto-advance every 3 seconds with smooth infinite loop -->
+                <div class="hero-slide">
+                    <img src="images/herosectionimages/1.jpg" alt="Premium Cosmetic Collection">
+                </div>
+                <div class="hero-slide">
+                    <img src="images/herosectionimages/2.jpg" alt="Luxury Beauty Products">
+                </div>
+                <div class="hero-slide">
+                    <img src="images/herosectionimages/3.jpg" alt="Elegant Makeup Collection">
+                </div>
+                <div class="hero-slide">
+                    <img src="images/herosectionimages/4.jpg" alt="Exclusive Skincare Range">
+                </div>
+                <div class="hero-slide">
+                    <img src="images/herosectionimages/5.jpg" alt="Sophisticated Beauty Essentials">
+                </div>
+                <!-- Duplicate first slide for seamless infinite loop -->
+                <div class="hero-slide">
+                    <img src="images/herosectionimages/1.jpg" alt="Premium Cosmetic Collection">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ========================================
+         FEATURED PRODUCTS SECTION - Horizontal scrolling with arrows
+         ======================================== -->
+    <section class="featured-products">
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+            
+            <div class="products-carousel-wrapper">
+                <!-- Left Arrow - Initially hidden -->
+                <button class="carousel-arrow arrow-left" aria-label="Previous products">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <!-- Products Container -->
+                <div class="products-carousel">
+                    <div class="products-track">
+                        <!-- Product Card 1 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product1.jpg" alt="Luxe Lipstick">
+                                <div class="product-badge">New</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Luxe Lipstick</h3>
+                                <p class="product-price">$29.99</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Card 2 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product2.jpg" alt="Radiant Foundation">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Radiant Foundation</h3>
+                                <p class="product-price">$45.99</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Card 3 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product3.jpg" alt="Glow Serum">
+                                <div class="product-badge">Popular</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Glow Serum</h3>
+                                <p class="product-price">$59.99</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Card 4 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product4.jpg" alt="Eyeshadow Palette">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Eyeshadow Palette</h3>
+                                <p class="product-price">$39.99</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Card 5 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product5.jpg" alt="Mascara Pro">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Mascara Pro</h3>
+                                <p class="product-price">$24.99</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Card 6 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product6.jpg" alt="Blush Duo">
+                                <div class="product-badge">Sale</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Blush Duo</h3>
+                                <p class="product-price">$19.99</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Card 7 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product7.jpg" alt="Setting Spray">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Setting Spray</h3>
+                                <p class="product-price">$27.99</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Card 8 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="images/productsimages/product8.jpg" alt="Highlighter Stick">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Highlighter Stick</h3>
+                                <p class="product-price">$22.99</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Arrow -->
+                <button class="carousel-arrow arrow-right" aria-label="Next products">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <!-- View More Button -->
+            <div class="view-more-section">
+                <button class="btn-view-more disabled">View All Products</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ========================================
+         BUNDLES SECTION - Product bundles with carousel
+         ======================================== -->
+    <section class="bundles-section">
+        <div class="container">
+            <h2 class="section-title">Exclusive Bundles</h2>
+            
+            <div class="bundles-carousel-wrapper">
+                <!-- Left Arrow - Initially hidden -->
+                <button class="bundle-arrow bundle-arrow-left" aria-label="Previous bundles">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <!-- Bundles Container -->
+                <div class="bundles-carousel">
+                    <div class="bundles-track">
+                        <!-- Bundle Card 1 -->
+                        <div class="bundle-card">
+                            <div class="bundle-image">
+                                <img src="images/bundle1.jpg" alt="Everyday Essentials Bundle">
+                                <div class="bundle-badge">Save 20%</div>
+                            </div>
+                            <div class="bundle-info">
+                                <h3 class="bundle-name">Everyday Essentials</h3>
+                                <p class="bundle-description">Foundation, Mascara & Lipstick</p>
+                                <div class="bundle-pricing">
+                                    <span class="bundle-original">$99.97</span>
+                                    <span class="bundle-price">$79.99</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bundle Card 2 -->
+                        <div class="bundle-card">
+                            <div class="bundle-image">
+                                <img src="images/bundle2.jpg" alt="Glow Up Bundle">
+                                <div class="bundle-badge">Best Value</div>
+                            </div>
+                            <div class="bundle-info">
+                                <h3 class="bundle-name">Glow Up Bundle</h3>
+                                <p class="bundle-description">Serum, Highlighter & Setting Spray</p>
+                                <div class="bundle-pricing">
+                                    <span class="bundle-original">$109.97</span>
+                                    <span class="bundle-price">$89.99</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bundle Card 3 -->
+                        <div class="bundle-card">
+                            <div class="bundle-image">
+                                <img src="images/bundle3.jpg" alt="Eye Perfection Bundle">
+                            </div>
+                            <div class="bundle-info">
+                                <h3 class="bundle-name">Eye Perfection</h3>
+                                <p class="bundle-description">Eyeshadow Palette, Mascara & Liner</p>
+                                <div class="bundle-pricing">
+                                    <span class="bundle-original">$84.97</span>
+                                    <span class="bundle-price">$69.99</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bundle Card 4 -->
+                        <div class="bundle-card">
+                            <div class="bundle-image">
+                                <img src="images/bundle4.jpg" alt="Complete Makeup Kit">
+                                <div class="bundle-badge">Premium</div>
+                            </div>
+                            <div class="bundle-info">
+                                <h3 class="bundle-name">Complete Makeup Kit</h3>
+                                <p class="bundle-description">8 Premium Products</p>
+                                <div class="bundle-pricing">
+                                    <span class="bundle-original">$199.99</span>
+                                    <span class="bundle-price">$149.99</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bundle Card 5 -->
+                        <div class="bundle-card">
+                            <div class="bundle-image">
+                                <img src="images/bundle5.jpg" alt="Skincare Starter Bundle">
+                            </div>
+                            <div class="bundle-info">
+                                <h3 class="bundle-name">Skincare Starter</h3>
+                                <p class="bundle-description">Cleanser, Serum & Moisturizer</p>
+                                <div class="bundle-pricing">
+                                    <span class="bundle-original">$129.97</span>
+                                    <span class="bundle-price">$99.99</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bundle Card 6 -->
+                        <div class="bundle-card">
+                            <div class="bundle-image">
+                                <img src="images/bundle6.jpg" alt="Party Ready Bundle">
+                                <div class="bundle-badge">Limited</div>
+                            </div>
+                            <div class="bundle-info">
+                                <h3 class="bundle-name">Party Ready</h3>
+                                <p class="bundle-description">Bold Lipstick, Glitter & Setting Spray</p>
+                                <div class="bundle-pricing">
+                                    <span class="bundle-original">$89.97</span>
+                                    <span class="bundle-price">$74.99</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Arrow -->
+                <button class="bundle-arrow bundle-arrow-right" aria-label="Next bundles">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ========================================
+         FOOTER SECTION - Newsletter, Links, Social Media
+         ======================================== -->
+    <footer class="footer">
+        <!-- Newsletter Section -->
+        <div class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-header">
+                        <h2>Subscribe to our Newsletter</h2>
+                        <p>Be the first one to know about our new products & exclusive offers.</p>
+                    </div>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div class="input-group">
+                            <input 
+                                type="email" 
+                                id="newsletterEmail" 
+                                placeholder="Email" 
+                                required
+                            >
+                            <button type="submit" class="btn-subscribe">subscribe</button>
+                        </div>
+                    </form>
+                    <p id="newsletterMessage" class="newsletter-message"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Main Content -->
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- Let's Connect Section -->
+                    <div class="footer-column">
+                        <h4>Let's Connect</h4>
+                        <div class="social-links">
+                            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Shop Section -->
+                    <div class="footer-column">
+                        <h4>Shop</h4>
+                        <ul class="footer-links">
+                            <li><a href="#" class="disabled">Collection</a></li>
+                            <li><a href="#" class="disabled">About Us</a></li>
+                            <li><a href="#" class="disabled">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Brand Section -->
+                    <div class="footer-column">
+                        <h4>TheIconique</h4>
+                        <p class="footer-description">
+                            Premium cosmetic products for the modern woman. 
+                            Elevate your beauty routine with our curated collection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright Section -->
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2025 TheIconique. All rights reserved. | Developed by <strong>DevPy Technologies</strong></p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- ========================================
+         FIREBASE CONFIGURATION
+         ======================================== -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
