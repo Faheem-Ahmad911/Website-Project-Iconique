@@ -10,7 +10,7 @@
     <link rel="icon" type="image/jpeg" href="images/faviconimages/favicon.jpg">
     
     <!-- CSS Stylesheet -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="styles.css">
     
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -130,7 +130,7 @@
                         <!-- Product Card 1 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product1.jpg" alt="Luxe Lipstick">
+                                <img src="images/productimages/product1.jpg" alt="Luxe Lipstick">
                                 <div class="product-badge">New</div>
                             </div>
                             <div class="product-info">
@@ -142,7 +142,7 @@
                         <!-- Product Card 2 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product2.jpg" alt="Radiant Foundation">
+                                <img src="images/bundle2.jpg" alt="Radiant Foundation">
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Radiant Foundation</h3>
@@ -153,7 +153,7 @@
                         <!-- Product Card 3 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product3.jpg" alt="Glow Serum">
+                                <img src="images/bundle3.jpg" alt="Glow Serum">
                                 <div class="product-badge">Popular</div>
                             </div>
                             <div class="product-info">
@@ -165,7 +165,7 @@
                         <!-- Product Card 4 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product4.jpg" alt="Eyeshadow Palette">
+                                <img src="images/bundle4.jpg" alt="Eyeshadow Palette">
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Eyeshadow Palette</h3>
@@ -176,7 +176,7 @@
                         <!-- Product Card 5 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product5.jpg" alt="Mascara Pro">
+                                <img src="images/bundle5.jpg" alt="Mascara Pro">
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Mascara Pro</h3>
@@ -187,7 +187,7 @@
                         <!-- Product Card 6 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product6.jpg" alt="Blush Duo">
+                                <img src="images/bundle6.jpg" alt="Blush Duo">
                                 <div class="product-badge">Sale</div>
                             </div>
                             <div class="product-info">
@@ -199,7 +199,7 @@
                         <!-- Product Card 7 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product7.jpg" alt="Setting Spray">
+                                <img src="images/herosectionimages/1.jpg" alt="Setting Spray">
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Setting Spray</h3>
@@ -210,7 +210,7 @@
                         <!-- Product Card 8 -->
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="images/productsimages/product8.jpg" alt="Highlighter Stick">
+                                <img src="images/herosectionimages/2.jpg" alt="Highlighter Stick">
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Highlighter Stick</h3>
@@ -439,6 +439,55 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
     <!-- Main JavaScript -->
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const track = document.querySelector(".hero-track");
+    let slides = document.querySelectorAll(".hero-slide");
+    const totalSlides = slides.length;
+
+    let index = 1;
+
+    // Clone slides
+    const firstClone = slides[0].cloneNode(true);
+    const lastClone = slides[totalSlides - 1].cloneNode(true);
+
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, slides[0]);
+
+    slides = document.querySelectorAll(".hero-slide");
+
+    // Set initial position
+    track.style.transform = `translateX(-100vw)`;
+
+    function move() {
+        index++;
+        track.style.transition = "transform 1s";
+        track.style.transform = `translateX(-${index * 100}vw)`;
+    }
+
+    track.addEventListener("transitionend", () => {
+
+        // If we reach the cloned LAST → snap back to real first
+        if (index === slides.length - 1) {
+            index = 1;
+            track.style.transition = "none";
+            track.style.transform = `translateX(-${index * 100}vw)`;
+        }
+
+        // If we go backward (only if you add backward control)
+        if (index === 0) {
+            index = totalSlides;
+            track.style.transition = "none";
+            track.style.transform = `translateX(-${index * 100}vw)`;
+        }
+    });
+
+    setInterval(move, 2000); // 2s slide timing, change as needed
+
+});
+</script>
+
 </body>
 </html>
