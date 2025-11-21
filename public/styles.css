@@ -27,8 +27,8 @@
     --color-shadow-medium: rgba(0, 0, 0, 0.12);
     
     /* Typography */
-    --font-primary: 'Outfit', sans-serif;
-    --font-secondary: 'Nata Sans', sans-serif;
+    --font-primary: 'Times New Roman', Times, serif;
+    --font-secondary: 'Times New Roman', Times, serif;
     
     /* Spacing */
     --spacing-xs: 0.5rem;
@@ -789,7 +789,7 @@ img[src="#"]::before {
 
 .hero-section {
     width: 100%;
-    height: 500px;
+    height: 400px;
     position: relative;
     overflow: hidden;
     background-color: var(--color-light-pink);
@@ -808,16 +808,8 @@ img[src="#"]::before {
     object-fit: cover;
     object-position: center center;
     display: block;
-    transition: transform 0.3s ease;
-    background-color: var(--color-light-pink);
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
-    image-rendering: high-quality;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    will-change: transform;
 }
+
 
 .hero-image:hover {
     transform: scale(1.02);
