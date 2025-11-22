@@ -1695,11 +1695,67 @@ img[src="#"]::before {
 }
 
 /* ========================================
+   NEW SECTION - Featured Image Section
+   ======================================== */
+
+.new-section {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    animation: fadeIn 1s ease-out;
+}
+
+.new-section-image-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-light-pink);
+}
+
+.newsection-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    transition: transform var(--transition-slow);
+    background-color: var(--color-light-pink);
+}
+
+.newsection-image:hover {
+    transform: scale(1.02);
+}
+
+/* Responsive Image Display */
+/* Desktop responsiveness */
+@media screen and (max-width: 768px) {
+    .new-section-image-container {
+        aspect-ratio: auto;
+        max-height: 500px;
+    }
+    
+    .newsection-image {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* Tablet adjustments */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .new-section-image-container {
+        aspect-ratio: auto;
+        max-height: 600px;
+    }
+}
+
+/* ========================================
    FOOTER SECTION
    ======================================== */
 
 .footer {
-    margin-top: var(--spacing-xl);
+    margin-top: 0;
 }
 
 /* Newsletter Section - Modern Light Design */
