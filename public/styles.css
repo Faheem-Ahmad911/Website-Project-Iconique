@@ -1222,16 +1222,18 @@ img[src="#"]::before {
 
 .product-image {
     width: 100%;
-    height: 250px;
+    height: 280px;
     position: relative;
     overflow: hidden;
     background-color: var(--color-light-pink);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .product-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     position: absolute;
     top: 0;
@@ -1266,7 +1268,7 @@ img[src="#"]::before {
 
 /* Fallback hover effect for cards without hover images */
 .product-card:hover .product-image img:not(.product-img-hover) {
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
 
 
@@ -1538,16 +1540,17 @@ img[src="#"]::before {
 
 .bundle-image {
     width: 100%;
-    height: 200px;
+    height: 240px;
     position: relative;
     overflow: hidden;
     background-color: var(--color-light-pink);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 /* Smaller image height on mobile */
 @media (max-width: 767px) {
     .bundle-image {
-        height: 160px;
+        height: 200px;
     }
 }
 
@@ -1555,11 +1558,12 @@ img[src="#"]::before {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: var(--transition-slow);
 }
 
 .bundle-card:hover .bundle-image img {
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
 
 .bundle-badge {
@@ -1992,7 +1996,7 @@ img[src="#"]::before {
     }
     
     .product-image {
-        height: 340px;
+        height: 380px;
     }
 }
 
@@ -2012,12 +2016,12 @@ img[src="#"]::before {
     }
     
     .product-card {
-        min-height: 420px;
+        min-height: 460px;
         scroll-snap-align: center;
     }
 
     .product-image {
-        height: 280px;
+        height: 320px;
     }
 
     .product-info {
@@ -2042,7 +2046,7 @@ img[src="#"]::before {
     }
 
     .bundle-image {
-        height: 250px;
+        height: 280px;
     }
 
     .bundle-info {
@@ -2146,12 +2150,12 @@ img[src="#"]::before {
     }
     
     .product-card {
-        min-height: 360px;
+        min-height: 420px;
         scroll-snap-align: center;
     }
     
     .product-image {
-        height: 240px;
+        height: 280px;
     }
 
     .product-info {
@@ -2165,7 +2169,7 @@ img[src="#"]::before {
     }
     
     .bundle-image {
-        height: 220px;
+        height: 260px;
     }
 
     .bundle-info {
