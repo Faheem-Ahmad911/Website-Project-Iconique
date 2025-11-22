@@ -1169,9 +1169,8 @@ img[src="#"]::before {
     transition: transform var(--transition-slow);
 }
 
-/* Product Card Styling - Desktop: 3 cards, Mobile: 1 card */
+/* Product Card Styling - Responsive design handled by media queries */
 .product-card {
-    min-width: 320px;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
     border-radius: 12px;
@@ -1181,6 +1180,7 @@ img[src="#"]::before {
     position: relative;
     opacity: 0;
     animation: scaleIn 0.8s ease-out forwards;
+    flex-shrink: 0;
 }
 
 .product-card:nth-child(1) { animation-delay: 0.1s; }
@@ -1465,48 +1465,55 @@ img[src="#"]::before {
     will-change: transform;
 }
 
-/* Desktop: Show 3 cards at a time */
+/* Desktop: Show 3 cards at a time - Same for both sections */
 @media (min-width: 768px) {
-    .bundles-track {
+    .bundles-track,
+    .products-track {
         gap: var(--spacing-md);
     }
     
-    .bundle-card {
+    .bundle-card,
+    .product-card {
         flex: 0 0 calc((100% - (2 * var(--spacing-md))) / 3);
         min-width: 280px;
         max-width: 320px;
     }
 }
 
-/* Large screens: Slightly bigger cards but still 3 per view */
+/* Large screens: Slightly bigger cards but still 3 per view - Same for both sections */
 @media (min-width: 1200px) {
-    .bundles-track {
+    .bundles-track,
+    .products-track {
         gap: var(--spacing-lg);
         max-width: 1100px;
         margin: 0 auto;
     }
     
-    .bundle-card {
+    .bundle-card,
+    .product-card {
         flex: 0 0 calc((100% - (2 * var(--spacing-lg))) / 3);
         min-width: 300px;
         max-width: 340px;
     }
 }
 
-/* Mobile: Show 1 complete card + partial second card */
+/* Mobile: Show 1 complete card + partial second card - Same for both sections */
 @media (max-width: 767px) {
-    .bundles-track {
+    .bundles-track,
+    .products-track {
         gap: var(--spacing-sm);
     }
     
-    .bundle-card {
+    .bundle-card,
+    .product-card {
         flex: 0 0 calc(85% - var(--spacing-sm));
         min-width: calc(85% - var(--spacing-sm));
         max-width: calc(85% - var(--spacing-sm));
         margin-right: var(--spacing-xs);
     }
     
-    .bundles-carousel {
+    .bundles-carousel,
+    .products-carousel {
         overflow: visible;
         padding-right: 1rem;
     }
@@ -1651,15 +1658,17 @@ img[src="#"]::before {
     z-index: 3;
 }
 
-/* Mobile bundle arrows - smaller and better positioned */
+/* Mobile arrows - smaller and better positioned for both sections */
 @media (max-width: 767px) {
-    .bundle-arrow {
+    .bundle-arrow,
+    .carousel-arrow {
         width: 40px;
         height: 40px;
         font-size: 1rem;
     }
     
-    .bundles-carousel-wrapper {
+    .bundles-carousel-wrapper,
+    .products-carousel-wrapper {
         gap: var(--spacing-xs);
     }
 }
@@ -1946,15 +1955,14 @@ img[src="#"]::before {
         font-size: 3rem;
     }
     
-    .product-card {
-        flex: 0 0 calc((100% - 32px) / 2); /* 2 cards on tablet */
-    }
-
+    .product-card,
     .bundle-card {
+        flex: 0 0 calc((100% - 32px) / 2); /* 2 cards on tablet */
         min-width: 350px;
     }
     
-    .products-track {
+    .products-track,
+    .bundles-track {
         gap: 20px;
     }
 }
@@ -1972,15 +1980,14 @@ img[src="#"]::before {
         height: 600px;
     }
     
-    .product-card {
-        flex: 0 0 calc((100% - 48px) / 3); /* 3 cards on desktop */
-    }
-
+    .product-card,
     .bundle-card {
+        flex: 0 0 calc((100% - 48px) / 3); /* 3 cards on desktop */
         min-width: 380px;
     }
     
-    .products-track {
+    .products-track,
+    .bundles-track {
         gap: 24px;
     }
     
@@ -2005,10 +2012,6 @@ img[src="#"]::before {
     }
     
     .product-card {
-        flex: 0 0 calc(85% - var(--spacing-sm)); /* Match bundle card sizing */
-        min-width: calc(85% - var(--spacing-sm));
-        max-width: calc(85% - var(--spacing-sm));
-        margin-right: var(--spacing-xs);
         min-height: 420px;
         scroll-snap-align: center;
     }
@@ -2143,10 +2146,6 @@ img[src="#"]::before {
     }
     
     .product-card {
-        flex: 0 0 calc(85% - var(--spacing-sm));
-        min-width: calc(85% - var(--spacing-sm));
-        max-width: calc(85% - var(--spacing-sm));
-        margin-right: var(--spacing-xs);
         min-height: 360px;
         scroll-snap-align: center;
     }
@@ -2175,7 +2174,7 @@ img[src="#"]::before {
     
     .carousel-arrow,
     .bundle-arrow {
-        display: none;
+        display: none; /* Hide all arrows on small mobile screens */
     }
     
     .newsletter-section {
