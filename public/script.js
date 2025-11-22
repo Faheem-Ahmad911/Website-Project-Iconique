@@ -238,6 +238,12 @@ class EnhancedCarousel {
 
     
     init() {
+        // For bundles on mobile, use native scrolling instead of carousel
+        if (this.carouselType === 'bundles' && this.isMobile()) {
+            this.enableNativeScrolling();
+            return;
+        }
+        
         this.calculateDimensions();
         this.setupEventListeners();
         this.updateArrows();
@@ -348,6 +354,29 @@ class EnhancedCarousel {
                 this.handleSwipe();
             }
         }, { passive: true });
+    }
+    
+    enableNativeScrolling() {
+        // Remove any transform styles that might interfere
+        this.track.style.transform = '';
+        this.track.style.transition = '';
+        
+        // Ensure proper CSS classes are applied for mobile native scrolling
+        this.carousel.style.overflowX = 'auto';
+        this.carousel.style.scrollBehavior = 'smooth';
+        this.carousel.style.webkitOverflowScrolling = 'touch';
+        
+        // Hide arrows on mobile
+        if (this.leftArrow) this.leftArrow.style.display = 'none';
+        if (this.rightArrow) this.rightArrow.style.display = 'none';
+        
+        // Add resize listener to switch back to carousel on desktop
+        window.addEventListener('resize', () => {
+            if (!this.isMobile() && this.carouselType === 'bundles') {
+                // Switch back to carousel mode on desktop
+                location.reload(); // Simple solution to reinitialize properly
+            }
+        });
     }
     
     handleSwipe() {
