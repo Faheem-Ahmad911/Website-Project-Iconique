@@ -238,12 +238,6 @@ class EnhancedCarousel {
 
     
     init() {
-        // For bundles on mobile, use native scrolling instead of carousel
-        if (this.carouselType === 'bundles' && this.isMobile()) {
-            this.enableNativeScrolling();
-            return;
-        }
-        
         this.calculateDimensions();
         this.setupEventListeners();
         this.updateArrows();
@@ -266,7 +260,10 @@ class EnhancedCarousel {
     
     getVisibleCards() {
         const width = window.innerWidth;
-        if (width < 768) return 1;      // Mobile: 1 card
+        if (width < 768) {
+            // Mobile: 1 card for bundles (with partial second visible), 1 for products
+            return this.carouselType === 'bundles' ? 1 : 1;
+        }
         if (width < 1024) return 2;     // Tablet: 2 cards
         return 3;                        // Desktop: 3 cards
     }
@@ -356,29 +353,6 @@ class EnhancedCarousel {
         }, { passive: true });
     }
     
-    enableNativeScrolling() {
-        // Remove any transform styles that might interfere
-        this.track.style.transform = '';
-        this.track.style.transition = '';
-        
-        // Ensure proper CSS classes are applied for mobile native scrolling
-        this.carousel.style.overflowX = 'auto';
-        this.carousel.style.scrollBehavior = 'smooth';
-        this.carousel.style.webkitOverflowScrolling = 'touch';
-        
-        // Hide arrows on mobile
-        if (this.leftArrow) this.leftArrow.style.display = 'none';
-        if (this.rightArrow) this.rightArrow.style.display = 'none';
-        
-        // Add resize listener to switch back to carousel on desktop
-        window.addEventListener('resize', () => {
-            if (!this.isMobile() && this.carouselType === 'bundles') {
-                // Switch back to carousel mode on desktop
-                location.reload(); // Simple solution to reinitialize properly
-            }
-        });
-    }
-    
     handleSwipe() {
         const swipeThreshold = 50;
         const diff = this.touchStartX - this.touchEndX;
@@ -426,7 +400,15 @@ class EnhancedCarousel {
         if (!firstCard) return;
         
         const cardWidth = firstCard.offsetWidth;
-        const translateX = -(this.currentIndex * (cardWidth + this.gap));
+        let translateX;
+        
+        if (this.carouselType === 'bundles' && this.isMobile()) {
+            // For bundles on mobile, slide by card width + gap to show complete cards
+            translateX = -(this.currentIndex * (cardWidth + this.gap));
+        } else {
+            translateX = -(this.currentIndex * (cardWidth + this.gap));
+        }
+        
         this.track.style.transform = `translateX(${translateX}px)`;
     }
     
