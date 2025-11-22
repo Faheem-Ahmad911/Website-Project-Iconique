@@ -1728,25 +1728,35 @@ img[src="#"]::before {
     transform: scale(1.02);
 }
 
-/* Responsive Image Display */
-/* Desktop responsiveness */
+/* Responsive Image Display Classes */
+.desktop-only {
+    display: block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* Mobile responsiveness */
 @media screen and (max-width: 768px) {
     .new-section-image-container {
         aspect-ratio: auto;
         max-height: 500px;
     }
     
-    .newsection-image {
-        width: 100%;
-        height: auto;
+    .desktop-only {
+        display: none;
+    }
+    
+    .mobile-only {
+        display: block;
     }
 }
 
 /* Tablet adjustments */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
     .new-section-image-container {
-        aspect-ratio: auto;
-        max-height: 600px;
+        aspect-ratio: 16 / 9;
     }
 }
 
