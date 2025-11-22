@@ -712,9 +712,24 @@ img[src="#"]::before {
     color: var(--color-accent-pink);
 }
 
+.mobile-nav-brand {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--spacing-sm) 0;
+    margin-bottom: var(--spacing-lg);
+}
+
+.mobile-nav-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    letter-spacing: 0.5px;
+}
+
 .mobile-nav-menu {
     list-style: none;
-    margin-top: var(--spacing-xl);
+    margin-top: var(--spacing-md);
 }
 
 .mobile-nav-menu li {
