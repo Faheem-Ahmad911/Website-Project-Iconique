@@ -1446,44 +1446,64 @@ img[src="#"]::before {
 
 .bundles-carousel-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
     width: 100%;
 }
 
 .bundles-carousel {
+    overflow: hidden;
     width: 100%;
-    overflow: visible;
+    position: relative;
 }
 
 .bundles-track {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
     gap: var(--spacing-md);
-    transition: all var(--transition-slow);
-    justify-items: center;
+    transition: transform var(--transition-slow);
+    will-change: transform;
 }
 
-/* Desktop and Tablet: 3 cards per row */
+/* Desktop: Show 3 cards at a time */
 @media (min-width: 768px) {
     .bundles-track {
-        grid-template-columns: repeat(3, 1fr);
-        max-width: 1200px;
-        margin: 0 auto;
+        gap: var(--spacing-md);
+    }
+    
+    .bundle-card {
+        flex: 0 0 calc((100% - (2 * var(--spacing-md))) / 3);
+        min-width: 280px;
+        max-width: 320px;
     }
 }
 
-/* Large screens: Maintain 3 cards with proper spacing */
+/* Large screens: Slightly bigger cards but still 3 per view */
 @media (min-width: 1200px) {
     .bundles-track {
-        grid-template-columns: repeat(3, minmax(320px, 380px));
-        justify-content: center;
         gap: var(--spacing-lg);
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .bundle-card {
+        flex: 0 0 calc((100% - (2 * var(--spacing-lg))) / 3);
+        min-width: 300px;
+        max-width: 340px;
+    }
+}
+
+/* Mobile: Show 1 card at a time */
+@media (max-width: 767px) {
+    .bundle-card {
+        flex: 0 0 calc(100% - 2rem);
+        min-width: calc(100% - 2rem);
+        max-width: calc(100% - 2rem);
     }
 }
 
 /* Bundle Card Styling */
 .bundle-card {
-    width: 100%;
-    max-width: 380px;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
     border-radius: 12px;
@@ -1491,14 +1511,7 @@ img[src="#"]::before {
     box-shadow: 0 4px 15px var(--color-shadow);
     transition: var(--transition-normal);
     animation: fadeInUp 0.8s ease-out both;
-}
-
-/* Mobile: Full width cards */
-@media (max-width: 767px) {
-    .bundle-card {
-        max-width: 100%;
-        margin: 0 auto;
-    }
+    flex-shrink: 0;
 }
 
 .bundle-card:hover {
@@ -1574,9 +1587,40 @@ img[src="#"]::before {
     color: var(--color-accent-pink);
 }
 
-/* Bundle Arrows - Hidden in grid layout */
+/* Bundle Navigation Arrows */
 .bundle-arrow {
-    display: none;
+    background-color: var(--color-white);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--color-accent-pink);
+    box-shadow: 0 2px 10px var(--color-shadow);
+    flex-shrink: 0;
+    transition: var(--transition-normal);
+    cursor: pointer;
+    border: none;
+    z-index: 3;
+}
+
+.bundle-arrow:hover {
+    background-color: var(--color-accent-pink);
+    color: white;
+    transform: scale(1.1);
+}
+
+.bundle-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.bundle-arrow:disabled:hover {
+    background-color: var(--color-white);
+    color: var(--color-accent-pink);
+    transform: none;
 }
 
 /* ========================================
@@ -2115,15 +2159,13 @@ img[src="#"]::before {
     }
     
     .bundles-track {
-        grid-template-columns: 1fr;
         gap: var(--spacing-md);
         padding: 0;
     }
     
-    .bundle-card {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
+    .bundles-carousel-wrapper {
+        padding: 0;
+        gap: 0;
     }
     
     .bundle-image {
@@ -2138,13 +2180,13 @@ img[src="#"]::before {
     }
     
     .bundles-track {
-        grid-template-columns: 1fr;
         gap: var(--spacing-md);
         padding: 0;
     }
     
-    /* Enable smooth scrolling on mobile for products only */
-    .products-carousel {
+    /* Enable smooth scrolling on mobile for both sections */
+    .products-carousel,
+    .bundles-carousel {
         overflow-x: auto;
         overflow-y: hidden;
         scroll-behavior: smooth;
@@ -2153,10 +2195,6 @@ img[src="#"]::before {
         -ms-overflow-style: none; /* IE/Edge */
         scroll-snap-type: x mandatory;
         scroll-padding-left: 1.5rem;
-    }
-    
-    .bundles-carousel {
-        overflow: visible;
     }
     
     /* Hide scrollbars */
