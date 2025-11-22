@@ -1,4 +1,88 @@
 /* ========================================
+   LOADING ANIMATIONS & SCROLL EFFECTS
+   ======================================== */
+
+// Animation observer for scroll-triggered animations
+class AnimationObserver {
+    constructor() {
+        this.observer = null;
+        this.init();
+    }
+
+    init() {
+        // Create intersection observer for scroll animations
+        this.observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.animateElement(entry.target);
+                    this.observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        // Observe elements when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.observeElements());
+        } else {
+            this.observeElements();
+        }
+    }
+
+    observeElements() {
+        // Elements to animate on scroll
+        const animatedElements = document.querySelectorAll(`
+            .section-title,
+            .product-card,
+            .bundle-card,
+            .view-more-section,
+            .bundles-section,
+            .footer
+        `);
+
+        animatedElements.forEach(element => {
+            // Add initial animation class
+            element.classList.add('animate-on-load');
+            this.observer.observe(element);
+        });
+    }
+
+    animateElement(element) {
+        // Remove the initial hidden state
+        element.classList.remove('animate-on-load');
+        
+        // Add appropriate animation based on element type
+        if (element.classList.contains('section-title')) {
+            element.style.animation = 'fadeInUp 0.8s ease-out forwards';
+        } else if (element.classList.contains('product-card')) {
+            element.style.animation = 'scaleIn 0.8s ease-out forwards';
+        } else if (element.classList.contains('bundle-card')) {
+            element.style.animation = 'fadeInUp 0.8s ease-out forwards';
+        } else if (element.classList.contains('view-more-section')) {
+            element.style.animation = 'fadeInUp 0.8s ease-out forwards';
+        } else {
+            element.style.animation = 'fadeIn 0.8s ease-out forwards';
+        }
+    }
+}
+
+// Page loading animation
+function initPageAnimations() {
+    // Add loading class to body
+    document.body.classList.add('page-loading');
+    
+    // Remove loading class after initial animations
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.body.classList.remove('page-loading');
+            document.body.classList.add('page-loaded');
+        }, 500);
+    });
+}
+
+/* ========================================
    FIREBASE CONFIGURATION & INITIALIZATION
    ======================================== */
 
@@ -1113,14 +1197,20 @@ class TheIconiqueApp {
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        // Initialize page animations
+        initPageAnimations();
+        
+        // Initialize animation observer
+        const animationObserver = new AnimationObserver();
+        
+        // Initialize main app
         const app = new TheIconiqueApp();
         app.init();
     });
-
-
-    
 } else {
     // DOM already loaded
+    initPageAnimations();
+    const animationObserver = new AnimationObserver();
     const app = new TheIconiqueApp();
     app.init();
 }

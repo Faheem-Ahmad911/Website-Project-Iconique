@@ -52,6 +52,219 @@
     --radius-full: 50px;
 }
 
+/* ========================================
+   ANIMATION KEYFRAMES
+   ======================================== */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        transform: translate3d(0,0,0);
+    }
+    40%, 43% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -10px, 0);
+    }
+    70% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -5px, 0);
+    }
+    90% {
+        transform: translate3d(0,-2px,0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ========================================
+   LOADING ANIMATION CLASSES
+   ======================================== */
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-fadeInLeft {
+    animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+.animate-fadeInRight {
+    animation: fadeInRight 0.8s ease-out forwards;
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-scaleIn {
+    animation: scaleIn 0.6s ease-out forwards;
+}
+
+.animate-slideInDown {
+    animation: slideInDown 0.8s ease-out forwards;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-bounce {
+    animation: bounce 1s ease-in-out;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Animation delays for staggered effects */
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-600 { animation-delay: 0.6s; }
+.animate-delay-700 { animation-delay: 0.7s; }
+.animate-delay-800 { animation-delay: 0.8s; }
+
+/* Initial hidden state for animated elements */
+.animate-on-load {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Page loading states */
+.page-loading {
+    overflow: hidden;
+}
+
+.page-loading .hero-section {
+    animation-delay: 0.2s;
+}
+
+.page-loading .header {
+    animation-delay: 0s;
+}
+
+.page-loaded {
+    overflow: visible;
+}
+
+/* Enhanced hover effects */
+.product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px var(--color-shadow-medium);
+    animation: none;
+}
+
+.bundle-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px var(--color-shadow-medium);
+    animation: none;
+}
+
+/* Floating animation for hero images */
+.hero-image {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Button bounce effect on load */
+.btn-view-more:hover {
+    animation: bounce 0.6s ease-in-out;
+}
+
+/* Staggered animations for product grid */
+.products-track .product-card:nth-child(1) { animation-delay: 0.1s; }
+.products-track .product-card:nth-child(2) { animation-delay: 0.2s; }
+.products-track .product-card:nth-child(3) { animation-delay: 0.3s; }
+.products-track .product-card:nth-child(4) { animation-delay: 0.4s; }
+.products-track .product-card:nth-child(5) { animation-delay: 0.5s; }
+
+/* Staggered animations for bundle grid */
+.bundles-track .bundle-card:nth-child(1) { animation-delay: 0.1s; }
+.bundles-track .bundle-card:nth-child(2) { animation-delay: 0.2s; }
+.bundles-track .bundle-card:nth-child(3) { animation-delay: 0.3s; }
+.bundles-track .bundle-card:nth-child(4) { animation-delay: 0.4s; }
+
 html {
     scroll-behavior: smooth;
 }
@@ -216,6 +429,7 @@ img[src="#"]::before {
     position: sticky;
     top: 0;
     z-index: 1000;
+    animation: slideInDown 0.8s ease-out;
     box-shadow: 
         0 8px 32px rgba(255, 105, 180, 0.08),
         0 2px 16px rgba(0, 0, 0, 0.04),
@@ -250,6 +464,7 @@ img[src="#"]::before {
     flex-shrink: 0;
     margin-right: 2rem;
     z-index: 1001;
+    animation: fadeInLeft 0.8s ease-out 0.2s both;
 }
 
 .logo a {
@@ -304,7 +519,14 @@ img[src="#"]::before {
 
 .nav-menu li {
     position: relative;
+    animation: fadeInUp 0.8s ease-out both;
 }
+
+.nav-menu li:nth-child(1) { animation-delay: 0.3s; }
+.nav-menu li:nth-child(2) { animation-delay: 0.4s; }
+.nav-menu li:nth-child(3) { animation-delay: 0.5s; }
+.nav-menu li:nth-child(4) { animation-delay: 0.6s; }
+.nav-menu li:nth-child(5) { animation-delay: 0.7s; }
 
 .nav-menu a {
     font-weight: 500;
@@ -351,6 +573,7 @@ img[src="#"]::before {
     display: flex;
     align-items: center;
     gap: 1rem;
+    animation: fadeInRight 0.8s ease-out 0.4s both;
 }
 
 /* Search Icon */
@@ -360,6 +583,7 @@ img[src="#"]::before {
     cursor: pointer;
     color: var(--color-text-dark);
     transition: all var(--transition-normal);
+    animation: fadeInRight 0.8s ease-out 0.5s both;
     padding: 0.6rem;
     border-radius: var(--radius-md);
 }
@@ -378,6 +602,7 @@ img[src="#"]::before {
     transition: all var(--transition-normal);
     padding: 0.6rem;
     border-radius: var(--radius-md);
+    animation: fadeInRight 0.8s ease-out 0.6s both;
 }
 
 .cart-icon:hover {
@@ -793,6 +1018,7 @@ img[src="#"]::before {
     position: relative;
     overflow: hidden;
     background-color: var(--color-light-pink);
+    animation: fadeIn 1s ease-out;
 }
 
 .hero-image-container {
@@ -847,6 +1073,7 @@ img[src="#"]::before {
     position: relative;
     letter-spacing: -0.5px;
     line-height: 1.2;
+    animation: fadeInUp 0.8s ease-out both;
 }
 
 .section-title::after {
@@ -953,8 +1180,14 @@ img[src="#"]::before {
     transition: var(--transition-normal);
     position: relative;
     opacity: 0;
-    animation: cardFadeIn 0.6s ease-out forwards;
+    animation: scaleIn 0.8s ease-out forwards;
 }
+
+.product-card:nth-child(1) { animation-delay: 0.1s; }
+.product-card:nth-child(2) { animation-delay: 0.2s; }
+.product-card:nth-child(3) { animation-delay: 0.3s; }
+.product-card:nth-child(4) { animation-delay: 0.4s; }
+.product-card:nth-child(5) { animation-delay: 0.5s; }
 
 @keyframes cardFadeIn {
     from {
@@ -999,10 +1232,40 @@ img[src="#"]::before {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: var(--transition-slow);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
-.product-card:hover .product-image img {
+/* Primary image - always visible by default */
+.product-img-primary {
+    opacity: 1;
+    z-index: 1;
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+}
+
+/* Hover image - hidden by default */
+.product-img-hover {
+    opacity: 0;
+    z-index: 2;
+    transform: scale(1.05);
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+}
+
+/* Hover effects */
+.product-card:hover .product-img-primary {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.product-card:hover .product-img-hover {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Fallback hover effect for cards without hover images */
+.product-card:hover .product-image img:not(.product-img-hover) {
     transform: scale(1.1);
 }
 
@@ -1152,9 +1415,18 @@ img[src="#"]::before {
     font-weight: 600;
     box-shadow: 0 4px 15px rgba(196, 137, 154, 0.3);
     transition: var(--transition-normal);
+    border: none;
+    cursor: pointer;
+    min-width: 200px;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    animation: fadeInUp 0.8s ease-out 0.3s both, pulse 3s ease-in-out 2s infinite;
 }
 
-.btn-view-more:hover:not(.disabled) {
+.btn-view-more:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(196, 137, 154, 0.4);
 }
@@ -1174,31 +1446,59 @@ img[src="#"]::before {
 
 .bundles-carousel-wrapper {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.bundles-carousel {
-    overflow: hidden;
     width: 100%;
 }
 
+.bundles-carousel {
+    width: 100%;
+    overflow: visible;
+}
+
 .bundles-track {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--spacing-md);
-    transition: transform var(--transition-slow);
+    transition: all var(--transition-slow);
+    justify-items: center;
+}
+
+/* Desktop and Tablet: 3 cards per row */
+@media (min-width: 768px) {
+    .bundles-track {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+/* Large screens: Maintain 3 cards with proper spacing */
+@media (min-width: 1200px) {
+    .bundles-track {
+        grid-template-columns: repeat(3, minmax(320px, 380px));
+        justify-content: center;
+        gap: var(--spacing-lg);
+    }
 }
 
 /* Bundle Card Styling */
 .bundle-card {
-    min-width: 320px;
+    width: 100%;
+    max-width: 380px;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px var(--color-shadow);
     transition: var(--transition-normal);
+    animation: fadeInUp 0.8s ease-out both;
+}
+
+/* Mobile: Full width cards */
+@media (max-width: 767px) {
+    .bundle-card {
+        max-width: 100%;
+        margin: 0 auto;
+    }
 }
 
 .bundle-card:hover {
@@ -1274,37 +1574,9 @@ img[src="#"]::before {
     color: var(--color-accent-pink);
 }
 
-/* Bundle Arrows */
+/* Bundle Arrows - Hidden in grid layout */
 .bundle-arrow {
-    background-color: var(--color-white);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: var(--color-accent-pink);
-    box-shadow: 0 2px 10px var(--color-shadow);
-    flex-shrink: 0;
-    transition: var(--transition-normal);
-}
-
-.bundle-arrow:hover {
-    background-color: var(--color-accent-pink);
-    color: white;
-    transform: scale(1.1);
-}
-
-.bundle-arrow:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-.bundle-arrow:disabled:hover {
-    background-color: var(--color-white);
-    color: var(--color-accent-pink);
-    transform: none;
+    display: none;
 }
 
 /* ========================================
@@ -1782,11 +2054,9 @@ img[src="#"]::before {
     }
     
     .bundle-card {
-        flex: 0 0 calc(100vw - 2rem);
-        margin: 0 1rem;
-        min-width: calc(100vw - 2rem);
-        max-width: calc(100vw - 2rem);
-        scroll-snap-align: center;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
     }
     
     .bundle-image {
@@ -1844,27 +2114,37 @@ img[src="#"]::before {
         min-width: 100%;
     }
     
+    .bundles-track {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        padding: 0;
+    }
+    
     .bundle-card {
-        min-width: calc(100% - 2rem);
-        margin: 0 1rem;
-        flex: 0 0 calc(100% - 2rem);
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
     }
     
     .bundle-image {
         height: 300px;
     }
     
-    /* Optimize track spacing on mobile - identical for both sections */
-    .products-track,
-    .bundles-track {
+    /* Optimize track spacing on mobile - different for each section */
+    .products-track {
         justify-content: flex-start;
         gap: 0.5rem;
         padding: 0 0.5rem;
     }
     
-    /* Enable smooth scrolling on mobile with snap behavior */
-    .products-carousel,
-    .bundles-carousel {
+    .bundles-track {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        padding: 0;
+    }
+    
+    /* Enable smooth scrolling on mobile for products only */
+    .products-carousel {
         overflow-x: auto;
         overflow-y: hidden;
         scroll-behavior: smooth;
@@ -1873,6 +2153,10 @@ img[src="#"]::before {
         -ms-overflow-style: none; /* IE/Edge */
         scroll-snap-type: x mandatory;
         scroll-padding-left: 1.5rem;
+    }
+    
+    .bundles-carousel {
+        overflow: visible;
     }
     
     /* Hide scrollbars */
