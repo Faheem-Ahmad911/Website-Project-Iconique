@@ -1493,41 +1493,12 @@ img[src="#"]::before {
     }
 }
 
-/* Mobile: Natural scrolling with 85vw cards */
+/* Mobile: Show 1 card at a time */
 @media (max-width: 767px) {
-    .bundles-carousel-wrapper {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-    }
-    
-    .bundles-carousel {
-        overflow-x: auto;
-        overflow-y: hidden;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        scroll-snap-type: x mandatory;
-    }
-    
-    .bundles-track {
-        display: flex;
-        gap: 1rem;
-        padding: 0 1rem;
-        width: max-content;
-    }
-    
     .bundle-card {
-        flex: 0 0 85vw;
-        min-width: 85vw;
-        max-width: 85vw;
-        scroll-snap-align: center;
-    }
-    
-    /* Hide webkit scrollbar */
-    .bundles-carousel::-webkit-scrollbar {
-        display: none;
+        flex: 0 0 calc(100% - 2rem);
+        min-width: calc(100% - 2rem);
+        max-width: calc(100% - 2rem);
     }
 }
 
@@ -2223,23 +2194,7 @@ img[src="#"]::before {
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* IE/Edge */
         scroll-snap-type: x mandatory;
-        scroll-padding-left: 1rem;
-    }
-    
-    /* Mobile: Natural finger-tracking scroll for bundles */
-    .bundles-track {
-        display: flex;
-        gap: var(--spacing-md);
-        padding: 0 1rem;
-        scroll-snap-align: none;
-    }
-    
-    .bundle-card {
-        flex: 0 0 85vw;
-        min-width: 85vw;
-        max-width: 85vw;
-        scroll-snap-align: center;
-        margin: 0;
+        scroll-padding-left: 1.5rem;
     }
     
     /* Hide scrollbars */
