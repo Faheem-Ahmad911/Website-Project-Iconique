@@ -242,9 +242,9 @@
     animation: none;
 }
 
-/* Floating animation for hero images */
+/* Floating animation for hero images - Disabled */
 .hero-image {
-    animation: float 6s ease-in-out infinite;
+    animation: none;
 }
 
 /* Button bounce effect on load */
@@ -712,24 +712,9 @@ img[src="#"]::before {
     color: var(--color-accent-pink);
 }
 
-.mobile-nav-brand {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: var(--spacing-sm) 0;
-    margin-bottom: var(--spacing-lg);
-}
-
-.mobile-nav-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--color-text-dark);
-    letter-spacing: 0.5px;
-}
-
 .mobile-nav-menu {
     list-style: none;
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-xl);
 }
 
 .mobile-nav-menu li {
@@ -1029,11 +1014,14 @@ img[src="#"]::before {
 
 .hero-section {
     width: 100%;
-    height: 400px;
+    height: 600px;
     position: relative;
     overflow: hidden;
     background-color: var(--color-light-pink);
     animation: fadeIn 1s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hero-image-container {
@@ -1049,8 +1037,20 @@ img[src="#"]::before {
     object-fit: cover;
     object-position: center center;
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
+/* Desktop Hero Image - Hidden on mobile */
+.hero-image-desktop {
+    display: block;
+}
+
+/* Mobile Hero Image - Hidden on desktop */
+.hero-image-mobile {
+    display: none;
+}
 
 .hero-image:hover {
     transform: scale(1.02);
@@ -2270,7 +2270,7 @@ img[src="#"]::before {
 /* Responsive breakpoints for hero section */
 @media screen and (max-width: 1024px) {
     .hero-section {
-        height: 400px;
+        height: 500px;
     }
 }
 
@@ -2280,7 +2280,16 @@ img[src="#"]::before {
     }
     
     .hero-section {
-        height: 300px;
+        height: 400px;
+    }
+    
+    /* Show mobile image, hide desktop image on mobile */
+    .hero-image-desktop {
+        display: none;
+    }
+    
+    .hero-image-mobile {
+        display: block;
     }
     
     .hero-image {
