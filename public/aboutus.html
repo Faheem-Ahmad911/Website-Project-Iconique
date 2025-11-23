@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About TheIconique - Premium Cosmetic Products">
+    <title>About Us - TheIconique</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="images/faviconimages/favicon.jpg">
+    
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Font: Times New Roman (system font) -->
+</head>
+<body>
+    <!-- ========================================
+         HEADER SECTION - White background with logo and navigation
+         ======================================== -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <!-- <a href="index.html">
+                        <img src="images/faviconimages/favicon.jpg" alt="TheIconique Logo">
+                    </a> -->
+                    <span class="logo-text">TheIconique</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="nav-desktop">
+                    <ul class="nav-menu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#" class="disabled">Collection</a></li>
+                        <li><a href="aboutus.html" class="active">About Us</a></li>
+                        <li><a href="#" class="disabled">Blogs</a></li>
+                        <li><a href="#" class="disabled">Contact</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Search Icon -->
+                    <div class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    <!-- Shopping Cart Icon -->
+                    <div class="cart-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Toggle Button -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ========================================
+         MOBILE NAVIGATION SIDEBAR - Slides from right
+         ======================================== -->
+    <div class="mobile-nav-overlay"></div>
+    <nav class="mobile-nav">
+        <button class="mobile-nav-close" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mobile-nav-title">TheIconique</div>
+        <ul class="mobile-nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#" class="disabled">Collection</a></li>
+            <li><a href="aboutus.html" class="active">About Us</a></li>
+            <li><a href="#" class="disabled">Blogs</a></li>
+            <li><a href="#" class="disabled">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <!-- ========================================
+         SEARCH MODAL - Full screen search overlay
+         ======================================== -->
+    <div class="search-overlay">
+        <div class="search-modal">
+            <button class="search-close" aria-label="Close search">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="search-content">
+                <h2>Search Products</h2>
+                <div class="search-form">
+                    <input type="text" id="searchInput" placeholder="Search for products, brands, categories..." autocomplete="off">
+                    <button type="button" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========================================
+         ABOUT US SECTION
+         ======================================== -->
+    <section class="aboutus-section">
+        <div class="container">
+            <!-- About Us Title (Outside the pink block) -->
+            <h1 class="aboutus-title">About Us</h1>
+            
+            <!-- About Us Content (Inside the pink block) -->
+            <div class="aboutus-content">
+                <p>At Organic Lab, we believe skincare should be <strong>effective, uncomplicated, and rooted in science.</strong></p>
+                <p>We're a modern Pakistani skincare company built on the idea that active ingredients can transform your skin when combined with thoughtful formulation and consistent care. Our products are designed to target real concerns - <strong>acne, dullness, pigmentation, dehydration, and premature aging</strong> - using clinically proven actives that work in harmony with your skin.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ========================================
+         OUR FORMULAS SECTION - Carousel with Cards
+         ======================================== -->
+    <section class="formulas-section">
+        <div class="container">
+            <h2 class="formulas-title">Our formulas</h2>
+            
+            <!-- Formulas Carousel -->
+            <div class="formulas-carousel-wrapper">
+                <div class="formulas-carousel">
+                    <!-- Formula Card 1 -->
+                    <div class="formula-card">
+                        <div class="formula-icon-wrapper">
+                            <div class="formula-icon">
+                                <i class="fas fa-flask-vial"></i>
+                            </div>
+                        </div>
+                        <h3 class="formula-name">Clinically Effective</h3>
+                        <p class="formula-description">Gentle on skin</p>
+                    </div>
+                    
+                    <!-- Formula Card 2 -->
+                    <div class="formula-card">
+                        <div class="formula-icon-wrapper">
+                            <div class="formula-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                        </div>
+                        <h3 class="formula-name">Organic</h3>
+                        <p class="formula-description">Natural ingredients</p>
+                    </div>
+                    
+                    <!-- Formula Card 3 -->
+                    <div class="formula-card">
+                        <div class="formula-icon-wrapper">
+                            <div class="formula-icon">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                        </div>
+                        <h3 class="formula-name">Synthetic</h3>
+                        <p class="formula-description">Lab formulated</p>
+                    </div>
+                    
+                    <!-- Formula Card 4 -->
+                    <div class="formula-card">
+                        <div class="formula-icon-wrapper">
+                            <div class="formula-icon">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                        </div>
+                        <h3 class="formula-name">No Unnecessary Fragrance</h3>
+                        <p class="formula-description">Tested on real people - never animals</p>
+                    </div>
+                    
+                    <!-- Formula Card 5 -->
+                    <div class="formula-card">
+                        <div class="formula-icon-wrapper">
+                            <div class="formula-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                        </div>
+                        <h3 class="formula-name">High-Quality Ingredients</h3>
+                        <p class="formula-description">Premium sourced actives</p>
+                    </div>
+                    
+                    <!-- Formula Card 6 -->
+                    <div class="formula-card">
+                        <div class="formula-icon-wrapper">
+                            <div class="formula-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                        <h3 class="formula-name">Good Value for Money</h3>
+                        <p class="formula-description">Affordable luxury</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carousel Indicators -->
+            <div class="formulas-indicators">
+                <button class="indicator active" data-index="0" aria-label="Formula 1"></button>
+                <button class="indicator" data-index="1" aria-label="Formula 2"></button>
+                <button class="indicator" data-index="2" aria-label="Formula 3"></button>
+                <button class="indicator" data-index="3" aria-label="Formula 4"></button>
+                <button class="indicator" data-index="4" aria-label="Formula 5"></button>
+                <button class="indicator" data-index="5" aria-label="Formula 6"></button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ========================================
+         FOOTER SECTION - Newsletter, Links, Social Media
+         ======================================== -->
+    <footer class="footer">
+        <!-- Newsletter Section -->
+        <div class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-header">
+                        <h2>Subscribe to our Newsletter</h2>
+                        <p>Be the first one to know about our new products & exclusive offers.</p>
+                    </div>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div class="input-group">
+                            <input 
+                                type="email" 
+                                id="newsletterEmail" 
+                                placeholder="Email" 
+                                required
+                            >
+                            <button type="submit" class="btn-subscribe">subscribe</button>
+                        </div>
+                    </form>
+                    <p id="newsletterMessage" class="newsletter-message"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Main Content -->
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- Let's Connect Section -->
+                    <div class="footer-column">
+                        <h4>Let's Connect</h4>
+                        <div class="social-links">
+                            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Shop Section -->
+                    <div class="footer-column">
+                        <h4>Shop</h4>
+                        <ul class="footer-links">
+                            <li><a href="#" class="disabled">Collection</a></li>
+                            <li><a href="aboutus.html">About Us</a></li>
+                            <li><a href="#" class="disabled">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Brand Section -->
+                    <div class="footer-column">
+                        <h4>TheIconique</h4>
+                        <p class="footer-description">
+                            Premium cosmetic products for the modern woman. 
+                            Elevate your beauty routine with our curated collection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright Section -->
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2025 TheIconique. All rights reserved. | Developed by DevPy Technologies</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- ========================================
+         FIREBASE CONFIGURATION
+         ======================================== -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+    
+    <!-- Formulas Carousel JavaScript -->
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const carousel = document.querySelector(".formulas-carousel");
+    const cards = document.querySelectorAll(".formula-card");
+    const indicators = document.querySelectorAll(".formulas-indicators .indicator");
+    
+    if (!carousel || cards.length === 0) return;
+    
+    let currentIndex = 0;
+    let isAutoScrolling = true;
+    let autoScrollInterval;
+    
+    // Check if mobile/tablet
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    // Calculate how many cards to show and scroll
+    function getCardsToShow() {
+        return isMobile() ? 1 : 2;
+    }
+    
+    // Check if auto-scroll should be enabled (only on desktop)
+    function shouldAutoScroll() {
+        return !isMobile();
+    }
+    
+    // Calculate how many indicator dots should be shown
+    function getIndicatorCount() {
+        const cardsToShow = getCardsToShow();
+        return Math.max(1, cards.length - cardsToShow + 1);
+    }
+    
+    // Update visible indicators
+    function updateVisibleIndicators() {
+        const visibleCount = getIndicatorCount();
+        indicators.forEach((indicator, i) => {
+            indicator.style.display = i < visibleCount ? "block" : "none";
+        });
+    }
+    
+    // Scroll to a specific index
+    function scrollToIndex(index) {
+        const cardWidth = cards[0].offsetWidth;
+        const gap = parseInt(window.getComputedStyle(carousel).gap);
+        const scrollAmount = (cardWidth + gap) * index;
+        
+        carousel.scrollTo({
+            left: scrollAmount,
+            behavior: "smooth"
+        });
+    }
+    
+    // Update active indicator
+    function updateIndicators(index) {
+        const visibleCount = getIndicatorCount();
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle("active", i === (index % visibleCount));
+        });
+    }
+    
+    // Auto scroll logic
+    function autoScroll() {
+        const cardsToShow = getCardsToShow();
+        const maxIndex = Math.max(0, cards.length - cardsToShow);
+        
+        currentIndex++;
+        if (currentIndex > maxIndex) {
+            currentIndex = 0;
+        }
+        
+        scrollToIndex(currentIndex);
+        updateIndicators(currentIndex);
+    }
+    
+    // Start auto scroll
+    function startAutoScroll() {
+        if (isAutoScrolling && shouldAutoScroll()) {
+            autoScrollInterval = setInterval(autoScroll, 4000); // Change card every 4 seconds
+        }
+    }
+    
+    // Stop auto scroll
+    function stopAutoScroll() {
+        clearInterval(autoScrollInterval);
+    }
+    
+    // Indicator click handler
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener("click", () => {
+            currentIndex = index;
+            scrollToIndex(currentIndex);
+            updateIndicators(currentIndex);
+            stopAutoScroll();
+            startAutoScroll();
+        });
+    });
+    
+    // Pause on carousel hover
+    carousel.addEventListener("mouseenter", stopAutoScroll);
+    carousel.addEventListener("mouseleave", startAutoScroll);
+    
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    carousel.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoScroll();
+    }, false);
+    
+    carousel.addEventListener("touchend", (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        startAutoScroll();
+    }, false);
+    
+    function handleSwipe() {
+        const cardsToShow = getCardsToShow();
+        const maxIndex = Math.max(0, cards.length - cardsToShow);
+        const swipeThreshold = 50;
+        
+        if (touchStartX - touchEndX > swipeThreshold) {
+            // Swiped left, go to next
+            currentIndex = Math.min(currentIndex + 1, maxIndex);
+        } else if (touchEndX - touchStartX > swipeThreshold) {
+            // Swiped right, go to previous
+            currentIndex = Math.max(currentIndex - 1, 0);
+        }
+        
+        scrollToIndex(currentIndex);
+        updateIndicators(currentIndex);
+    }
+    
+    // Track scroll position for indicators
+    let scrollTimeout;
+    carousel.addEventListener("scroll", () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const cardWidth = cards[0].offsetWidth;
+            const gap = parseInt(window.getComputedStyle(carousel).gap);
+            const scrollLeft = carousel.scrollLeft;
+            const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+            const cardsToShow = getCardsToShow();
+            
+            currentIndex = Math.min(newIndex, cards.length - cardsToShow);
+            updateIndicators(currentIndex);
+        }, 100);
+    });
+    
+    // Handle window resize
+    window.addEventListener("resize", () => {
+        updateVisibleIndicators();
+        stopAutoScroll();
+        startAutoScroll();
+        scrollToIndex(currentIndex);
+    });
+    
+    // Initialize
+    updateVisibleIndicators();
+    startAutoScroll();
+});
+    </script>
+</body>
+</html>

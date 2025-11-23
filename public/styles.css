@@ -1785,6 +1785,290 @@ img[src="#"]::before {
 }
 
 /* ========================================
+   ABOUT US SECTION
+   ======================================== */
+
+.aboutus-section {
+    padding: 5rem 0;
+    background-color: var(--color-white);
+}
+
+.aboutus-title {
+    font-size: 3.5rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-text-dark);
+    font-family: var(--font-primary);
+    letter-spacing: 0.5px;
+}
+
+.aboutus-content {
+    background-color: var(--color-light-pink);
+    padding: 3rem;
+    border-radius: var(--radius-lg);
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.aboutus-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-text-dark);
+    margin-bottom: 1.5rem;
+    font-family: var(--font-primary);
+}
+
+.aboutus-content p:last-child {
+    margin-bottom: 0;
+}
+
+.aboutus-content strong {
+    font-weight: 600;
+    color: var(--color-text-dark);
+}
+
+/* Responsive Design for About Us */
+@media screen and (max-width: 768px) {
+    .aboutus-section {
+        padding: 3rem 0;
+    }
+
+    .aboutus-title {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .aboutus-content {
+        padding: 2rem;
+    }
+
+    .aboutus-content p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .aboutus-section {
+        padding: 2rem 0;
+    }
+
+    .aboutus-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .aboutus-content {
+        padding: 1.5rem;
+    }
+
+    .aboutus-content p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+}
+
+/* ========================================
+   OUR FORMULAS SECTION - Carousel
+   ======================================== */
+
+.formulas-section {
+    padding: 5rem 0;
+    background-color: var(--color-white);
+}
+
+.formulas-title {
+    font-size: 3rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--color-text-dark);
+    font-family: var(--font-primary);
+    letter-spacing: 0.5px;
+}
+
+/* Formulas Carousel Wrapper */
+.formulas-carousel-wrapper {
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.formulas-carousel {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    padding: 1rem 0;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.formulas-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Formula Card */
+.formula-card {
+    flex: 0 0 calc(50% - 1rem);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.formula-icon-wrapper {
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--color-text-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: all var(--transition-normal);
+}
+
+.formula-icon {
+    font-size: 3rem;
+    color: var(--color-text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.formula-name {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-primary);
+}
+
+.formula-description {
+    font-size: 1rem;
+    color: var(--color-text-medium);
+    font-family: var(--font-primary);
+}
+
+/* Carousel Indicators */
+.formulas-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+}
+
+.formulas-indicators .indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--color-border);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.formulas-indicators .indicator.active {
+    background-color: var(--color-text-dark);
+    width: 30px;
+    border-radius: 5px;
+}
+
+/* Responsive Design for Formulas - Web: 2 cards, Mobile: 1 card */
+@media screen and (min-width: 769px) {
+    .formula-card {
+        flex: 0 0 calc(50% - 1rem);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .formulas-section {
+        padding: 3rem 0;
+    }
+
+    .formulas-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .formulas-carousel {
+        gap: 1.5rem;
+    }
+
+    .formula-card {
+        flex: 0 0 calc(100% - 1rem);
+        padding: 1.5rem 1rem;
+    }
+
+    .formula-icon-wrapper {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+    }
+
+    .formula-icon {
+        font-size: 2.5rem;
+    }
+
+    .formula-name {
+        font-size: 1.2rem;
+    }
+
+    .formula-description {
+        font-size: 0.95rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .formulas-section {
+        padding: 2rem 0;
+    }
+
+    .formulas-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .formulas-carousel {
+        gap: 1rem;
+    }
+
+    .formula-card {
+        flex: 0 0 calc(100% - 0.5rem);
+        padding: 1rem 0.75rem;
+    }
+
+    .formula-icon-wrapper {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 0.8rem;
+    }
+
+    .formula-icon {
+        font-size: 2rem;
+    }
+
+    .formula-name {
+        font-size: 1.1rem;
+    }
+
+    .formula-description {
+        font-size: 0.9rem;
+    }
+
+    .formulas-indicators .indicator.active {
+        width: 24px;
+    }
+}
+
+/* ========================================
    FOOTER SECTION
    ======================================== */
 
