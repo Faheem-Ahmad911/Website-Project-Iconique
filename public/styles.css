@@ -1942,6 +1942,8 @@ img[src="#"]::before {
     /* Hide scrollbar */
     -ms-overflow-style: none;
     scrollbar-width: none;
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
 }
 
 .formulas-carousel::-webkit-scrollbar {
@@ -2041,6 +2043,8 @@ img[src="#"]::before {
     .formula-card {
         flex: 0 0 calc(100% - 1rem);
         padding: 1.5rem 1rem;
+        transform: translateZ(0);
+        backface-visibility: hidden;
     }
 
     .formula-icon-wrapper {
@@ -2079,6 +2083,8 @@ img[src="#"]::before {
     .formula-card {
         flex: 0 0 calc(100% - 0.5rem);
         padding: 1rem 0.75rem;
+        transform: translateZ(0);
+        backface-visibility: hidden;
     }
 
     .formula-icon-wrapper {

@@ -348,10 +348,19 @@ document.addEventListener("DOMContentLoaded", function () {
         const gap = parseInt(window.getComputedStyle(carousel).gap);
         const scrollAmount = (cardWidth + gap) * index;
         
-        carousel.scrollTo({
-            left: scrollAmount,
-            behavior: "smooth"
-        });
+        // Use requestAnimationFrame for smoother mobile scrolling
+        if (isMobile()) {
+            // For mobile, use a slightly slower smooth scroll
+            carousel.scrollTo({
+                left: scrollAmount,
+                behavior: "smooth"
+            });
+        } else {
+            carousel.scrollTo({
+                left: scrollAmount,
+                behavior: "smooth"
+            });
+        }
     }
     
     // Update active indicator
@@ -437,8 +446,14 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Track scroll position for indicators
     let scrollTimeout;
+    let isScrolling = false;
+    
     carousel.addEventListener("scroll", () => {
+        if (isScrolling) return;
+        
+        isScrolling = true;
         clearTimeout(scrollTimeout);
+        
         scrollTimeout = setTimeout(() => {
             const cardWidth = cards[0].offsetWidth;
             const gap = parseInt(window.getComputedStyle(carousel).gap);
@@ -448,9 +463,11 @@ document.addEventListener("DOMContentLoaded", function () {
             
             currentIndex = Math.min(newIndex, cards.length - cardsToShow);
             updateIndicators(currentIndex);
-        }, 100);
-    });
+            isScrolling = false;
+        }, 50);
+    }, { passive: true });
     
+    // Handle window resize
     // Handle window resize
     window.addEventListener("resize", () => {
         updateVisibleIndicators();
