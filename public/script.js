@@ -350,12 +350,13 @@ class EnhancedCarousel {
         }, { passive: false });
         
         this.carousel.addEventListener('touchend', (e) => {
-            if (isHorizontalSwipe && e.changedTouches.length > 0) {
+            if (isHorizontalSwipe && e.changedTouches.length > 0 && !this.isAnimating) {
                 this.touchEndX = e.changedTouches[0].screenX;
                 const touchDuration = Date.now() - touchStartTime;
                 
-                // Only process swipe if touch duration is less than 500ms (swipe, not drag)
-                if (touchDuration < 500) {
+                // Only process swipe if touch duration is between 50-500ms (quick swipe, not drag)
+                // This ensures only 1 card is scrolled at a time and prevents accidental multiple scrolls
+                if (touchDuration >= 50 && touchDuration < 500) {
                     this.handleSwipe();
                 }
             }
@@ -363,16 +364,18 @@ class EnhancedCarousel {
     }
     
     handleSwipe() {
-        const swipeThreshold = 30; // Reduced threshold for more responsive swiping
+        // In mobile mode, always scroll exactly 1 card at a time
+        const swipeThreshold = this.isMobile() ? 20 : 30; // Stricter threshold on mobile for single card scroll
         const diff = this.touchStartX - this.touchEndX;
         
-        if (Math.abs(diff) > swipeThreshold && !this.isAnimating) {
+        if (Math.abs(diff) > swipeThreshold) {
             // Swipe left (negative diff) = move right/next card
             // Swipe right (positive diff) = move left/previous card
+            // Each swipe advances by exactly 1 card
             if (diff > 0) {
-                this.slideLeft(); // Swiped right, show previous card
+                this.slideLeft(); // Swiped right, show previous card (one card only)
             } else {
-                this.slideRight(); // Swiped left, show next card
+                this.slideRight(); // Swiped left, show next card (one card only)
             }
         }
     }
@@ -388,7 +391,7 @@ class EnhancedCarousel {
             
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 350);
+            }, 400);
         }
     }
     
@@ -402,7 +405,7 @@ class EnhancedCarousel {
             
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 350);
+            }, 400);
         }
     }
     
