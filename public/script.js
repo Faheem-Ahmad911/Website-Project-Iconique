@@ -244,7 +244,7 @@ class EnhancedCarousel {
         this.initialized = true;
         
         // Smooth transitions with faster mobile timing
-        const transitionSpeed = this.isMobile() ? '0.4s' : '0.6s';
+        const transitionSpeed = this.isMobile() ? '0.25s' : '0.5s';
         this.track.style.transition = `transform ${transitionSpeed} cubic-bezier(0.4, 0, 0.2, 1)`;
         
         // Add resize listener for responsive behavior
@@ -252,7 +252,7 @@ class EnhancedCarousel {
             clearTimeout(this.resizeTimeout);
             this.resizeTimeout = setTimeout(() => {
                 this.calculateDimensions();
-                const newTransitionSpeed = this.isMobile() ? '0.4s' : '0.6s';
+                const newTransitionSpeed = this.isMobile() ? '0.25s' : '0.5s';
                 this.track.style.transition = `transform ${newTransitionSpeed} cubic-bezier(0.4, 0, 0.2, 1)`;
             }, 150);
         });
@@ -323,11 +323,15 @@ class EnhancedCarousel {
         let startY = 0;
         let startX = 0;
         let isHorizontalSwipe = false;
+        let touchStartTime = 0;
         
         this.carousel.addEventListener('touchstart', (e) => {
+            if (this.isAnimating) return; // Don't start new touch if animation is in progress
+            
             this.touchStartX = e.changedTouches[0].screenX;
             startY = e.changedTouches[0].screenY;
             startX = e.changedTouches[0].screenX;
+            touchStartTime = Date.now();
             isHorizontalSwipe = false;
         }, { passive: true });
         
@@ -337,8 +341,8 @@ class EnhancedCarousel {
             const deltaX = Math.abs(currentX - startX);
             const deltaY = Math.abs(currentY - startY);
             
-            // Determine if this is a horizontal swipe
-            if (deltaX > deltaY && deltaX > 10) {
+            // Determine if this is a horizontal swipe (more horizontal movement than vertical)
+            if (deltaX > deltaY && deltaX > 5) {
                 isHorizontalSwipe = true;
                 // Prevent vertical scrolling during horizontal swipe
                 e.preventDefault();
@@ -346,22 +350,29 @@ class EnhancedCarousel {
         }, { passive: false });
         
         this.carousel.addEventListener('touchend', (e) => {
-            if (isHorizontalSwipe) {
+            if (isHorizontalSwipe && e.changedTouches.length > 0) {
                 this.touchEndX = e.changedTouches[0].screenX;
-                this.handleSwipe();
+                const touchDuration = Date.now() - touchStartTime;
+                
+                // Only process swipe if touch duration is less than 500ms (swipe, not drag)
+                if (touchDuration < 500) {
+                    this.handleSwipe();
+                }
             }
         }, { passive: true });
     }
     
     handleSwipe() {
-        const swipeThreshold = 50;
+        const swipeThreshold = 30; // Reduced threshold for more responsive swiping
         const diff = this.touchStartX - this.touchEndX;
         
-        if (Math.abs(diff) > swipeThreshold) {
+        if (Math.abs(diff) > swipeThreshold && !this.isAnimating) {
+            // Swipe left (negative diff) = move right/next card
+            // Swipe right (positive diff) = move left/previous card
             if (diff > 0) {
-                this.slideRight();
+                this.slideLeft(); // Swiped right, show previous card
             } else {
-                this.slideLeft();
+                this.slideRight(); // Swiped left, show next card
             }
         }
     }
@@ -377,7 +388,7 @@ class EnhancedCarousel {
             
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 600);
+            }, 350);
         }
     }
     
@@ -391,7 +402,7 @@ class EnhancedCarousel {
             
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 600);
+            }, 350);
         }
     }
     
