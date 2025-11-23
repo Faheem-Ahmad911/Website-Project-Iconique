@@ -1214,6 +1214,10 @@ if (document.readyState === 'loading') {
         // Initialize animation observer
         const animationObserver = new AnimationObserver();
         
+        // Initialize carousel controllers for products and bundles
+        const productsCarousel = new ProductsCarouselController();
+        const bundlesCarousel = new BundlesCarouselController();
+        
         // Initialize main app
         const app = new TheIconiqueApp();
         app.init();
@@ -1222,6 +1226,8 @@ if (document.readyState === 'loading') {
     // DOM already loaded
     initPageAnimations();
     const animationObserver = new AnimationObserver();
+    const productsCarousel = new ProductsCarouselController();
+    const bundlesCarousel = new BundlesCarouselController();
     const app = new TheIconiqueApp();
     app.init();
 }
@@ -1237,6 +1243,164 @@ window.addEventListener('error', (e) => {
 window.addEventListener('unhandledrejection', (e) => {
     console.error('Unhandled promise rejection:', e.reason);
 });
+
+/* ========================================
+   PRODUCTS CAROUSEL - Mobile Only Dots
+   ======================================== */
+class ProductsCarouselController {
+    constructor() {
+        this.carousel = document.querySelector(".products-carousel");
+        this.cards = document.querySelectorAll(".products-track .product-card");
+        this.indicators = document.querySelectorAll("#products-dots .carousel-dot");
+        this.index = 0;
+        
+        if (!this.carousel || this.cards.length === 0) return;
+        
+        this.init();
+    }
+    
+    isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    updateDots() {
+        const dotsContainer = document.getElementById('products-dots');
+        if (!dotsContainer) return;
+        
+        if (this.isMobile()) {
+            dotsContainer.classList.add('mobile-visible');
+            this.indicators.forEach((dot, i) => {
+                dot.classList.toggle('active', i === this.index);
+            });
+        } else {
+            dotsContainer.classList.remove('mobile-visible');
+        }
+    }
+    
+    setupScrollTracking() {
+        this.carousel.addEventListener('scroll', () => {
+            if (!this.isMobile()) return;
+            
+            const cardWidth = this.cards[0].offsetWidth;
+            const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+            const scrollLeft = this.carousel.scrollLeft;
+            const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+            
+            this.index = Math.min(newIndex, this.cards.length - 1);
+            this.updateDots();
+        });
+    }
+    
+    setupDotClickHandlers() {
+        this.indicators.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.index = index;
+                const cardWidth = this.cards[0].offsetWidth;
+                const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+                const scrollAmount = index * (cardWidth + gap);
+                
+                this.carousel.scrollTo({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+                
+                this.updateDots();
+            });
+        });
+    }
+    
+    setupResizeHandler() {
+        window.addEventListener('resize', () => {
+            this.updateDots();
+        });
+    }
+    
+    init() {
+        this.setupScrollTracking();
+        this.setupDotClickHandlers();
+        this.setupResizeHandler();
+        this.updateDots();
+    }
+}
+
+/* ========================================
+   BUNDLES CAROUSEL - Mobile Only Dots
+   ======================================== */
+class BundlesCarouselController {
+    constructor() {
+        this.carousel = document.querySelector(".bundles-carousel");
+        this.cards = document.querySelectorAll(".bundles-track .bundle-card");
+        this.indicators = document.querySelectorAll("#bundles-dots .carousel-dot");
+        this.index = 0;
+        
+        if (!this.carousel || this.cards.length === 0) return;
+        
+        this.init();
+    }
+    
+    isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    updateDots() {
+        const dotsContainer = document.getElementById('bundles-dots');
+        if (!dotsContainer) return;
+        
+        if (this.isMobile()) {
+            dotsContainer.classList.add('mobile-visible');
+            this.indicators.forEach((dot, i) => {
+                dot.classList.toggle('active', i === this.index);
+            });
+        } else {
+            dotsContainer.classList.remove('mobile-visible');
+        }
+    }
+    
+    setupScrollTracking() {
+        this.carousel.addEventListener('scroll', () => {
+            if (!this.isMobile()) return;
+            
+            const cardWidth = this.cards[0].offsetWidth;
+            const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+            const scrollLeft = this.carousel.scrollLeft;
+            const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+            
+            this.index = Math.min(newIndex, this.cards.length - 1);
+            this.updateDots();
+        });
+    }
+    
+    setupDotClickHandlers() {
+        this.indicators.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.index = index;
+                const cardWidth = this.cards[0].offsetWidth;
+                const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+                const scrollAmount = index * (cardWidth + gap);
+                
+                this.carousel.scrollTo({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+                
+                this.updateDots();
+            });
+        });
+    }
+    
+    setupResizeHandler() {
+        window.addEventListener('resize', () => {
+            this.updateDots();
+        });
+    }
+    
+    init() {
+        this.setupScrollTracking();
+        this.setupDotClickHandlers();
+        this.setupResizeHandler();
+        this.updateDots();
+    }
+}
 
 /* ========================================
    CONSOLE BRANDING

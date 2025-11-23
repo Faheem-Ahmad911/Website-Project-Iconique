@@ -1463,6 +1463,42 @@ img[src="#"]::before {
 }
 
 /* ========================================
+   CAROUSEL DOT INDICATORS - Mobile Only
+   ======================================== */
+
+.carousel-dots {
+    display: none;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding: 1rem 0;
+}
+
+.carousel-dots.mobile-visible {
+    display: flex;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--color-border);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.carousel-dot.active {
+    background-color: var(--color-text-dark);
+    width: 30px;
+    border-radius: 5px;
+}
+
+.carousel-dot:hover {
+    background-color: var(--color-text-medium);
+}
+
+/* ========================================
    BUNDLES SECTION
    ======================================== */
 
