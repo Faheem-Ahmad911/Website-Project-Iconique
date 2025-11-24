@@ -1267,6 +1267,8 @@ class ProductsCarouselController {
         this.cards = document.querySelectorAll(".products-track .product-card");
         this.indicators = document.querySelectorAll("#products-dots .carousel-dot");
         this.index = 0;
+        this.isScrolling = false;
+        this.scrollTimeout = null;
         
         if (!this.carousel || this.cards.length === 0) return;
         
@@ -1275,6 +1277,12 @@ class ProductsCarouselController {
     
     isMobile() {
         return window.innerWidth <= 768;
+    }
+    
+    getCardDimensions() {
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+        return { cardWidth, gap };
     }
     
     updateDots() {
@@ -1295,22 +1303,35 @@ class ProductsCarouselController {
         this.carousel.addEventListener('scroll', () => {
             if (!this.isMobile()) return;
             
-            const cardWidth = this.cards[0].offsetWidth;
-            const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
-            const scrollLeft = this.carousel.scrollLeft;
-            const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+            clearTimeout(this.scrollTimeout);
+            this.isScrolling = true;
             
-            this.index = Math.min(newIndex, this.cards.length - 1);
-            this.updateDots();
+            const { cardWidth, gap } = this.getCardDimensions();
+            const scrollLeft = this.carousel.scrollLeft;
+            
+            // Calculate index based on scroll position
+            let newIndex = Math.round(scrollLeft / (cardWidth + gap));
+            newIndex = Math.min(newIndex, this.cards.length - 1);
+            newIndex = Math.max(newIndex, 0);
+            
+            if (newIndex !== this.index) {
+                this.index = newIndex;
+                this.updateDots();
+            }
+            
+            this.scrollTimeout = setTimeout(() => {
+                this.isScrolling = false;
+            }, 150);
         });
     }
     
     setupDotClickHandlers() {
         this.indicators.forEach((dot, index) => {
             dot.addEventListener('click', () => {
+                if (this.isScrolling) return;
+                
                 this.index = index;
-                const cardWidth = this.cards[0].offsetWidth;
-                const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+                const { cardWidth, gap } = this.getCardDimensions();
                 const scrollAmount = index * (cardWidth + gap);
                 
                 this.carousel.scrollTo({
@@ -1325,6 +1346,11 @@ class ProductsCarouselController {
     
     setupResizeHandler() {
         window.addEventListener('resize', () => {
+            if (this.isMobile()) {
+                const { cardWidth, gap } = this.getCardDimensions();
+                const scrollAmount = this.index * (cardWidth + gap);
+                this.carousel.scrollLeft = scrollAmount;
+            }
             this.updateDots();
         });
     }
@@ -1346,6 +1372,8 @@ class BundlesCarouselController {
         this.cards = document.querySelectorAll(".bundles-track .bundle-card");
         this.indicators = document.querySelectorAll("#bundles-dots .carousel-dot");
         this.index = 0;
+        this.isScrolling = false;
+        this.scrollTimeout = null;
         
         if (!this.carousel || this.cards.length === 0) return;
         
@@ -1354,6 +1382,12 @@ class BundlesCarouselController {
     
     isMobile() {
         return window.innerWidth <= 768;
+    }
+    
+    getCardDimensions() {
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+        return { cardWidth, gap };
     }
     
     updateDots() {
@@ -1374,22 +1408,35 @@ class BundlesCarouselController {
         this.carousel.addEventListener('scroll', () => {
             if (!this.isMobile()) return;
             
-            const cardWidth = this.cards[0].offsetWidth;
-            const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
-            const scrollLeft = this.carousel.scrollLeft;
-            const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+            clearTimeout(this.scrollTimeout);
+            this.isScrolling = true;
             
-            this.index = Math.min(newIndex, this.cards.length - 1);
-            this.updateDots();
+            const { cardWidth, gap } = this.getCardDimensions();
+            const scrollLeft = this.carousel.scrollLeft;
+            
+            // Calculate index based on scroll position
+            let newIndex = Math.round(scrollLeft / (cardWidth + gap));
+            newIndex = Math.min(newIndex, this.cards.length - 1);
+            newIndex = Math.max(newIndex, 0);
+            
+            if (newIndex !== this.index) {
+                this.index = newIndex;
+                this.updateDots();
+            }
+            
+            this.scrollTimeout = setTimeout(() => {
+                this.isScrolling = false;
+            }, 150);
         });
     }
     
     setupDotClickHandlers() {
         this.indicators.forEach((dot, index) => {
             dot.addEventListener('click', () => {
+                if (this.isScrolling) return;
+                
                 this.index = index;
-                const cardWidth = this.cards[0].offsetWidth;
-                const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+                const { cardWidth, gap } = this.getCardDimensions();
                 const scrollAmount = index * (cardWidth + gap);
                 
                 this.carousel.scrollTo({
@@ -1404,6 +1451,11 @@ class BundlesCarouselController {
     
     setupResizeHandler() {
         window.addEventListener('resize', () => {
+            if (this.isMobile()) {
+                const { cardWidth, gap } = this.getCardDimensions();
+                const scrollAmount = this.index * (cardWidth + gap);
+                this.carousel.scrollLeft = scrollAmount;
+            }
             this.updateDots();
         });
     }
