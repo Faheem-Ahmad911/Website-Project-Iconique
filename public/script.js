@@ -1267,8 +1267,10 @@ class ProductsCarouselController {
         this.cards = document.querySelectorAll(".products-track .product-card");
         this.indicators = document.querySelectorAll("#products-dots .carousel-dot");
         this.index = 0;
-        this.isScrolling = false;
-        this.scrollTimeout = null;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isDragging = false;
+        this.scrollListener = null;
         
         if (!this.carousel || this.cards.length === 0) return;
         
@@ -1299,47 +1301,89 @@ class ProductsCarouselController {
         }
     }
     
-    setupScrollTracking() {
-        this.carousel.addEventListener('scroll', () => {
-            if (!this.isMobile()) return;
-            
-            clearTimeout(this.scrollTimeout);
-            this.isScrolling = true;
-            
-            const { cardWidth, gap } = this.getCardDimensions();
-            const scrollLeft = this.carousel.scrollLeft;
-            
-            // Calculate index based on scroll position
-            let newIndex = Math.round(scrollLeft / (cardWidth + gap));
-            newIndex = Math.min(newIndex, this.cards.length - 1);
-            newIndex = Math.max(newIndex, 0);
-            
-            if (newIndex !== this.index) {
-                this.index = newIndex;
-                this.updateDots();
-            }
-            
-            this.scrollTimeout = setTimeout(() => {
-                this.isScrolling = false;
-            }, 150);
+    updateDotsFromScroll() {
+        if (!this.isMobile()) return;
+        
+        const { cardWidth, gap } = this.getCardDimensions();
+        const scrollLeft = this.carousel.scrollLeft;
+        const threshold = (cardWidth + gap) * 0.5;
+        
+        // Calculate which card is closest to being fully visible
+        let newIndex = Math.round(scrollLeft / (cardWidth + gap));
+        newIndex = Math.max(0, Math.min(newIndex, this.cards.length - 1));
+        
+        if (newIndex !== this.index) {
+            this.index = newIndex;
+            this.updateDots();
+        }
+    }
+    
+    scrollToIndex(index, smooth = true) {
+        this.index = Math.max(0, Math.min(index, this.cards.length - 1));
+        const { cardWidth, gap } = this.getCardDimensions();
+        const scrollAmount = this.index * (cardWidth + gap);
+        
+        this.carousel.scrollTo({
+            left: scrollAmount,
+            behavior: smooth ? 'smooth' : 'auto'
         });
+        
+        this.updateDots();
+    }
+    
+    handleTouchStart(e) {
+        if (!this.isMobile()) return;
+        this.touchStartX = e.touches[0].clientX;
+        this.isDragging = true;
+        
+        // Start listening to scroll events during drag
+        this.scrollListener = this.carousel.addEventListener('scroll', () => {
+            this.updateDotsFromScroll();
+        });
+    }
+    
+    handleTouchEnd(e) {
+        if (!this.isMobile()) return;
+        this.touchEndX = e.changedTouches[0].clientX;
+        this.isDragging = false;
+        this.handleSwipe();
+    }
+    
+    handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = this.touchStartX - this.touchEndX;
+        
+        // Swipe left - show next card
+        if (diff > swipeThreshold) {
+            this.scrollToIndex(this.index + 1, true);
+        }
+        // Swipe right - show previous card
+        else if (diff < -swipeThreshold) {
+            this.scrollToIndex(this.index - 1, true);
+        } else {
+            // Snap back to current card if swipe is too small
+            this.scrollToIndex(this.index, true);
+        }
+    }
+    
+    setupTouchHandlers() {
+        this.carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), false);
+        this.carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e), false);
+    }
+    
+    setupScrollTracking() {
+        // Also track scroll for smooth dot updates during drag
+        this.carousel.addEventListener('scroll', () => {
+            if (this.isDragging) {
+                this.updateDotsFromScroll();
+            }
+        }, false);
     }
     
     setupDotClickHandlers() {
         this.indicators.forEach((dot, index) => {
             dot.addEventListener('click', () => {
-                if (this.isScrolling) return;
-                
-                this.index = index;
-                const { cardWidth, gap } = this.getCardDimensions();
-                const scrollAmount = index * (cardWidth + gap);
-                
-                this.carousel.scrollTo({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-                
-                this.updateDots();
+                this.scrollToIndex(index, true);
             });
         });
     }
@@ -1347,15 +1391,14 @@ class ProductsCarouselController {
     setupResizeHandler() {
         window.addEventListener('resize', () => {
             if (this.isMobile()) {
-                const { cardWidth, gap } = this.getCardDimensions();
-                const scrollAmount = this.index * (cardWidth + gap);
-                this.carousel.scrollLeft = scrollAmount;
+                this.scrollToIndex(this.index, false);
             }
             this.updateDots();
         });
     }
     
     init() {
+        this.setupTouchHandlers();
         this.setupScrollTracking();
         this.setupDotClickHandlers();
         this.setupResizeHandler();
@@ -1372,8 +1415,10 @@ class BundlesCarouselController {
         this.cards = document.querySelectorAll(".bundles-track .bundle-card");
         this.indicators = document.querySelectorAll("#bundles-dots .carousel-dot");
         this.index = 0;
-        this.isScrolling = false;
-        this.scrollTimeout = null;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isDragging = false;
+        this.scrollListener = null;
         
         if (!this.carousel || this.cards.length === 0) return;
         
@@ -1404,47 +1449,89 @@ class BundlesCarouselController {
         }
     }
     
-    setupScrollTracking() {
-        this.carousel.addEventListener('scroll', () => {
-            if (!this.isMobile()) return;
-            
-            clearTimeout(this.scrollTimeout);
-            this.isScrolling = true;
-            
-            const { cardWidth, gap } = this.getCardDimensions();
-            const scrollLeft = this.carousel.scrollLeft;
-            
-            // Calculate index based on scroll position
-            let newIndex = Math.round(scrollLeft / (cardWidth + gap));
-            newIndex = Math.min(newIndex, this.cards.length - 1);
-            newIndex = Math.max(newIndex, 0);
-            
-            if (newIndex !== this.index) {
-                this.index = newIndex;
-                this.updateDots();
-            }
-            
-            this.scrollTimeout = setTimeout(() => {
-                this.isScrolling = false;
-            }, 150);
+    updateDotsFromScroll() {
+        if (!this.isMobile()) return;
+        
+        const { cardWidth, gap } = this.getCardDimensions();
+        const scrollLeft = this.carousel.scrollLeft;
+        const threshold = (cardWidth + gap) * 0.5;
+        
+        // Calculate which card is closest to being fully visible
+        let newIndex = Math.round(scrollLeft / (cardWidth + gap));
+        newIndex = Math.max(0, Math.min(newIndex, this.cards.length - 1));
+        
+        if (newIndex !== this.index) {
+            this.index = newIndex;
+            this.updateDots();
+        }
+    }
+    
+    scrollToIndex(index, smooth = true) {
+        this.index = Math.max(0, Math.min(index, this.cards.length - 1));
+        const { cardWidth, gap } = this.getCardDimensions();
+        const scrollAmount = this.index * (cardWidth + gap);
+        
+        this.carousel.scrollTo({
+            left: scrollAmount,
+            behavior: smooth ? 'smooth' : 'auto'
         });
+        
+        this.updateDots();
+    }
+    
+    handleTouchStart(e) {
+        if (!this.isMobile()) return;
+        this.touchStartX = e.touches[0].clientX;
+        this.isDragging = true;
+        
+        // Start listening to scroll events during drag
+        this.scrollListener = this.carousel.addEventListener('scroll', () => {
+            this.updateDotsFromScroll();
+        });
+    }
+    
+    handleTouchEnd(e) {
+        if (!this.isMobile()) return;
+        this.touchEndX = e.changedTouches[0].clientX;
+        this.isDragging = false;
+        this.handleSwipe();
+    }
+    
+    handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = this.touchStartX - this.touchEndX;
+        
+        // Swipe left - show next card
+        if (diff > swipeThreshold) {
+            this.scrollToIndex(this.index + 1, true);
+        }
+        // Swipe right - show previous card
+        else if (diff < -swipeThreshold) {
+            this.scrollToIndex(this.index - 1, true);
+        } else {
+            // Snap back to current card if swipe is too small
+            this.scrollToIndex(this.index, true);
+        }
+    }
+    
+    setupTouchHandlers() {
+        this.carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), false);
+        this.carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e), false);
+    }
+    
+    setupScrollTracking() {
+        // Also track scroll for smooth dot updates during drag
+        this.carousel.addEventListener('scroll', () => {
+            if (this.isDragging) {
+                this.updateDotsFromScroll();
+            }
+        }, false);
     }
     
     setupDotClickHandlers() {
         this.indicators.forEach((dot, index) => {
             dot.addEventListener('click', () => {
-                if (this.isScrolling) return;
-                
-                this.index = index;
-                const { cardWidth, gap } = this.getCardDimensions();
-                const scrollAmount = index * (cardWidth + gap);
-                
-                this.carousel.scrollTo({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-                
-                this.updateDots();
+                this.scrollToIndex(index, true);
             });
         });
     }
@@ -1452,15 +1539,14 @@ class BundlesCarouselController {
     setupResizeHandler() {
         window.addEventListener('resize', () => {
             if (this.isMobile()) {
-                const { cardWidth, gap } = this.getCardDimensions();
-                const scrollAmount = this.index * (cardWidth + gap);
-                this.carousel.scrollLeft = scrollAmount;
+                this.scrollToIndex(this.index, false);
             }
             this.updateDots();
         });
     }
     
     init() {
+        this.setupTouchHandlers();
         this.setupScrollTracking();
         this.setupDotClickHandlers();
         this.setupResizeHandler();
