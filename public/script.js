@@ -1353,13 +1353,17 @@ class ProductsCarouselController {
         const swipeThreshold = 50;
         const diff = this.touchStartX - this.touchEndX;
         
-        // Swipe left - show next card
+        // Swipe left - show next card (only if not at the last card)
         if (diff > swipeThreshold) {
-            this.scrollToIndex(this.index + 1, true);
+            if (this.index < this.cards.length - 1) {
+                this.scrollToIndex(this.index + 1, true);
+            }
         }
-        // Swipe right - show previous card
+        // Swipe right - show previous card (only if not at the first card)
         else if (diff < -swipeThreshold) {
-            this.scrollToIndex(this.index - 1, true);
+            if (this.index > 0) {
+                this.scrollToIndex(this.index - 1, true);
+            }
         } else {
             // Snap back to current card if swipe is too small
             this.scrollToIndex(this.index, true);
@@ -1501,13 +1505,17 @@ class BundlesCarouselController {
         const swipeThreshold = 50;
         const diff = this.touchStartX - this.touchEndX;
         
-        // Swipe left - show next card
+        // Swipe left - show next card (only if not at the last card)
         if (diff > swipeThreshold) {
-            this.scrollToIndex(this.index + 1, true);
+            if (this.index < this.cards.length - 1) {
+                this.scrollToIndex(this.index + 1, true);
+            }
         }
-        // Swipe right - show previous card
+        // Swipe right - show previous card (only if not at the first card)
         else if (diff < -swipeThreshold) {
-            this.scrollToIndex(this.index - 1, true);
+            if (this.index > 0) {
+                this.scrollToIndex(this.index - 1, true);
+            }
         } else {
             // Snap back to current card if swipe is too small
             this.scrollToIndex(this.index, true);
