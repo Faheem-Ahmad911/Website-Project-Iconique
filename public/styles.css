@@ -2028,20 +2028,20 @@ img[src="#"]::before {
 
 @media screen and (max-width: 768px) {
     .formulas-section {
-        padding: 3rem 0;
+        padding: 2rem 0;
     }
 
     .formulas-title {
-        font-size: 2.2rem;
-        margin-bottom: 2rem;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
     }
 
     .formulas-carousel {
-        gap: 1.5rem;
+        gap: 1.2rem;
     }
 
     .formula-card {
-        flex: 0 0 calc(100% - 1rem);
+        flex: 0 0 calc(50% - 0.6rem);
         padding: 1.5rem 1rem;
         transform: translateZ(0);
         backface-visibility: hidden;
@@ -2058,11 +2058,11 @@ img[src="#"]::before {
     }
 
     .formula-name {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .formula-description {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
     .formulas-indicators {
