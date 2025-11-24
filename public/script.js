@@ -1417,6 +1417,132 @@ class BundlesCarouselController {
 }
 
 /* ========================================
+   FORMULAS CAROUSEL - Auto Scroll on Mobile
+   ======================================== */
+
+class FormulasCarousel {
+    constructor() {
+        this.carousel = document.querySelector('.formulas-carousel');
+        this.scrollInterval = null;
+        this.isDragging = false;
+        this.lastTouchX = 0;
+        
+        if (!this.carousel) return;
+        
+        this.init();
+    }
+    
+    isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    setupAutoScroll() {
+        if (!this.isMobile()) return;
+        
+        // Detect if user is trying to drag/swipe horizontally
+        this.carousel.addEventListener('touchstart', (e) => {
+            this.lastTouchX = e.touches[0].clientX;
+            this.isDragging = true;
+        }, false);
+        
+        this.carousel.addEventListener('touchmove', (e) => {
+            if (!this.isDragging) return;
+            
+            const currentTouchX = e.touches[0].clientX;
+            const diffX = Math.abs(currentTouchX - this.lastTouchX);
+            
+            // If horizontal movement is detected, prevent it
+            if (diffX > 5) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        this.carousel.addEventListener('touchend', () => {
+            this.isDragging = false;
+        }, false);
+        
+        // Prevent mouse drag scrolling
+        let isMouseDown = false;
+        this.carousel.addEventListener('mousedown', () => {
+            isMouseDown = true;
+        });
+        
+        this.carousel.addEventListener('mousemove', (e) => {
+            if (isMouseDown) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        this.carousel.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+        
+        // Allow wheel scrolling to scroll the page (not the carousel)
+        this.carousel.addEventListener('wheel', (e) => {
+            // Only prevent horizontal wheel scrolling
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Start auto scroll after a delay on initial load
+        setTimeout(() => {
+            this.startAutoScroll();
+        }, 500);
+    }
+    
+    startAutoScroll() {
+        const carousel = this.carousel;
+        const cardWidth = carousel.querySelector('.formula-card').offsetWidth;
+        const gap = parseInt(window.getComputedStyle(carousel).gap) || 0;
+        const cardWithGap = cardWidth + gap;
+        const visibleCards = Math.ceil(carousel.clientWidth / cardWithGap);
+        const totalCards = carousel.querySelectorAll('.formula-card').length;
+        
+        let currentScroll = carousel.scrollLeft;
+        const maxScroll = (totalCards - visibleCards) * cardWithGap;
+        
+        // Clear any existing interval
+        if (this.scrollInterval) {
+            clearInterval(this.scrollInterval);
+        }
+        
+        this.scrollInterval = setInterval(() => {
+            if (!this.isMobile()) {
+                clearInterval(this.scrollInterval);
+                return;
+            }
+            
+            currentScroll += 2;
+            
+            if (currentScroll > maxScroll) {
+                currentScroll = 0;
+            }
+            
+            carousel.scrollLeft = currentScroll;
+        }, 50);
+    }
+    
+    init() {
+        this.setupAutoScroll();
+        
+        // Reinitialize on resize
+        window.addEventListener('resize', () => {
+            this.init();
+        });
+    }
+}
+
+// Initialize formulas carousel when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new FormulasCarousel();
+    });
+} else {
+    new FormulasCarousel();
+}
+
+/* ========================================
    CONSOLE BRANDING
    ======================================== */
 

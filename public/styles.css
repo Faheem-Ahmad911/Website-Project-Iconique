@@ -2064,6 +2064,10 @@ img[src="#"]::before {
     .formula-description {
         font-size: 0.95rem;
     }
+
+    .formulas-indicators {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -2105,8 +2109,8 @@ img[src="#"]::before {
         font-size: 0.9rem;
     }
 
-    .formulas-indicators .indicator.active {
-        width: 24px;
+    .formulas-indicators {
+        display: none;
     }
 }
 
