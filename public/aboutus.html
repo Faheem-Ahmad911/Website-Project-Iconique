@@ -213,6 +213,89 @@
     </section>
     
     <!-- ========================================
+         TESTIMONIAL SECTION - Founders Quote
+         ======================================== -->
+    <section class="testimonial-section">
+        <div class="container">
+            <div class="testimonial-content">
+                <div class="testimonial-quote-icon">
+                    <i class="fas fa-quote-left"></i>
+                </div>
+                <p class="testimonial-text">
+                    When we started TheIconique, our goal wasn't to follow the latest beauty trends – it was to create cosmetics that actually 
+                    deliver results. We wanted products that are <strong>safe, effective, and backed by quality</strong>. Every product we make is 
+                    something we genuinely use, test, and believe in.
+                </p>
+                <p class="testimonial-author">The Founders, TheIconique</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         OUR VALUES SECTION - Accordion with Expandable Cards
+         ======================================== -->
+    <section class="values-section">
+        <div class="container">
+            <h2 class="values-title">Our Values</h2>
+            
+            <!-- Values Accordion -->
+            <div class="values-accordion">
+                <!-- Value Card 1 -->
+                <div class="value-card">
+                    <button class="value-card-header" onclick="toggleValueCard(this)">
+                        <span class="value-card-title">Science First Always</span>
+                        <span class="value-card-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="value-card-content">
+                        <p>Every formula begins with research-backed actives — niacinamide, peptides, ceramides, hyaluronic acid, and more - chosen for visible, lasting results.</p>
+                    </div>
+                </div>
+                
+                <!-- Value Card 2 -->
+                <div class="value-card">
+                    <button class="value-card-header" onclick="toggleValueCard(this)">
+                        <span class="value-card-title">Transparency</span>
+                        <span class="value-card-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="value-card-content">
+                        <p>We believe in complete honesty about our ingredients, processes, and what our products can realistically achieve. No false promises, just honest skincare.</p>
+                    </div>
+                </div>
+                
+                <!-- Value Card 3 -->
+                <div class="value-card">
+                    <button class="value-card-header" onclick="toggleValueCard(this)">
+                        <span class="value-card-title">Consistency Over Hype</span>
+                        <span class="value-card-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="value-card-content">
+                        <p>Real skincare results take time and consistency. We focus on products that deliver gradual, sustainable improvements rather than quick fixes.</p>
+                    </div>
+                </div>
+                
+                <!-- Value Card 4 -->
+                <div class="value-card">
+                    <button class="value-card-header" onclick="toggleValueCard(this)">
+                        <span class="value-card-title">Quality You Can Trust</span>
+                        <span class="value-card-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="value-card-content">
+                        <p>Every product is rigorously tested and sourced with care. We use premium ingredients and maintain strict quality standards from production to delivery.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
          FOOTER SECTION - Newsletter, Links, Social Media
          ======================================== -->
     <footer class="footer">
@@ -480,6 +563,27 @@ document.addEventListener("DOMContentLoaded", function () {
     updateVisibleIndicators();
     startAutoScroll();
 });
+
+/* ========================================
+   VALUES ACCORDION TOGGLE FUNCTION
+   ======================================== */
+function toggleValueCard(headerButton) {
+    const valueCard = headerButton.closest('.value-card');
+    const contentDiv = valueCard.querySelector('.value-card-content');
+    
+    // Close other open cards
+    const allCards = document.querySelectorAll('.value-card');
+    allCards.forEach(card => {
+        if (card !== valueCard) {
+            card.querySelector('.value-card-header').classList.remove('active');
+            card.querySelector('.value-card-content').classList.remove('active');
+        }
+    });
+    
+    // Toggle current card
+    headerButton.classList.toggle('active');
+    contentDiv.classList.toggle('active');
+}
     </script>
 </body>
 </html>

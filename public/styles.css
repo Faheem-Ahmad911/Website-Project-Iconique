@@ -2115,6 +2115,269 @@ img[src="#"]::before {
 }
 
 /* ========================================
+   TESTIMONIAL SECTION
+   ======================================== */
+
+.testimonial-section {
+    padding: 4rem 0;
+    background-color: var(--color-cream);
+}
+
+.testimonial-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.testimonial-quote-icon {
+    font-size: 4rem;
+    color: var(--color-accent-pink);
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+}
+
+.testimonial-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: var(--color-text-dark);
+    margin-bottom: 1.5rem;
+    font-family: var(--font-primary);
+    font-weight: 400;
+}
+
+.testimonial-text strong {
+    font-weight: 600;
+    color: var(--color-text-dark);
+}
+
+.testimonial-author {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    font-family: var(--font-primary);
+    letter-spacing: 0.3px;
+}
+
+/* Responsive Design for Testimonial */
+@media screen and (max-width: 768px) {
+    .testimonial-section {
+        padding: 3rem 0;
+    }
+
+    .testimonial-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .testimonial-quote-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .testimonial-text {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+
+    .testimonial-author {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .testimonial-section {
+        padding: 2rem 0;
+    }
+
+    .testimonial-content {
+        padding: 1.5rem 1rem;
+    }
+
+    .testimonial-quote-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .testimonial-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 0.8rem;
+    }
+
+    .testimonial-author {
+        font-size: 0.95rem;
+    }
+}
+
+/* ========================================
+   VALUES SECTION - Accordion Cards
+   ======================================== */
+
+.values-section {
+    padding: 2rem 0;
+    background-color: var(--color-white);
+}
+
+.values-title {
+    font-size: 2rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-dark);
+    font-family: var(--font-primary);
+    letter-spacing: 0.5px;
+}
+
+/* Values Accordion Container */
+.values-accordion {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Value Card */
+.value-card {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 8px var(--color-shadow-light);
+}
+
+.value-card:hover {
+    box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+/* Value Card Header (Button) */
+.value-card-header {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    background-color: var(--color-light-pink);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all var(--transition-normal);
+    font-family: var(--font-primary);
+}
+
+.value-card-header:hover {
+    background-color: var(--color-soft-pink);
+}
+
+.value-card-header.active {
+    background-color: var(--color-soft-pink);
+}
+
+/* Value Card Title */
+.value-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    text-align: left;
+    font-family: var(--font-primary);
+}
+
+/* Value Card Toggle Icon */
+.value-card-toggle {
+    font-size: 1rem;
+    color: var(--color-text-dark);
+    transition: transform var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+}
+
+.value-card-header.active .value-card-toggle {
+    transform: rotate(180deg);
+}
+
+/* Value Card Content */
+.value-card-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-normal) ease-out;
+    background-color: var(--color-cream);
+}
+
+.value-card-content.active {
+    max-height: 500px;
+    overflow: visible;
+}
+
+.value-card-content p {
+    padding: 1rem 1.2rem;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-medium);
+    font-family: var(--font-primary);
+}
+
+/* Responsive Design for Values */
+@media screen and (max-width: 768px) {
+    .values-section {
+        padding: 3rem 0;
+    }
+
+    .values-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .values-accordion {
+        gap: 1rem;
+    }
+
+    .value-card-header {
+        padding: 1.2rem 1rem;
+    }
+
+    .value-card-title {
+        font-size: 1.1rem;
+    }
+
+    .value-card-content p {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .values-section {
+        padding: 2rem 0;
+    }
+
+    .values-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .values-accordion {
+        gap: 0.8rem;
+    }
+
+    .value-card-header {
+        padding: 1rem 0.8rem;
+    }
+
+    .value-card-title {
+        font-size: 1rem;
+    }
+
+    .value-card-content p {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========================================
    FOOTER SECTION
    ======================================== */
 
