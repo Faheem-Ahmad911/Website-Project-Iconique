@@ -1169,8 +1169,8 @@ class TheIconiqueApp {
             this.components.bundlesCarousel = new EnhancedCarousel({
                 carouselSelector: '.bundles-carousel',
                 trackSelector: '.bundles-track',
-                leftArrowSelector: '.bundle-arrow-left',
-                rightArrowSelector: '.bundle-arrow-right',
+                leftArrowSelector: '.bundles-section .arrow-left',
+                rightArrowSelector: '.bundles-section .arrow-right',
                 type: 'bundles'
             });
             

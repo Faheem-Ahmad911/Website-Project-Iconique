@@ -1496,9 +1496,7 @@ img[src="#"]::before {
 
 .carousel-dot:hover {
     background-color: var(--color-text-medium);
-}
-
-/* ========================================
+}/* ========================================
    BUNDLES SECTION
    ======================================== */
 
@@ -1506,183 +1504,12 @@ img[src="#"]::before {
     padding: var(--spacing-xl) 0;
 }
 
-.bundles-carousel-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    width: 100%;
-}
-
-.bundles-carousel {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-}
-
-.bundles-track {
-    display: flex;
-    gap: var(--spacing-md);
-    transition: transform var(--transition-slow);
-    will-change: transform;
-}
-
-/* Desktop: Show 3 cards at a time - Same for both sections */
-@media (min-width: 768px) {
-    .bundles-track,
-    .products-track {
-        gap: var(--spacing-md);
-    }
-    
-    .bundle-card,
-    .product-card {
-        flex: 0 0 calc((100% - (2 * var(--spacing-md))) / 3);
-        min-width: 280px;
-        max-width: 320px;
-    }
-}
-
-/* Large screens: Slightly bigger cards but still 3 per view - Same for both sections */
-@media (min-width: 1200px) {
-    .bundles-track,
-    .products-track {
-        gap: var(--spacing-lg);
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    
-    .bundle-card,
-    .product-card {
-        flex: 0 0 calc((100% - (2 * var(--spacing-lg))) / 3);
-        min-width: 300px;
-        max-width: 340px;
-    }
-}
-
-/* Mobile: Show 1 complete card + partial second card - Same for both sections */
-@media (max-width: 767px) {
-    .bundles-track,
-    .products-track {
-        gap: var(--spacing-sm);
-    }
-    
-    .bundle-card,
-    .product-card {
-        flex: 0 0 calc(85% - var(--spacing-sm));
-        min-width: calc(85% - var(--spacing-sm));
-        max-width: calc(85% - var(--spacing-sm));
-        margin-right: var(--spacing-xs);
-    }
-    
-    .bundles-carousel,
-    .products-carousel {
-        overflow: visible;
-        padding-right: 1rem;
-    }
-}
-
-/* Bundle Card Styling */
-.bundle-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px var(--color-shadow);
-    transition: var(--transition-normal);
-    animation: fadeInUp 0.8s ease-out both;
-    flex-shrink: 0;
-}
-
-.bundle-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px var(--color-shadow);
-}
-
-.bundle-image {
-    width: 100%;
-    height: 240px;
-    position: relative;
-    overflow: hidden;
-    background-color: var(--color-light-pink);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-}
-
-/* Smaller image height on mobile */
-@media (max-width: 767px) {
-    .bundle-image {
-        height: 200px;
-    }
-}
-
-.bundle-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: var(--transition-slow);
-}
-
-.bundle-card:hover .bundle-image img {
-    transform: scale(1.15);
-}
-
-.bundle-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: linear-gradient(135deg, var(--color-accent-pink), var(--color-medium-pink));
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    z-index: 2;
-}
-
-.bundle-info {
-    padding: var(--spacing-sm);
-}
-
-/* More compact padding on mobile */
-@media (max-width: 767px) {
-    .bundle-info {
-        padding: calc(var(--spacing-sm) * 0.75);
-    }
-}
-
-.bundle-name {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--color-text-dark);
-}
+/* Bundle cards inherit from product-card styling */
 
 .bundle-description {
     font-size: 0.9rem;
     color: var(--color-text-light);
     margin-bottom: var(--spacing-sm);
-}
-
-/* Mobile typography adjustments for bundle cards */
-@media (max-width: 767px) {
-    .bundle-name {
-        font-size: 1.1rem;
-        margin-bottom: 0.3rem;
-    }
-    
-    .bundle-description {
-        font-size: 0.8rem;
-        margin-bottom: calc(var(--spacing-sm) * 0.75);
-    }
-    
-    .bundle-price {
-        font-size: 1.3rem;
-    }
-    
-    .bundle-original {
-        font-size: 0.9rem;
-    }
 }
 
 .bundle-pricing {
@@ -1703,55 +1530,20 @@ img[src="#"]::before {
     color: var(--color-accent-pink);
 }
 
-/* Bundle Navigation Arrows */
-.bundle-arrow {
-    background-color: var(--color-white);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: var(--color-accent-pink);
-    box-shadow: 0 2px 10px var(--color-shadow);
-    flex-shrink: 0;
-    transition: var(--transition-normal);
-    cursor: pointer;
-    border: none;
-    z-index: 3;
-}
-
-/* Mobile arrows - smaller and better positioned for both sections */
+/* Mobile typography adjustments for bundle cards */
 @media (max-width: 767px) {
-    .bundle-arrow,
-    .carousel-arrow {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+    .bundle-description {
+        font-size: 0.8rem;
+        margin-bottom: calc(var(--spacing-sm) * 0.75);
     }
     
-    .bundles-carousel-wrapper,
-    .products-carousel-wrapper {
-        gap: var(--spacing-xs);
+    .bundle-price {
+        font-size: 1.3rem;
     }
-}
-
-.bundle-arrow:hover {
-    background-color: var(--color-accent-pink);
-    color: white;
-    transform: scale(1.1);
-}
-
-.bundle-arrow:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-.bundle-arrow:disabled:hover {
-    background-color: var(--color-white);
-    color: var(--color-accent-pink);
-    transform: none;
+    
+    .bundle-original {
+        font-size: 0.9rem;
+    }
 }
 
 /* ========================================
