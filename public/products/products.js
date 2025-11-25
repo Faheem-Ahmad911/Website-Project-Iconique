@@ -1,0 +1,732 @@
+// ========================================
+// SHARED PRODUCT PAGE JAVASCRIPT
+// ========================================
+
+/**
+ * Product Page Initialization
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    initializeProductPage();
+});
+
+/**
+ * Initialize all product page functionality
+ */
+function initializeProductPage() {
+    // Quantity selector
+    initQuantitySelector();
+    
+    // Image thumbnail switching
+    initImageThumbnails();
+    
+    // Action buttons
+    initActionButtons();
+    
+    // Wishlist functionality
+    initWishlist();
+    
+    // Cart functionality
+    initCart();
+    
+    // Image zoom
+    initImageZoom();
+    
+    // Smooth scroll
+    initSmoothScroll();
+    
+    // Initialize comparison
+    initComparison();
+    
+    // Initialize explore more products
+    initExploreMoreProducts();
+}
+
+// ========================================
+// QUANTITY SELECTOR
+// ========================================
+
+function initQuantitySelector() {
+    const quantityInput = document.getElementById('quantity-input');
+    const decreaseBtn = document.getElementById('decrease-qty');
+    const increaseBtn = document.getElementById('increase-qty');
+    
+    if (!quantityInput || !decreaseBtn || !increaseBtn) return;
+    
+    // Decrease quantity
+    decreaseBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+            updateQuantityDisplay();
+        }
+    });
+    
+    // Increase quantity
+    increaseBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        let maxValue = parseInt(quantityInput.getAttribute('max')) || 10;
+        if (currentValue < maxValue) {
+            quantityInput.value = currentValue + 1;
+            updateQuantityDisplay();
+        }
+    });
+    
+    // Direct input
+    quantityInput.addEventListener('change', function() {
+        let value = parseInt(this.value);
+        let maxValue = parseInt(this.getAttribute('max')) || 10;
+        
+        if (isNaN(value) || value < 1) {
+            this.value = 1;
+        } else if (value > maxValue) {
+            this.value = maxValue;
+        }
+        updateQuantityDisplay();
+    });
+    
+    // Prevent non-numeric input
+    quantityInput.addEventListener('keypress', function(e) {
+        if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+        }
+    });
+}
+
+function updateQuantityDisplay() {
+    const quantityInput = document.getElementById('quantity-input');
+    const quantity = parseInt(quantityInput.value);
+    
+    // Visual feedback when quantity changes
+    quantityInput.style.opacity = '0.8';
+    setTimeout(() => {
+        quantityInput.style.opacity = '1';
+    }, 100);
+}
+
+// ========================================
+// IMAGE THUMBNAIL SWITCHING
+// ========================================
+
+function initImageThumbnails() {
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.getElementById('main-product-image');
+    
+    if (!thumbnails.length || !mainImage) return;
+    
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            const imageUrl = this.getAttribute('data-image');
+            
+            // Update main image with fade effect
+            mainImage.style.opacity = '0.7';
+            setTimeout(() => {
+                mainImage.src = imageUrl;
+                mainImage.style.opacity = '1';
+            }, 150);
+            
+            // Update active thumbnail
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            this.classList.add('active');
+        });
+        
+        // Hover preview
+        thumbnail.addEventListener('mouseenter', function() {
+            const imageUrl = this.getAttribute('data-image');
+            mainImage.src = imageUrl;
+        });
+    });
+}
+
+// ========================================
+// ACTION BUTTONS
+// ========================================
+
+function initActionButtons() {
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    const buyNowBtn = document.getElementById('buy-now-btn');
+    
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', handleAddToCart);
+    }
+    
+    if (buyNowBtn) {
+        buyNowBtn.addEventListener('click', handleBuyNow);
+    }
+}
+
+function handleAddToCart(e) {
+    e.preventDefault();
+    
+    const quantity = parseInt(document.getElementById('quantity-input').value);
+    
+    // Get product details from page data attributes
+    const productId = document.body.getAttribute('data-product-id') || 'product1';
+    const productName = document.querySelector('.product-title')?.textContent || 'Product';
+    const priceAmount = document.querySelector('.price .amount')?.textContent?.replace(/,/g, '') || '0';
+    const mainImage = document.getElementById('main-product-image').src;
+    
+    const productData = {
+        id: productId,
+        name: productName,
+        price: parseFloat(priceAmount),
+        quantity: quantity,
+        image: mainImage,
+        timestamp: new Date().getTime()
+    };
+    
+    // Save to localStorage (simulated cart)
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Check if product already exists in cart
+    const existingProduct = cart.find(item => item.id === productData.id);
+    if (existingProduct) {
+        existingProduct.quantity += quantity;
+    } else {
+        cart.push(productData);
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Update cart count
+    updateCartCount();
+    
+    // Show feedback
+    showNotification('Added to cart!', 'success');
+    
+    // Animate button
+    animateButton(this);
+}
+
+function handleBuyNow(e) {
+    e.preventDefault();
+    
+    const quantity = parseInt(document.getElementById('quantity-input').value);
+    const productId = document.body.getAttribute('data-product-id') || 'product1';
+    const productName = document.querySelector('.product-title')?.textContent || 'Product';
+    const priceAmount = document.querySelector('.price .amount')?.textContent?.replace(/,/g, '') || '0';
+    const mainImage = document.getElementById('main-product-image').src;
+    
+    const productData = {
+        id: productId,
+        name: productName,
+        price: parseFloat(priceAmount),
+        quantity: quantity,
+        image: mainImage
+    };
+    
+    // Save to localStorage
+    localStorage.setItem('selectedProduct', JSON.stringify(productData));
+    
+    // Redirect to checkout
+    window.location.href = '#checkout';
+}
+
+// ========================================
+// WISHLIST FUNCTIONALITY
+// ========================================
+
+function initWishlist() {
+    const addToWishlistBtn = document.getElementById('add-to-wishlist-btn');
+    
+    if (addToWishlistBtn) {
+        addToWishlistBtn.addEventListener('click', handleAddToWishlist);
+    }
+    
+    // Update wishlist status from localStorage
+    updateWishlistStatus();
+}
+
+function handleAddToWishlist(e) {
+    e.preventDefault();
+    
+    const productId = document.body.getAttribute('data-product-id') || 'product1';
+    const productName = document.querySelector('.product-title')?.textContent || 'Product';
+    const priceAmount = document.querySelector('.price .amount')?.textContent?.replace(/,/g, '') || '0';
+    const mainImage = document.getElementById('main-product-image').src;
+    
+    const productData = {
+        id: productId,
+        name: productName,
+        price: parseFloat(priceAmount),
+        image: mainImage,
+        timestamp: new Date().getTime()
+    };
+    
+    // Get wishlist from localStorage
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    
+    // Check if product already exists in wishlist
+    const existingProduct = wishlist.find(item => item.id === productData.id);
+    
+    if (existingProduct) {
+        // Remove from wishlist
+        wishlist = wishlist.filter(item => item.id !== productData.id);
+        this.classList.remove('active');
+        showNotification('Removed from wishlist', 'info');
+    } else {
+        // Add to wishlist
+        wishlist.push(productData);
+        this.classList.add('active');
+        showNotification('Added to wishlist!', 'success');
+    }
+    
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    updateWishlistCount();
+    animateButton(this);
+}
+
+function updateWishlistStatus() {
+    const addToWishlistBtn = document.getElementById('add-to-wishlist-btn');
+    if (!addToWishlistBtn) return;
+    
+    const productId = document.body.getAttribute('data-product-id') || 'product1';
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const isInWishlist = wishlist.some(item => item.id === productId);
+    
+    if (isInWishlist) {
+        addToWishlistBtn.classList.add('active');
+    }
+}
+
+function updateWishlistCount() {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const wishlistCount = document.getElementById('wishlist-count');
+    
+    if (wishlistCount) {
+        wishlistCount.textContent = wishlist.length;
+    }
+}
+
+// ========================================
+// CART FUNCTIONALITY
+// ========================================
+
+function initCart() {
+    updateCartCount();
+}
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartCount = document.getElementById('cart-count');
+    
+    if (cartCount) {
+        cartCount.textContent = cart.length;
+    }
+}
+
+// ========================================
+// COMPARISON FUNCTIONALITY
+// ========================================
+
+function initComparison() {
+    const addToCompareBtn = document.getElementById('add-to-compare-btn');
+    
+    if (addToCompareBtn) {
+        addToCompareBtn.addEventListener('click', handleAddToCompare);
+    }
+}
+
+function handleAddToCompare(e) {
+    e.preventDefault();
+    
+    const productId = document.body.getAttribute('data-product-id') || 'product1';
+    const productName = document.querySelector('.product-title')?.textContent || 'Product';
+    const priceAmount = document.querySelector('.price .amount')?.textContent?.replace(/,/g, '') || '0';
+    const mainImage = document.getElementById('main-product-image').src;
+    
+    const productData = {
+        id: productId,
+        name: productName,
+        price: parseFloat(priceAmount),
+        image: mainImage
+    };
+    
+    // Get comparison list from localStorage
+    let comparison = JSON.parse(localStorage.getItem('comparison')) || [];
+    
+    // Check if product already exists in comparison
+    const existingProduct = comparison.find(item => item.id === productData.id);
+    
+    if (existingProduct) {
+        // Remove from comparison
+        comparison = comparison.filter(item => item.id !== productData.id);
+        this.classList.remove('active');
+        showNotification('Removed from comparison', 'info');
+    } else {
+        // Add to comparison (max 4 products)
+        if (comparison.length < 4) {
+            comparison.push(productData);
+            this.classList.add('active');
+            showNotification('Added to comparison!', 'success');
+        } else {
+            showNotification('You can compare up to 4 products', 'warning');
+            return;
+        }
+    }
+    
+    localStorage.setItem('comparison', JSON.stringify(comparison));
+    animateButton(this);
+}
+
+// ========================================
+// NOTIFICATION SYSTEM
+// ========================================
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${getNotificationIcon(type)}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        success: 'check-circle',
+        info: 'info-circle',
+        warning: 'exclamation-circle',
+        error: 'times-circle'
+    };
+    return icons[type] || 'info-circle';
+}
+
+// ========================================
+// BUTTON ANIMATION
+// ========================================
+
+function animateButton(button) {
+    button.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        button.style.transform = 'scale(1)';
+    }, 100);
+}
+
+// ========================================
+// SMOOTH SCROLL
+// ========================================
+
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#checkout' || href.startsWith('#external')) return;
+            
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// ========================================
+// PRODUCT IMAGE ZOOM (Enhanced)
+// ========================================
+
+function initImageZoom() {
+    const zoomIcon = document.querySelector('.image-zoom-icon');
+    const mainImage = document.getElementById('main-product-image');
+    
+    if (!zoomIcon || !mainImage) return;
+    
+    zoomIcon.addEventListener('click', openImageZoom);
+    mainImage.addEventListener('click', openImageZoom);
+}
+
+function openImageZoom() {
+    const mainImage = document.getElementById('main-product-image');
+    if (!mainImage) return;
+    
+    // Create zoom modal
+    const modal = document.createElement('div');
+    modal.className = 'image-zoom-modal';
+    modal.innerHTML = `
+        <div class="zoom-modal-content">
+            <button class="zoom-close" aria-label="Close zoom">
+                <i class="fas fa-times"></i>
+            </button>
+            <img src="${mainImage.src}" alt="Zoomed product image" style="cursor: zoom-out;">
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    
+    // Close modal functionality
+    const closeBtn = modal.querySelector('.zoom-close');
+    const modalImg = modal.querySelector('.zoom-modal-content img');
+    
+    const closeZoom = () => {
+        modal.remove();
+        document.body.style.overflow = 'auto';
+    };
+    
+    closeBtn.addEventListener('click', closeZoom);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeZoom();
+    });
+    
+    // Close on Escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            closeZoom();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    
+    // Click on image to close
+    modalImg.addEventListener('click', closeZoom);
+}
+
+// ========================================
+// PAGE VISIBILITY
+// ========================================
+
+// Update cart count when page becomes visible
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        updateCartCount();
+        updateWishlistCount();
+    }
+});
+
+// ========================================
+// KEYBOARD SHORTCUTS
+// ========================================
+
+document.addEventListener('keydown', function(e) {
+    const quantityInput = document.getElementById('quantity-input');
+    
+    if (e.key === 'ArrowUp' && document.activeElement === quantityInput) {
+        e.preventDefault();
+        document.getElementById('increase-qty').click();
+    } else if (e.key === 'ArrowDown' && document.activeElement === quantityInput) {
+        e.preventDefault();
+        document.getElementById('decrease-qty').click();
+    }
+});
+
+// ========================================
+// EXPLORE MORE PRODUCTS
+// ========================================
+
+/**
+ * Sample product database - can be replaced with API call
+ */
+const relatedProducts = [
+    {
+        id: 'product2',
+        name: 'Radiant Foundation',
+        price: 'Rs. 3,500.00',
+        originalPrice: 'Rs. 5,200.00',
+        image: '../../images/productimages/product2.jpg',
+        link: '../product2/product2.html'
+    },
+    {
+        id: 'product3',
+        name: 'Glow Serum',
+        price: 'Rs. 2,800.00',
+        originalPrice: 'Rs. 4,200.00',
+        image: '../../images/productimages/product3.jpg',
+        link: '../product3/product3.html'
+    },
+    {
+        id: 'product4',
+        name: 'Eyeshadow Palette',
+        price: 'Rs. 1,999.00',
+        originalPrice: 'Rs. 3,500.00',
+        image: '../../images/productimages/product4.jpg',
+        link: '../product4/product4.html'
+    },
+    {
+        id: 'product5',
+        name: 'Mascara Pro',
+        price: 'Rs. 1,499.00',
+        originalPrice: 'Rs. 2,500.00',
+        image: '../../images/productimages/product5.jpg',
+        link: '../product5/product5.html'
+    },
+    {
+        id: 'product6',
+        name: 'Luxury Lipstick',
+        price: 'Rs. 1,799.00',
+        originalPrice: 'Rs. 2,800.00',
+        image: '../../images/productimages/product1.jpg',
+        link: '../product6/product6.html'
+    }
+];
+
+function initExploreMoreProducts() {
+    const exploreTrack = document.getElementById('explore-products-track');
+    const exploreDots = document.getElementById('explore-dots');
+    const arrowLeft = document.querySelector('.explore-more-section .explore-arrow.arrow-left');
+    const arrowRight = document.querySelector('.explore-more-section .explore-arrow.arrow-right');
+    
+    if (!exploreTrack || !exploreDots) return;
+    
+    // Clear previous content
+    exploreTrack.innerHTML = '';
+    exploreDots.innerHTML = '';
+    
+    // Populate products
+    relatedProducts.forEach((product, index) => {
+        // Create product card
+        const productCard = document.createElement('div');
+        productCard.className = 'explore-product-card';
+        productCard.innerHTML = `
+            <div class="explore-product-image">
+                <img src="${product.image}" alt="${product.name}">
+            </div>
+            <div class="explore-product-info">
+                <h3 class="explore-product-name">${product.name}</h3>
+                <span class="explore-product-original-price">${product.originalPrice}</span>
+                <p class="explore-product-price">${product.price}</p>
+                <button class="explore-quick-view" data-product-id="${product.id}">
+                    <i class="fas fa-eye"></i> View Product
+                </button>
+            </div>
+        `;
+        
+        // Add click handler for view product button
+        const viewBtn = productCard.querySelector('.explore-quick-view');
+        viewBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = product.link;
+        });
+        
+        // Add click handler for card
+        productCard.addEventListener('click', () => {
+            window.location.href = product.link;
+        });
+        
+        exploreTrack.appendChild(productCard);
+        
+        // Create dot indicator
+        const dot = document.createElement('span');
+        dot.className = `explore-dot ${index === 0 ? 'active' : ''}`;
+        dot.setAttribute('data-index', index);
+        dot.addEventListener('click', () => scrollToProduct(index));
+        exploreDots.appendChild(dot);
+    });
+    
+    // Carousel navigation
+    if (arrowLeft && arrowRight) {
+        arrowLeft.addEventListener('click', () => scrollExploreCarousel('left'));
+        arrowRight.addEventListener('click', () => scrollExploreCarousel('right'));
+    }
+    
+    // Update arrow states
+    updateExploreArrowStates();
+    
+    // Handle scroll for dot indicators
+    const exploreCarousel = document.querySelector('.explore-carousel');
+    if (exploreCarousel) {
+        exploreCarousel.addEventListener('scroll', updateExploreActiveDot, { passive: true });
+    }
+}
+
+function scrollExploreCarousel(direction) {
+    const exploreCarousel = document.querySelector('.explore-carousel');
+    if (!exploreCarousel) return;
+    
+    const scrollAmount = 250;
+    const currentScroll = exploreCarousel.scrollLeft;
+    
+    if (direction === 'left') {
+        exploreCarousel.scrollTo({
+            left: currentScroll - scrollAmount,
+            behavior: 'smooth'
+        });
+    } else {
+        exploreCarousel.scrollTo({
+            left: currentScroll + scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+    
+    // Update arrows after scroll
+    setTimeout(updateExploreArrowStates, 300);
+}
+
+function scrollToProduct(index) {
+    const exploreCarousel = document.querySelector('.explore-carousel');
+    const cards = document.querySelectorAll('.explore-product-card');
+    
+    if (!cards[index] || !exploreCarousel) return;
+    
+    const card = cards[index];
+    const cardWidth = card.offsetWidth + 16; // 16px gap
+    const scrollPosition = cardWidth * index;
+    
+    exploreCarousel.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+    });
+}
+
+function updateExploreArrowStates() {
+    const exploreCarousel = document.querySelector('.explore-carousel');
+    const arrowLeft = document.querySelector('.explore-more-section .explore-arrow.arrow-left');
+    const arrowRight = document.querySelector('.explore-more-section .explore-arrow.arrow-right');
+    
+    if (!exploreCarousel || !arrowLeft || !arrowRight) return;
+    
+    const canScrollLeft = exploreCarousel.scrollLeft > 0;
+    const canScrollRight = 
+        exploreCarousel.scrollLeft < (exploreCarousel.scrollWidth - exploreCarousel.clientWidth - 10);
+    
+    arrowLeft.disabled = !canScrollLeft;
+    arrowRight.disabled = !canScrollRight;
+}
+
+function updateExploreActiveDot() {
+    const exploreCarousel = document.querySelector('.explore-carousel');
+    const cards = document.querySelectorAll('.explore-product-card');
+    const dots = document.querySelectorAll('.explore-dot');
+    
+    if (!exploreCarousel || !cards.length || !dots.length) return;
+    
+    const scrollLeft = exploreCarousel.scrollLeft;
+    const cardWidth = cards[0].offsetWidth + 16;
+    const activeIndex = Math.round(scrollLeft / cardWidth);
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === Math.min(activeIndex, dots.length - 1));
+    });
+    
+    updateExploreArrowStates();
+}
+
+// ========================================
+// EXPORT FUNCTIONS FOR EXTERNAL USE
+// ========================================
+
+window.ProductPage = {
+    addToCart: handleAddToCart,
+    buyNow: handleBuyNow,
+    addToWishlist: handleAddToWishlist,
+    addToCompare: handleAddToCompare,
+    showNotification: showNotification,
+    updateCartCount: updateCartCount,
+    updateWishlistCount: updateWishlistCount
+};

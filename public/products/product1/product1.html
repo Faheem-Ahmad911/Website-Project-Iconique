@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Daily Defence - Premium Sunscreen Product">
+    <title>Daily Defence - TheIconique</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="../../images/faviconimages/favicon.jpg">
+    
+    <!-- Main CSS Stylesheet -->
+    <link rel="stylesheet" href="../../styles.css">
+    
+    <!-- Product Page CSS -->
+    <link rel="stylesheet" href="../products.css">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-product-id="product1">
+    <!-- ========================================
+         HEADER SECTION - White background with logo and navigation
+         ======================================== -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <span class="logo-text">TheIconique</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="nav-desktop">
+                    <ul class="nav-menu">
+                        <li><a href="../../index.html">Home</a></li>
+                        <li><a href="#" class="disabled">Collection</a></li>
+                        <li><a href="../../aboutus.html">About Us</a></li>
+                        <li><a href="#" class="disabled">Blogs</a></li>
+                        <li><a href="#" class="disabled">Contact</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Search Icon -->
+                    <div class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    <!-- Shopping Cart Icon -->
+                    <div class="cart-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Toggle Button -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ========================================
+         MOBILE NAVIGATION SIDEBAR - Slides from right
+         ======================================== -->
+    <div class="mobile-nav-overlay"></div>
+    <nav class="mobile-nav">
+        <button class="mobile-nav-close" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mobile-nav-title">TheIconique</div>
+        <ul class="mobile-nav-menu">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="#" class="disabled">Collection</a></li>
+            <li><a href="../../aboutus.html">About Us</a></li>
+            <li><a href="#" class="disabled">Blogs</a></li>
+            <li><a href="#" class="disabled">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========================================
+         PRODUCT PAGE SECTION
+         ======================================== -->
+    <main class="product-page">
+        <div class="container">
+            <div class="product-container">
+                <!-- Product Image Section -->
+                <div class="product-image-section">
+                    <div class="product-image-wrapper">
+                        <div class="product-image-container">
+                            <img id="main-product-image" src="../../images/productimages/product1.jpg" alt="Daily Defence Product" class="product-main-image">
+                            <div class="image-zoom-icon">
+                                <i class="fas fa-search-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Image Thumbnails -->
+                    <div class="product-thumbnails">
+                        <div class="thumbnail active" data-image="../../images/productimages/product1.jpg">
+                            <img src="../../images/productimages/product1.jpg" alt="Product view 1">
+                        </div>
+                        <div class="thumbnail" data-image="../../images/productimages/product1.jpg">
+                            <img src="../../images/productimages/product1.jpg" alt="Product view 2">
+                        </div>
+                        <div class="thumbnail" data-image="../../images/productimages/product1.jpg">
+                            <img src="../../images/productimages/product1.jpg" alt="Product view 3">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Details Section -->
+                <div class="product-details-section">
+                    <!-- Product Title & Rating -->
+                    <div class="product-header">
+                        <h1 class="product-title">Daily Defence</h1>
+                        
+                        <div class="rating-section">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="rating-count">(110)</span>
+                        </div>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="price-section">
+                        <div class="price">
+                            <span class="currency">Rs.</span>
+                            <span class="amount">2,199.00</span>
+                        </div>
+                        <div class="price-info">
+                            <span class="original-price">Rs. 3,500.00</span>
+                            <span class="discount">-37%</span>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Selector -->
+                    <div class="quantity-section">
+                        <label for="quantity">Quantity</label>
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" id="decrease-qty" aria-label="Decrease quantity">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="quantity-input" class="quantity-input" value="1" min="1" max="10">
+                            <button class="quantity-btn" id="increase-qty" aria-label="Increase quantity">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn btn-add-to-cart" id="add-to-cart-btn">
+                            <i class="fas fa-shopping-bag"></i> Add to cart
+                        </button>
+                        <button class="btn btn-buy-now" id="buy-now-btn">
+                            BUY IT NOW
+                        </button>
+                    </div>
+
+                    <!-- Secondary Actions -->
+                    <div class="secondary-actions">
+                        <button class="secondary-btn" id="add-to-wishlist-btn">
+                            <i class="far fa-heart"></i> Add to wishlist
+                        </button>
+                        <button class="secondary-btn" id="add-to-compare-btn">
+                            <i class="fas fa-exchange-alt"></i> Add to compare
+                        </button>
+                    </div>
+
+                    <!-- Product Description -->
+                    <div class="product-description">
+                        <h3>Product Description</h3>
+                        <p>Daily Defence is a premium hybrid sunscreen that offers SPF 50 protection. This lightweight formula is perfect for everyday use, providing broad-spectrum protection against UVA and UVB rays while maintaining a natural finish. Dermatologist tested and suitable for all skin types.</p>
+                    </div>
+
+                    <!-- Product Features -->
+                    <div class="product-features">
+                        <h3>Key Features</h3>
+                        <ul>
+                            <li><span class="feature-icon"><i class="fas fa-check"></i></span> SPF 50 Broad Spectrum Protection</li>
+                            <li><span class="feature-icon"><i class="fas fa-check"></i></span> Water Resistant (80 minutes)</li>
+                            <li><span class="feature-icon"><i class="fas fa-check"></i></span> Lightweight & Non-Greasy Formula</li>
+                            <li><span class="feature-icon"><i class="fas fa-check"></i></span> Suitable for All Skin Types</li>
+                            <li><span class="feature-icon"><i class="fas fa-check"></i></span> Dermatologist Tested</li>
+                        </ul>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div class="additional-info">
+                        <div class="info-item">
+                            <span class="info-label">SKU:</span>
+                            <span class="info-value">DD-SPF50-100ML</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Category:</span>
+                            <span class="info-value">Skincare / Sunscreen</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Availability:</span>
+                            <span class="info-value in-stock">In Stock</span>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Info -->
+                </div>
+            </div>
+
+            <!-- Shipping Info Wrapper - Full Width -->
+            <div class="shipping-info-wrapper">
+                <div class="shipping-info">
+                    <div class="info-box">
+                        <i class="fas fa-truck"></i>
+                        <div>
+                            <h4>Free Shipping</h4>
+                            <p>On orders above Rs. 3000</p>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-exchange-alt"></i>
+                        <div>
+                            <h4>Easy Returns</h4>
+                            <p>30-day return policy</p>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <h4>Secure Payment</h4>
+                            <p>100% secure transactions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================
+                 EXPLORE MORE PRODUCTS SECTION
+                 ======================================== -->
+            <div class="explore-more-section">
+                <h2 class="section-title">Explore More Products</h2>
+                <div class="explore-more-wrapper">
+                    <button class="explore-arrow arrow-left" aria-label="Previous products">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    <div class="explore-carousel">
+                        <div class="explore-track" id="explore-products-track">
+                            <!-- Related products will be dynamically loaded here -->
+                        </div>
+                    </div>
+                    
+                    <button class="explore-arrow arrow-right" aria-label="Next products">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Dot Indicators for Mobile -->
+                <div class="explore-dots" id="explore-dots">
+                    <!-- Dots will be dynamically generated -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================
+         FOOTER SECTION - Newsletter, Links, Social Media
+         ======================================== -->
+    <footer class="footer">
+        <!-- Newsletter Section -->
+        <div class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-header">
+                        <h2>Subscribe to our Newsletter</h2>
+                        <p>Be the first one to know about our new products & exclusive offers.</p>
+                    </div>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div class="input-group">
+                            <input 
+                                type="email" 
+                                id="newsletterEmail" 
+                                placeholder="Email" 
+                                required
+                            >
+                            <button type="submit" class="btn-subscribe">subscribe</button>
+                        </div>
+                    </form>
+                    <p id="newsletterMessage" class="newsletter-message"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Main Content -->
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- Let's Connect Section -->
+                    <div class="footer-column">
+                        <h4>Let's Connect</h4>
+                        <div class="social-links">
+                            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Shop Section -->
+                    <div class="footer-column">
+                        <h4>Shop</h4>
+                        <ul class="footer-links">
+                            <li><a href="#" class="disabled">Collection</a></li>
+                            <li><a href="#" class="disabled">About Us</a></li>
+                            <li><a href="#" class="disabled">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Brand Section -->
+                    <div class="footer-column">
+                        <h4>TheIconique</h4>
+                        <p class="footer-description">
+                            Premium cosmetic products for the modern woman. 
+                            Elevate your beauty routine with our curated collection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright Section -->
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2025 TheIconique. All rights reserved. | Developed by DevPy Technologies</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Product Script -->
+    <script src="../products.js"></script>
+</body>
+</html>
