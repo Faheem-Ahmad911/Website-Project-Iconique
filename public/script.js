@@ -1433,25 +1433,11 @@ class BundlesCarouselController {
         return window.innerWidth <= 768;
     }
     
-    // getCardDimensions() {
-    //     const cardWidth = this.cards[0].offsetWidth;
-    //     const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
-    //     return { cardWidth, gap };
-    // }
-
     getCardDimensions() {
-    const carouselWidth = this.carousel.clientWidth;
-    
-    // Define desired card width as a fraction of the screen (e.g., 80%)
-    const cardWidth = Math.floor(carouselWidth * 0.8); 
-    
-    // Calculate the gap on each side to center the card
-    const totalGap = carouselWidth - cardWidth; 
-    const gap = totalGap / 2; // equal left & right padding
-
-    return { cardWidth, gap };
-}
-
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 0;
+        return { cardWidth, gap };
+    }
     
     updateDots() {
         const dotsContainer = document.getElementById('bundles-dots');
