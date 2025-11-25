@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TheIconique - Premium Cosmetic Products">
     <title>TheIconique - Premium Cosmetics</title>
-
-    <!-- Swiper CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-
     
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="images/faviconimages/favicon.jpg">
@@ -489,54 +483,7 @@
     
     <!-- Main JavaScript -->
     <script src="script.js"></script>
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    const track = document.querySelector(".hero-track");
-    let slides = document.querySelectorAll(".hero-slide");
-    const totalSlides = slides.length;
-
-    let index = 1;
-
-    // Clone slides
-    const firstClone = slides[0].cloneNode(true);
-    const lastClone = slides[totalSlides - 1].cloneNode(true);
-
-    track.appendChild(firstClone);
-    track.insertBefore(lastClone, slides[0]);
-
-    slides = document.querySelectorAll(".hero-slide");
-
-    // Set initial position
-    track.style.transform = `translateX(-100vw)`;
-
-    function move() {
-        index++;
-        track.style.transition = "transform 1s";
-        track.style.transform = `translateX(-${index * 100}vw)`;
-    }
-
-    track.addEventListener("transitionend", () => {
-
-        // If we reach the cloned LAST → snap back to real first
-        if (index === slides.length - 1) {
-            index = 1;
-            track.style.transition = "none";
-            track.style.transform = `translateX(-${index * 100}vw)`;
-        }
-
-        // If we go backward (only if you add backward control)
-        if (index === 0) {
-            index = totalSlides;
-            track.style.transition = "none";
-            track.style.transform = `translateX(-${index * 100}vw)`;
-        }
-    });
-
-    setInterval(move, 2000); // 2s slide timing, change as needed
-
-});
-</script>
 
 </body>
 </html>
