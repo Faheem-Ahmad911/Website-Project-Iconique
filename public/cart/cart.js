@@ -223,7 +223,7 @@ class CartManager {
             const row = document.createElement('tr');
             row.dataset.index = index;
             row.innerHTML = `
-                <td>
+                <td data-label="Product">
                     <div class="cart-item-product">
                         <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.src='../images/bundleimages/default.png'">
                         <div class="cart-item-details">
@@ -232,16 +232,16 @@ class CartManager {
                         </div>
                     </div>
                 </td>
-                <td class="price-cell">Rs. ${parseFloat(item.price).toFixed(2)}</td>
-                <td>
+                <td class="price-cell" data-label="Price">Rs. ${parseFloat(item.price).toFixed(2)}</td>
+                <td data-label="Quantity">
                     <div class="quantity-controls">
                         <button class="qty-btn" type="button">−</button>
                         <input type="number" class="qty-input" value="${item.quantity}" min="1">
                         <button class="qty-btn" type="button">+</button>
                     </div>
                 </td>
-                <td class="total-cell">Rs. ${itemTotal.toFixed(2)}</td>
-                <td>
+                <td class="total-cell" data-label="Total">Rs. ${itemTotal.toFixed(2)}</td>
+                <td data-label="Action">
                     <button class="btn-remove" type="button" title="Remove item">
                         <i class="fas fa-trash-alt"></i>
                     </button>

@@ -411,57 +411,89 @@
         font-size: 0.9rem;
     }
 
-    .cart-table th,
-    .cart-table td {
-        padding: var(--spacing-sm);
-    }
-
-    .cart-item-image {
-        width: 60px;
-        height: 60px;
-    }
-
-    .cart-item-name {
-        font-size: 0.95rem;
-    }
-
-    /* Hide product column text on mobile, show image only */
-    .cart-table tbody tr:not(:first-child) {
+    .cart-table thead {
         display: none;
     }
 
-    /* Create card layout for mobile */
+    .cart-table-wrapper {
+        box-shadow: none;
+    }
+
+    .cart-table {
+        width: 100%;
+    }
+
     .cart-table tbody {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
     }
 
     .cart-table tbody tr {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: var(--spacing-lg);
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-bottom: 0;
         background: var(--color-white);
         border: 1px solid var(--color-border);
         border-radius: var(--radius-md);
         padding: var(--spacing-md);
         gap: var(--spacing-sm);
+        border-bottom: none;
+    }
+
+    .cart-table tbody tr:hover {
+        background-color: var(--color-white);
     }
 
     .cart-table tbody td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         padding: var(--spacing-sm) 0;
         border: none;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--spacing-md);
+        align-items: center;
+    }
+
+    .cart-table tbody td:first-child {
+        grid-column: 1 / -1;
+        display: flex;
     }
 
     .cart-table tbody td::before {
         content: attr(data-label);
         font-weight: 600;
         color: var(--color-text-medium);
+        font-size: 0.85rem;
+        min-width: 70px;
     }
 
     .cart-item-product {
         flex-direction: row;
+        width: 100%;
+    }
+
+    .cart-item-image {
+        width: 60px;
+        height: 60px;
+        flex-shrink: 0;
+    }
+
+    .cart-item-details {
+        flex: 1;
+    }
+
+    .cart-item-name {
+        font-size: 0.95rem;
+    }
+
+    .price-cell,
+    .total-cell {
+        font-size: 1rem;
+    }
+
+    .quantity-controls {
+        width: 100%;
+        justify-content: flex-start;
     }
 
     .empty-cart {
@@ -471,6 +503,50 @@
     .empty-cart h2 {
         font-size: 1.3rem;
     }
+
+    .summary-card {
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+        border-radius: 0;
+    }
+
+    .summary-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .summary-row {
+        padding: var(--spacing-xs) 0;
+        font-size: 0.9rem;
+    }
+
+    .summary-row.total {
+        font-size: 1.1rem;
+        padding: var(--spacing-sm) 0;
+    }
+
+    .summary-row.total span:last-child {
+        font-size: 1.2rem;
+    }
+
+    .promo-section {
+        margin-top: var(--spacing-md);
+        padding-top: var(--spacing-md);
+    }
+
+    .promo-section h4 {
+        font-size: 0.9rem;
+    }
+
+    .promo-input {
+        font-size: 0.85rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .btn-apply-promo {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.85rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -478,28 +554,155 @@
         font-size: 1.5rem;
     }
 
+    .cart-header {
+        margin-bottom: var(--spacing-lg);
+    }
+
     .cart-content {
-        gap: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+
+    .cart-main {
+        padding: var(--spacing-sm) var(--spacing-sm);
+    }
+
+    .cart-table tbody tr {
+        padding: var(--spacing-sm);
+    }
+
+    .cart-table tbody td {
+        padding: var(--spacing-xs) 0;
+        gap: var(--spacing-sm);
+    }
+
+    .cart-table tbody td::before {
+        min-width: 65px;
+        font-size: 0.8rem;
+    }
+
+    .cart-item-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .cart-item-name {
+        font-size: 0.85rem;
+    }
+
+    .cart-item-sku {
+        font-size: 0.75rem;
+    }
+
+    .quantity-controls {
+        gap: 0;
+    }
+
+    .qty-btn {
+        padding: var(--spacing-xs) 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .qty-input {
+        width: 40px;
+        font-size: 0.9rem;
+    }
+
+    .btn-remove {
+        font-size: 1rem;
+        padding: var(--spacing-xs) 0.25rem;
+    }
+
+    .price-cell,
+    .total-cell {
+        font-size: 0.95rem;
     }
 
     .summary-card {
-        padding: var(--spacing-md);
+        padding: var(--spacing-sm);
+        border-radius: var(--radius-md);
+    }
+
+    .summary-card h3 {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .summary-row {
+        padding: var(--spacing-xs) 0;
+        font-size: 0.85rem;
+    }
+
+    .summary-divider {
+        margin: var(--spacing-sm) 0;
     }
 
     .summary-actions {
-        margin: var(--spacing-md) 0;
+        margin: var(--spacing-sm) 0;
+        gap: var(--spacing-xs);
     }
 
     .btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.85rem;
+    }
+
+    .btn-checkout,
+    .btn-continue-shopping {
         padding: var(--spacing-sm);
         font-size: 0.9rem;
     }
 
+    .promo-section {
+        margin-top: var(--spacing-sm);
+        padding-top: var(--spacing-sm);
+    }
+
+    .promo-section h4 {
+        font-size: 0.8rem;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .promo-input {
+        padding: var(--spacing-xs);
+        font-size: 0.8rem;
+    }
+
     .promo-input-group {
         flex-direction: column;
+        gap: var(--spacing-xs);
     }
 
     .btn-apply-promo {
         width: 100%;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.8rem;
+    }
+
+    .promo-message {
+        font-size: 0.75rem;
+    }
+
+    .empty-cart {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .empty-cart-icon {
+        font-size: 3rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .empty-cart h2 {
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .empty-cart p {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .empty-cart .btn-primary {
+        padding: var(--spacing-sm);
+        font-size: 0.85rem;
     }
 }
