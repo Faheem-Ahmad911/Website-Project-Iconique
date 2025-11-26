@@ -13,6 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialize all product page functionality
  */
 function initializeProductPage() {
+    // Mobile navigation
+    initMobileNavigation();
+    
+    // Search functionality
+    initSearchFunctionality();
+    
+    // Cart icon
+    initCartIcon();
+    
     // Quantity selector
     initQuantitySelector();
     
@@ -34,8 +43,8 @@ function initializeProductPage() {
     // Smooth scroll
     initSmoothScroll();
     
-    // Initialize comparison
-    initComparison();
+    // Initialize compare (removed)
+    // initComparison();
     
     // Initialize explore more products
     initExploreMoreProducts();
@@ -307,10 +316,10 @@ function initCart() {
 
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartCount = document.getElementById('cart-count');
+    const cartCountElement = document.querySelector('.cart-count');
     
-    if (cartCount) {
-        cartCount.textContent = cart.length;
+    if (cartCountElement) {
+        cartCountElement.textContent = cart.length;
     }
 }
 
@@ -318,55 +327,10 @@ function updateCartCount() {
 // COMPARISON FUNCTIONALITY
 // ========================================
 
-function initComparison() {
-    const addToCompareBtn = document.getElementById('add-to-compare-btn');
-    
-    if (addToCompareBtn) {
-        addToCompareBtn.addEventListener('click', handleAddToCompare);
-    }
-}
-
-function handleAddToCompare(e) {
-    e.preventDefault();
-    
-    const productId = document.body.getAttribute('data-product-id') || 'product1';
-    const productName = document.querySelector('.product-title')?.textContent || 'Product';
-    const priceAmount = document.querySelector('.price .amount')?.textContent?.replace(/,/g, '') || '0';
-    const mainImage = document.getElementById('main-product-image').src;
-    
-    const productData = {
-        id: productId,
-        name: productName,
-        price: parseFloat(priceAmount),
-        image: mainImage
-    };
-    
-    // Get comparison list from localStorage
-    let comparison = JSON.parse(localStorage.getItem('comparison')) || [];
-    
-    // Check if product already exists in comparison
-    const existingProduct = comparison.find(item => item.id === productData.id);
-    
-    if (existingProduct) {
-        // Remove from comparison
-        comparison = comparison.filter(item => item.id !== productData.id);
-        this.classList.remove('active');
-        showNotification('Removed from comparison', 'info');
-    } else {
-        // Add to comparison (max 4 products)
-        if (comparison.length < 4) {
-            comparison.push(productData);
-            this.classList.add('active');
-            showNotification('Added to comparison!', 'success');
-        } else {
-            showNotification('You can compare up to 4 products', 'warning');
-            return;
-        }
-    }
-    
-    localStorage.setItem('comparison', JSON.stringify(comparison));
-    animateButton(this);
-}
+// ========================================
+// COMPARISON FUNCTIONALITY - REMOVED
+// ========================================
+// Compare functionality has been removed from this product page
 
 // ========================================
 // NOTIFICATION SYSTEM
@@ -942,6 +906,220 @@ function updateExploreActiveDot() {
 }
 
 // ========================================
+// NAVIGATION & SEARCH FUNCTIONALITY
+// ========================================
+
+/**
+ * Initialize mobile navigation
+ */
+function initMobileNavigation() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileNav = document.querySelector('.mobile-nav');
+    const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
+    const mobileNavClose = document.querySelector('.mobile-nav-close');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-menu a');
+    
+    if (!mobileMenuToggle || !mobileNav) return;
+    
+    // Open mobile menu
+    mobileMenuToggle.addEventListener('click', () => {
+        mobileNav.classList.add('active');
+        mobileNavOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    // Close mobile menu
+    const closeMobileNav = () => {
+        mobileNav.classList.remove('active');
+        mobileNavOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+    
+    if (mobileNavClose) {
+        mobileNavClose.addEventListener('click', closeMobileNav);
+    }
+    
+    if (mobileNavOverlay) {
+        mobileNavOverlay.addEventListener('click', closeMobileNav);
+    }
+    
+    // Close when clicking nav links
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileNav();
+        });
+    });
+}
+
+/**
+ * Initialize search functionality
+ */
+function initSearchFunctionality() {
+    const searchIcon = document.querySelector('.search-icon');
+    const searchOverlay = document.querySelector('.search-overlay');
+    const searchModal = document.querySelector('.search-modal');
+    const searchClose = document.querySelector('.search-close');
+    const searchInput = document.querySelector('#searchInput');
+    const searchBtn = document.querySelector('.search-btn');
+    const searchResults = document.querySelector('#searchResults');
+    const searchTags = document.querySelectorAll('.search-tag');
+    
+    if (!searchIcon || !searchOverlay) return;
+    
+    // Product data for search (dynamically load from page if available)
+    const products = [
+        { id: 'product1', name: 'Daily Defence', price: 'Rs. 2,199.00', image: '../../images/productimages/product1.jpg', category: 'sunscreen' },
+        { id: 'product2', name: 'Radiant Foundation', price: 'Rs. 45.99', image: '../../images/productimages/product1.jpg', category: 'foundation' },
+        { id: 'product3', name: 'Glow Serum', price: 'Rs. 59.99', image: '../../images/productimages/product1.jpg', category: 'serum' },
+        { id: 'product4', name: 'Eyeshadow Palette', price: 'Rs. 39.99', image: '../../images/productimages/product1.jpg', category: 'eyeshadow' },
+        { id: 'product5', name: 'Moisturizer Cream', price: 'Rs. 24.99', image: '../../images/productimages/product1.jpg', category: 'moisturizer' }
+    ];
+    
+    // Open search modal
+    searchIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openSearchModal();
+    });
+    
+    // Close search modal
+    const openSearchModal = () => {
+        searchOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            if (searchInput) searchInput.focus();
+        }, 300);
+    };
+    
+    const closeSearchModal = () => {
+        searchOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (searchInput) searchInput.value = '';
+        if (searchResults) searchResults.innerHTML = '';
+    };
+    
+    if (searchClose) {
+        searchClose.addEventListener('click', closeSearchModal);
+    }
+    
+    // Close on overlay click
+    if (searchOverlay) {
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                closeSearchModal();
+            }
+        });
+    }
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
+            closeSearchModal();
+        }
+    });
+    
+    // Search input handler
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            handleSearch(e.target.value, products);
+        });
+        
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearch(e.target.value, products);
+            }
+        });
+    }
+    
+    // Search button handler
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+            handleSearch(searchInput.value, products);
+        });
+    }
+    
+    // Search tags
+    searchTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            const query = tag.textContent;
+            if (searchInput) {
+                searchInput.value = query;
+            }
+            handleSearch(query, products);
+        });
+    });
+    
+    // Search handler function
+    function handleSearch(query, productList) {
+        if (!query || query.trim().length < 2) {
+            if (searchResults) searchResults.innerHTML = '';
+            return;
+        }
+        
+        const filteredProducts = productList.filter(product => 
+            product.name.toLowerCase().includes(query.toLowerCase()) ||
+            product.category.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        displaySearchResults(filteredProducts, query);
+    }
+    
+    // Display search results
+    function displaySearchResults(filteredProducts, query) {
+        if (filteredProducts.length === 0) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <p>No products found for "${query}"</p>
+                    <p>Try searching for: Sunscreen, Foundation, Serum, Eyeshadow</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const resultsHTML = filteredProducts.map(product => `
+            <div class="search-result-item" data-product-id="${product.id}">
+                <img src="${product.image}" alt="${product.name}" class="search-result-image">
+                <div class="search-result-info">
+                    <h4>${product.name}</h4>
+                    <p>${product.price}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        searchResults.innerHTML = `
+            <h4>Search Results (${filteredProducts.length})</h4>
+            ${resultsHTML}
+        `;
+        
+        // Add click handlers to search results
+        const resultItems = searchResults.querySelectorAll('.search-result-item');
+        resultItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const productId = item.dataset.productId;
+                const product = filteredProducts.find(p => p.id === productId);
+                if (product) {
+                    // Navigate to product page
+                    window.location.href = `../../products/${productId}/${productId}.html`;
+                }
+            });
+        });
+    }
+}
+
+/**
+ * Initialize cart icon
+ */
+function initCartIcon() {
+    const cartIcon = document.querySelector('.cart-icon');
+    
+    if (!cartIcon) return;
+    
+    cartIcon.addEventListener('click', () => {
+        showNotification('Shopping cart coming soon!', 'info');
+    });
+}
+
+// ========================================
 // EXPORT FUNCTIONS FOR EXTERNAL USE
 // ========================================
 
@@ -949,7 +1127,6 @@ window.ProductPage = {
     addToCart: handleAddToCart,
     buyNow: handleBuyNow,
     addToWishlist: handleAddToWishlist,
-    addToCompare: handleAddToCompare,
     showNotification: showNotification,
     updateCartCount: updateCartCount,
     updateWishlistCount: updateWishlistCount
