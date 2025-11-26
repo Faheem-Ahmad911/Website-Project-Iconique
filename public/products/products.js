@@ -122,12 +122,24 @@ function initImageThumbnails() {
     
     if (!thumbnails.length || !mainImage) return;
     
+    // Store original image sources for restoration
+    const originalImageUrls = new Map();
+    const activeThumbnail = document.querySelector('.thumbnail.active');
+    const initialImageUrl = activeThumbnail ? activeThumbnail.getAttribute('data-image') : mainImage.src;
+    
     thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', function() {
+        const imageUrl = thumbnail.getAttribute('data-image');
+        originalImageUrls.set(thumbnail, imageUrl);
+        
+        // Click handler - Update main image with smooth transition
+        thumbnail.addEventListener('click', function(e) {
+            e.stopPropagation();
             const imageUrl = this.getAttribute('data-image');
             
-            // Update main image with fade effect
-            mainImage.style.opacity = '0.7';
+            // Fade out
+            mainImage.style.opacity = '0';
+            mainImage.style.transition = 'opacity 0.3s ease-in-out';
+            
             setTimeout(() => {
                 mainImage.src = imageUrl;
                 mainImage.style.opacity = '1';
@@ -138,11 +150,11 @@ function initImageThumbnails() {
             this.classList.add('active');
         });
         
-        // Hover preview
-        thumbnail.addEventListener('mouseenter', function() {
-            const imageUrl = this.getAttribute('data-image');
-            mainImage.src = imageUrl;
-        });
+        // Touch support for mobile
+        thumbnail.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.click();
+        }, { passive: false });
     });
 }
 
