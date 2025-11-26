@@ -635,26 +635,237 @@ function initExploreMoreProducts() {
         arrowRight.addEventListener('click', () => scrollExploreCarousel('right'));
     }
     
-    // Update arrow states
-    updateExploreArrowStates();
-    
-    // Handle scroll for dot indicators
+    // Initialize carousel with proper responsive behavior
     const exploreCarousel = document.querySelector('.explore-carousel');
     if (exploreCarousel) {
+        // Calculate card dimensions on load
+        setTimeout(() => {
+            calculateExploreCardDimensions();
+            updateExploreArrowStates();
+        }, 100);
+        
+        // Handle scroll for dot indicators
         exploreCarousel.addEventListener('scroll', updateExploreActiveDot, { passive: true });
+        
+        // Recalculate on window resize
+        window.addEventListener('resize', () => {
+            calculateExploreCardDimensions();
+            updateExploreArrowStates();
+        });
+        
+        // Initialize gesture/touch support
+        setupExploreGestureHandlers(exploreCarousel);
     }
+}
+
+/**
+ * Setup gesture handlers for explore carousel (touch, swipe, drag)
+ */
+function setupExploreGestureHandlers(carousel) {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let isDragging = false;
+    let startScrollLeft = 0;
+    
+    // Touch start - record initial position
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        startScrollLeft = carousel.scrollLeft;
+        isDragging = true;
+    }, { passive: true });
+    
+    // Touch move - allow natural scrolling but track drag
+    carousel.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            const currentX = e.touches[0].clientX;
+            const diff = touchStartX - currentX;
+            
+            // Optional: Add visual feedback during drag if needed
+            // You can add more sophisticated drag logic here if desired
+        }
+    }, { passive: true });
+    
+    // Touch end - handle swipe gesture
+    carousel.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        
+        touchEndX = e.changedTouches[0].clientX;
+        isDragging = false;
+        
+        handleExploreSwipe(carousel);
+    }, { passive: true });
+    
+    // Mouse drag support for desktop testing
+    let isMouseDown = false;
+    let mouseStartX = 0;
+    
+    carousel.addEventListener('mousedown', (e) => {
+        isMouseDown = true;
+        mouseStartX = e.clientX;
+        carousel.style.scrollBehavior = 'auto';
+    });
+    
+    carousel.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        
+        const diff = mouseStartX - e.clientX;
+        carousel.scrollLeft = startScrollLeft + diff;
+    });
+    
+    carousel.addEventListener('mouseup', (e) => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        carousel.style.scrollBehavior = 'smooth';
+        
+        // Snap to nearest card after drag
+        setTimeout(() => {
+            snapExploreCarouselToCard(carousel);
+        }, 100);
+    });
+    
+    carousel.addEventListener('mouseleave', (e) => {
+        if (isMouseDown) {
+            isMouseDown = false;
+            carousel.style.scrollBehavior = 'smooth';
+            setTimeout(() => {
+                snapExploreCarouselToCard(carousel);
+            }, 100);
+        }
+    });
+}
+
+/**
+ * Handle swipe gesture on explore carousel
+ */
+function handleExploreSwipe(carousel) {
+    const swipeThreshold = 50; // Minimum swipe distance in pixels
+    const diff = touchStartX - touchEndX;
+    const exploreTrack = document.getElementById('explore-products-track');
+    const cards = document.querySelectorAll('.explore-product-card');
+    
+    if (!exploreTrack || !cards.length) return;
+    
+    const cardWidth = parseFloat(exploreTrack.dataset.cardWidth) || 300;
+    const gap = parseInt(exploreTrack.dataset.gap) || 16;
+    const scrollLeft = carousel.scrollLeft;
+    const scrollWidth = cardWidth + gap;
+    
+    // Get current card index
+    let currentIndex = Math.round(scrollLeft / scrollWidth);
+    currentIndex = Math.max(0, Math.min(currentIndex, cards.length - 1));
+    
+    // Swipe left - show next card
+    if (diff > swipeThreshold) {
+        if (currentIndex < cards.length - 1) {
+            scrollToProduct(currentIndex + 1);
+        } else {
+            // Already at last card, snap back
+            snapExploreCarouselToCard(carousel);
+        }
+    }
+    // Swipe right - show previous card
+    else if (diff < -swipeThreshold) {
+        if (currentIndex > 0) {
+            scrollToProduct(currentIndex - 1);
+        } else {
+            // Already at first card, snap back
+            snapExploreCarouselToCard(carousel);
+        }
+    }
+    // Swipe too small - snap back to current card
+    else {
+        snapExploreCarouselToCard(carousel);
+    }
+}
+
+/**
+ * Snap carousel to nearest card after drag or small swipe
+ */
+function snapExploreCarouselToCard(carousel) {
+    const exploreTrack = document.getElementById('explore-products-track');
+    const cards = document.querySelectorAll('.explore-product-card');
+    
+    if (!exploreTrack || !cards.length) return;
+    
+    const cardWidth = parseFloat(exploreTrack.dataset.cardWidth) || 300;
+    const gap = parseInt(exploreTrack.dataset.gap) || 16;
+    const scrollLeft = carousel.scrollLeft;
+    const scrollWidth = cardWidth + gap;
+    
+    // Find nearest card
+    let nearestIndex = Math.round(scrollLeft / scrollWidth);
+    nearestIndex = Math.max(0, Math.min(nearestIndex, cards.length - 1));
+    
+    // Scroll to nearest card
+    scrollToProduct(nearestIndex);
+}
+
+/**
+ * Calculate proper card dimensions based on screen size and gaps
+ */
+function calculateExploreCardDimensions() {
+    const exploreCarousel = document.querySelector('.explore-carousel');
+    const exploreTrack = document.getElementById('explore-products-track');
+    const cards = document.querySelectorAll('.explore-product-card');
+    
+    if (!exploreCarousel || !cards.length) return;
+    
+    const containerWidth = exploreCarousel.clientWidth;
+    
+    // Get actual gap from CSS computed styles (more accurate)
+    const computedGap = parseInt(window.getComputedStyle(exploreCarousel).gap) || 16;
+    
+    let cardWidth;
+    let cardsPerView = 1;
+    
+    // Determine cards per view based on screen size
+    if (window.innerWidth >= 1024) {
+        // Desktop: 4 cards visible
+        cardsPerView = 4;
+        const totalGapWidth = (cardsPerView - 1) * computedGap;
+        cardWidth = (containerWidth - totalGapWidth) / cardsPerView;
+    } else if (window.innerWidth >= 768) {
+        // Tablet: 2 cards visible
+        cardsPerView = 2;
+        const totalGapWidth = (cardsPerView - 1) * computedGap;
+        cardWidth = (containerWidth - totalGapWidth) / cardsPerView;
+    } else {
+        // Mobile: 1 card visible - make it fill the screen width minus padding
+        cardsPerView = 1;
+        // For mobile, make card take up most of the visible width (80% of container)
+        cardWidth = Math.floor(containerWidth * 0.9); // 90% of container width
+    }
+    
+    // Apply calculated width to all cards
+    cards.forEach(card => {
+        card.style.flex = `0 0 ${cardWidth}px`;
+        card.style.minWidth = `${cardWidth}px`;
+    });
+    
+    // Store dimensions for carousel calculations
+    exploreTrack.dataset.cardWidth = cardWidth;
+    exploreTrack.dataset.cardsPerView = cardsPerView;
+    exploreTrack.dataset.containerWidth = containerWidth;
+    exploreTrack.dataset.gap = computedGap;
 }
 
 function scrollExploreCarousel(direction) {
     const exploreCarousel = document.querySelector('.explore-carousel');
-    if (!exploreCarousel) return;
+    const exploreTrack = document.getElementById('explore-products-track');
     
-    const scrollAmount = 250;
+    if (!exploreCarousel || !exploreTrack) return;
+    
+    // Get card dimensions from stored data
+    const cardWidth = parseFloat(exploreTrack.dataset.cardWidth) || 300;
+    const gap = parseInt(exploreTrack.dataset.gap) || 16;
+    
+    // Scroll amount should be one card width plus gap
+    const scrollAmount = cardWidth + gap;
     const currentScroll = exploreCarousel.scrollLeft;
     
     if (direction === 'left') {
         exploreCarousel.scrollTo({
-            left: currentScroll - scrollAmount,
+            left: Math.max(0, currentScroll - scrollAmount),
             behavior: 'smooth'
         });
     } else {
@@ -670,18 +881,24 @@ function scrollExploreCarousel(direction) {
 
 function scrollToProduct(index) {
     const exploreCarousel = document.querySelector('.explore-carousel');
+    const exploreTrack = document.getElementById('explore-products-track');
     const cards = document.querySelectorAll('.explore-product-card');
     
-    if (!cards[index] || !exploreCarousel) return;
+    if (!cards[index] || !exploreCarousel || !exploreTrack) return;
     
-    const card = cards[index];
-    const cardWidth = card.offsetWidth + 16; // 16px gap
-    const scrollPosition = cardWidth * index;
+    // Get card dimensions from stored data
+    const cardWidth = parseFloat(exploreTrack.dataset.cardWidth) || 300;
+    const gap = parseInt(exploreTrack.dataset.gap) || 16;
+    
+    // Calculate scroll position
+    const scrollPosition = (cardWidth + gap) * index;
     
     exploreCarousel.scrollTo({
         left: scrollPosition,
         behavior: 'smooth'
     });
+    
+    updateExploreActiveDot();
 }
 
 function updateExploreArrowStates() {
@@ -701,15 +918,22 @@ function updateExploreArrowStates() {
 
 function updateExploreActiveDot() {
     const exploreCarousel = document.querySelector('.explore-carousel');
+    const exploreTrack = document.getElementById('explore-products-track');
     const cards = document.querySelectorAll('.explore-product-card');
     const dots = document.querySelectorAll('.explore-dot');
     
-    if (!exploreCarousel || !cards.length || !dots.length) return;
+    if (!exploreCarousel || !cards.length || !dots.length || !exploreTrack) return;
     
+    // Get card dimensions from stored data
+    const cardWidth = parseFloat(exploreTrack.dataset.cardWidth) || 300;
+    const gap = parseInt(exploreTrack.dataset.gap) || 16;
     const scrollLeft = exploreCarousel.scrollLeft;
-    const cardWidth = cards[0].offsetWidth + 16;
-    const activeIndex = Math.round(scrollLeft / cardWidth);
+    const scrollWidth = cardWidth + gap;
     
+    // Calculate which product is at the start of the visible area
+    const activeIndex = Math.round(scrollLeft / scrollWidth);
+    
+    // Update dots
     dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === Math.min(activeIndex, dots.length - 1));
     });

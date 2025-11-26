@@ -1205,6 +1205,9 @@ img[src="#"]::before {
     opacity: 0;
     animation: scaleIn 0.8s ease-out forwards;
     flex-shrink: 0;
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
 
 .product-card:nth-child(1) { animation-delay: 0.1s; }
