@@ -243,8 +243,8 @@ class EnhancedCarousel {
         this.updateArrows();
         this.initialized = true;
         
-        // Smooth transitions with faster mobile timing
-        const transitionSpeed = this.isMobile() ? '0.15s' : '0.5s';
+        // Smooth transitions - increased timing to prevent animation conflicts
+        const transitionSpeed = this.isMobile() ? '0.3s' : '0.6s';
         this.track.style.transition = `transform ${transitionSpeed} cubic-bezier(0.4, 0, 0.2, 1)`;
         
         // Add resize listener for responsive behavior
@@ -252,7 +252,7 @@ class EnhancedCarousel {
             clearTimeout(this.resizeTimeout);
             this.resizeTimeout = setTimeout(() => {
                 this.calculateDimensions();
-                const newTransitionSpeed = this.isMobile() ? '0.15s' : '0.5s';
+                const newTransitionSpeed = this.isMobile() ? '0.3s' : '0.6s';
                 this.track.style.transition = `transform ${newTransitionSpeed} cubic-bezier(0.4, 0, 0.2, 1)`;
             }, 150);
         });
@@ -389,9 +389,11 @@ class EnhancedCarousel {
             this.updatePosition();
             this.updateArrows();
             
+            // Match timeout with CSS transition duration
+            const animationDuration = this.isMobile() ? 300 : 600;
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 400);
+            }, animationDuration);
         }
     }
     
@@ -403,9 +405,11 @@ class EnhancedCarousel {
             this.updatePosition();
             this.updateArrows();
             
+            // Match timeout with CSS transition duration
+            const animationDuration = this.isMobile() ? 300 : 600;
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 400);
+            }, animationDuration);
         }
     }
     
