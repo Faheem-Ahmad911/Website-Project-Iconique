@@ -191,31 +191,32 @@ function handleAddToCart(e) {
         name: productName,
         price: parseFloat(priceAmount),
         quantity: quantity,
-        image: mainImage,
-        timestamp: new Date().getTime()
+        image: mainImage
     };
     
-    // Save to localStorage (simulated cart)
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    // Check if product already exists in cart
-    const existingProduct = cart.find(item => item.id === productData.id);
-    if (existingProduct) {
-        existingProduct.quantity += quantity;
+    // Add to cart using global cart manager if available
+    if (typeof globalCartManager !== 'undefined' && globalCartManager) {
+        globalCartManager.addToCart(productData);
     } else {
-        cart.push(productData);
+        // Fallback to direct localStorage (for compatibility)
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingProduct = cart.find(item => item.id === productData.id);
+        if (existingProduct) {
+            existingProduct.quantity += quantity;
+        } else {
+            cart.push(productData);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
     }
     
-    localStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Update cart count
-    updateCartCount();
-    
-    // Show feedback
-    showNotification('Added to cart!', 'success');
+    // Show feedback with cart count
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalQuantity = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+    showNotification(`✓ ${productName} added to cart! (Total items: ${totalQuantity})`, 'success');
     
     // Animate button
-    animateButton(this);
+    animateButton(e.target);
 }
 
 function handleBuyNow(e) {
@@ -328,11 +329,22 @@ function initCart() {
 
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartCountElement = document.querySelector('.cart-count');
+    const cartCountElements = document.querySelectorAll('.cart-count');
     
-    if (cartCountElement) {
-        cartCountElement.textContent = cart.length;
-    }
+    // Calculate total quantity of all items in cart
+    const totalQuantity = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+    
+    cartCountElements.forEach(el => {
+        el.textContent = totalQuantity;
+        
+        // Add bounce animation
+        if (totalQuantity > 0) {
+            el.classList.add('bounce');
+            setTimeout(() => {
+                el.classList.remove('bounce');
+            }, 300);
+        }
+    });
 }
 
 // ========================================
@@ -1127,7 +1139,7 @@ function initCartIcon() {
     if (!cartIcon) return;
     
     cartIcon.addEventListener('click', () => {
-        showNotification('Shopping cart coming soon!', 'info');
+        window.location.href = '../../cart/cart.html';
     });
 }
 

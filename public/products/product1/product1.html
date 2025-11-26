@@ -379,7 +379,27 @@
         </div>
     </footer>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Main Script for Cart Management -->
+    <script src="../../script.js"></script>
+    
     <!-- Product Script -->
     <script src="../products.js"></script>
+    
+    <!-- Cart Navigation Setup -->
+    <script>
+        // Update cart icon to navigate to cart page
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartIcon = document.querySelector('.cart-icon');
+            if (cartIcon) {
+                cartIcon.addEventListener('click', () => {
+                    window.location.href = '../../cart/cart.html';
+                });
+            }
+        });
+    </script>
 </body>
 </html>

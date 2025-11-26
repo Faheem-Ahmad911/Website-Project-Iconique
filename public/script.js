@@ -751,6 +751,36 @@ class ProductInteractions {
     handleProductClick(e, card, type) {
         e.preventDefault();
         
+        // Get product information from card
+        const productName = card.querySelector('.product-name, .bundle-name')?.textContent || 'Product';
+        const productPrice = card.querySelector('.product-price, .bundle-price')?.textContent?.match(/[\d.,]+/)?.[0] || '0';
+        const productImage = card.querySelector('img')?.src || '';
+        const productId = card.getAttribute('data-product-id') || `${type}_${Date.now()}`;
+        
+        // Create product data
+        const productData = {
+            id: productId,
+            name: productName,
+            price: parseFloat(productPrice.replace(/,/g, '')),
+            image: productImage,
+            quantity: 1
+        };
+        
+        // Add to cart using global cart manager
+        if (typeof globalCartManager !== 'undefined' && globalCartManager) {
+            globalCartManager.addToCart(productData);
+        } else {
+            // Fallback
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingProduct = cart.find(item => item.id === productData.id);
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                cart.push(productData);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+        
         // Animate click feedback
         card.style.transform = 'scale(0.95)';
         
@@ -760,34 +790,33 @@ class ProductInteractions {
             }
         }, 150);
         
-        // Show coming soon message with better UX
-        this.showComingSoonNotification(type);
-        
-        console.log(`${type} card clicked - Add to cart functionality coming soon`);
+        // Show success notification
+        this.showNotification(`${productName} added to cart!`, 'success');
     }
     
-    showComingSoonNotification(type) {
+    showNotification(message, type) {
         // Create notification element
         const notification = document.createElement('div');
-        notification.className = 'coming-soon-notification';
-        notification.innerHTML = `
-            <i class="fas fa-info-circle"></i>
-            <span>Shopping cart coming soon!</span>
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: ${type === 'success' ? '#4caf50' : '#ff9800'};
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease-out;
         `;
         
         document.body.appendChild(notification);
-        
-        // Animate in
+
         setTimeout(() => {
-            notification.classList.add('show');
-        }, 10);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 300);
+            notification.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
     
@@ -809,8 +838,7 @@ class ProductInteractions {
     setupCartHandler() {
         if (this.cartIcon) {
             this.cartIcon.addEventListener('click', () => {
-                this.showComingSoonNotification('cart');
-                console.log('Cart page will be implemented in next phase');
+                window.location.href = 'cart/cart.html';
             });
         }
     }
@@ -1219,9 +1247,103 @@ class TheIconiqueApp {
    APPLICATION STARTUP
    ======================================== */
 
+/* ========================================
+   CART MANAGEMENT & SYNCHRONIZATION
+   ======================================== */
+
+// Global Cart Manager for synchronizing cart across pages
+class GlobalCartManager {
+    constructor() {
+        this.storageKey = 'cart'; // Same key used everywhere
+        this.init();
+    }
+
+    init() {
+        // Initialize cart count on page load
+        this.updateCartCount();
+        
+        // Listen for storage changes from other tabs/windows
+        window.addEventListener('storage', (e) => {
+            if (e.key === this.storageKey) {
+                this.updateCartCount();
+            }
+        });
+    }
+
+    // Get cart from localStorage
+    getCart() {
+        const stored = localStorage.getItem(this.storageKey);
+        return stored ? JSON.parse(stored) : [];
+    }
+
+    // Add product to cart
+    addToCart(product) {
+        const cart = this.getCart();
+        
+        // Check if product already exists
+        const existingProduct = cart.find(item => item.id === product.id);
+        if (existingProduct) {
+            existingProduct.quantity += product.quantity || 1;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                quantity: product.quantity || 1
+            });
+        }
+        
+        localStorage.setItem(this.storageKey, JSON.stringify(cart));
+        this.updateCartCount();
+        return cart;
+    }
+
+    // Remove product from cart
+    removeFromCart(productId) {
+        const cart = this.getCart();
+        const index = cart.findIndex(item => item.id === productId);
+        if (index > -1) {
+            cart.splice(index, 1);
+            localStorage.setItem(this.storageKey, JSON.stringify(cart));
+            this.updateCartCount();
+        }
+        return cart;
+    }
+
+    // Update cart count display
+    updateCartCount() {
+        const cart = this.getCart();
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        // Calculate total quantity of all items in cart
+        const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+        
+        cartCountElements.forEach(el => {
+            el.textContent = count;
+            
+            // Add bounce animation when count updates
+            if (count > 0) {
+                el.classList.add('bounce');
+                setTimeout(() => el.classList.remove('bounce'), 300);
+            }
+        });
+    }
+
+    // Clear cart
+    clearCart() {
+        localStorage.removeItem(this.storageKey);
+        this.updateCartCount();
+    }
+}
+
+// Initialize global cart manager
+let globalCartManager = null;
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        globalCartManager = new GlobalCartManager();
+        
         // Initialize page animations
         initPageAnimations();
         
@@ -1238,6 +1360,7 @@ if (document.readyState === 'loading') {
     });
 } else {
     // DOM already loaded
+    globalCartManager = new GlobalCartManager();
     initPageAnimations();
     const animationObserver = new AnimationObserver();
     const productsCarousel = new ProductsCarouselController();
