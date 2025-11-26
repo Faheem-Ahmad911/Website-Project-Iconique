@@ -1187,16 +1187,16 @@ class TheIconiqueApp {
             
             // Initialize carousels
             this.components.productsCarousel = new EnhancedCarousel({
-                carouselSelector: '.products-carousel',
-                trackSelector: '.products-track',
-                leftArrowSelector: '.arrow-left',
-                rightArrowSelector: '.arrow-right',
+                carouselSelector: '.featured-products .products-carousel',
+                trackSelector: '.featured-products .products-track',
+                leftArrowSelector: '.featured-products .arrow-left',
+                rightArrowSelector: '.featured-products .arrow-right',
                 type: 'products'
             });
             
             this.components.bundlesCarousel = new EnhancedCarousel({
-                carouselSelector: '.bundles-carousel',
-                trackSelector: '.bundles-track',
+                carouselSelector: '.bundles-section .bundles-carousel',
+                trackSelector: '.bundles-section .bundles-track',
                 leftArrowSelector: '.bundles-section .arrow-left',
                 rightArrowSelector: '.bundles-section .arrow-right',
                 type: 'bundles'
@@ -1351,7 +1351,8 @@ if (document.readyState === 'loading') {
         const animationObserver = new AnimationObserver();
         
         // Initialize carousel controllers for products and bundles
-        initializeCarousels();
+        const productsCarousel = new ProductsCarouselController();
+        const bundlesCarousel = new BundlesCarouselController();
         
         // Initialize main app
         const app = new TheIconiqueApp();
@@ -1362,7 +1363,8 @@ if (document.readyState === 'loading') {
     globalCartManager = new GlobalCartManager();
     initPageAnimations();
     const animationObserver = new AnimationObserver();
-    initializeCarousels();
+    const productsCarousel = new ProductsCarouselController();
+    const bundlesCarousel = new BundlesCarouselController();
     const app = new TheIconiqueApp();
     app.init();
 }
@@ -1380,35 +1382,24 @@ window.addEventListener('unhandledrejection', (e) => {
 });
 
 /* ========================================
-   CAROUSEL CONTROLLER - Clean Implementation
+   PRODUCTS CAROUSEL - Mobile Only Dots
    ======================================== */
-
-class CarouselController {
-    constructor(config) {
-        this.carousel = document.querySelector(config.carouselSelector);
-        this.track = document.querySelector(config.trackSelector);
-        this.dots = document.querySelectorAll(config.dotsSelector);
-        this.cards = this.track ? this.track.querySelectorAll(':scope > *') : [];
-        
-        if (!this.carousel || !this.track || this.cards.length === 0) {
-            console.warn(`Carousel not initialized: ${config.carouselSelector}`);
-            return;
-        }
-        
-        this.currentIndex = 0;
+class ProductsCarouselController {
+    constructor() {
+        this.carousel = document.querySelector(".products-carousel");
+        this.track = document.querySelector(".products-track");
+        this.cards = document.querySelectorAll(".products-track .product-card");
+        this.indicators = document.querySelectorAll("#products-dots .carousel-dot");
+        this.index = 0;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
         this.isDragging = false;
-        this.startX = 0;
+        this.lastScrollLeft = 0;
         this.scrollTimeout = null;
         
+        if (!this.carousel || this.cards.length === 0) return;
+        
         this.init();
-    }
-    
-    init() {
-        this.setupDotClickHandlers();
-        this.setupScrollTracking();
-        this.setupTouchHandlers();
-        this.setupResizeHandler();
-        this.updateDots();
     }
     
     isMobile() {
@@ -1416,150 +1407,348 @@ class CarouselController {
     }
     
     getCardDimensions() {
-        if (!this.cards[0]) return { width: 0, gap: 0 };
-        
+        if (!this.cards[0]) return { cardWidth: 0, gap: 0 };
         const cardWidth = this.cards[0].offsetWidth;
-        const trackStyle = window.getComputedStyle(this.track);
-        const gap = parseInt(trackStyle.gap) || 16;
-        
-        return { width: cardWidth, gap };
+        const gap = parseInt(window.getComputedStyle(this.track).gap) || 16;
+        return { cardWidth, gap };
     }
     
-    // Update dots to reflect current card
     updateDots() {
-        if (!this.isMobile() || this.dots.length === 0) {
-            return;
-        }
+        const dotsContainer = document.getElementById('products-dots');
+        if (!dotsContainer) return;
         
-        this.dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentIndex);
-        });
+        if (this.isMobile()) {
+            dotsContainer.classList.add('mobile-visible');
+            // Update active dot based on current index
+            this.indicators.forEach((dot, i) => {
+                dot.classList.toggle('active', i === this.index);
+            });
+        } else {
+            dotsContainer.classList.remove('mobile-visible');
+        }
     }
     
-    // Get the current visible card based on scroll position
-    getCurrentCardIndex() {
-        const { width, gap } = this.getCardDimensions();
-        if (width === 0) return 0;
+    updateDotsFromScroll() {
+        if (!this.isMobile() || !this.carousel) return;
+        
+        const { cardWidth, gap } = this.getCardDimensions();
+        if (cardWidth === 0) return;
         
         const scrollLeft = this.carousel.scrollLeft;
-        const cardStep = width + gap;
-        const index = Math.round(scrollLeft / cardStep);
+        const cardStep = cardWidth + gap;
         
-        return Math.max(0, Math.min(index, this.cards.length - 1));
+        // Calculate which card is currently visible (closest to left edge)
+        let newIndex = Math.round(scrollLeft / cardStep);
+        newIndex = Math.max(0, Math.min(newIndex, this.cards.length - 1));
+        
+        if (newIndex !== this.index) {
+            this.index = newIndex;
+            this.updateDots();
+        }
     }
     
-    // Scroll to specific card
-    scrollToCard(index, smooth = true) {
+    scrollToCard(index) {
         if (!this.carousel) return;
         
-        this.currentIndex = Math.max(0, Math.min(index, this.cards.length - 1));
+        this.index = Math.max(0, Math.min(index, this.cards.length - 1));
+        const { cardWidth, gap } = this.getCardDimensions();
         
-        const { width, gap } = this.getCardDimensions();
-        if (width === 0) return;
+        if (cardWidth === 0) return;
         
-        const scrollPosition = this.currentIndex * (width + gap);
+        const scrollAmount = this.index * (cardWidth + gap);
         
         this.carousel.scrollTo({
-            left: scrollPosition,
-            behavior: smooth ? 'smooth' : 'auto'
+            left: scrollAmount,
+            behavior: 'smooth'
         });
         
+        // Update dots immediately for better UX
         this.updateDots();
     }
     
-    // Snap to nearest card
-    snapToCard() {
+    handleTouchStart(e) {
         if (!this.isMobile()) return;
+        this.touchStartX = e.touches[0].clientX;
+        this.isDragging = true;
+    }
+    
+    handleTouchEnd(e) {
+        if (!this.isMobile()) return;
+        this.touchEndX = e.changedTouches[0].clientX;
+        this.isDragging = false;
+        this.handleSwipe();
+    }
+    
+    handleSwipe() {
+        const swipeThreshold = 30; // Reduced threshold for better responsiveness
+        const diff = this.touchStartX - this.touchEndX;
         
-        const newIndex = this.getCurrentCardIndex();
-        if (newIndex !== this.currentIndex) {
-            this.currentIndex = newIndex;
-            this.scrollToCard(this.currentIndex, true);
+        // Only advance one card per swipe
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swiped left - show next card
+                this.scrollToCard(this.index + 1);
+            } else {
+                // Swiped right - show previous card
+                this.scrollToCard(this.index - 1);
+            }
+        } else {
+            // Snap to nearest card if swipe threshold not met
+            this.snapToNearestCard();
         }
     }
     
-    setupDotClickHandlers() {
-        this.dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                this.scrollToCard(index, true);
-            });
-        });
+    snapToNearestCard() {
+        if (!this.carousel) return;
+        
+        const { cardWidth, gap } = this.getCardDimensions();
+        if (cardWidth === 0) return;
+        
+        const scrollLeft = this.carousel.scrollLeft;
+        const cardStep = cardWidth + gap;
+        
+        // Snap to the nearest card
+        const nearestIndex = Math.round(scrollLeft / cardStep);
+        this.scrollToCard(nearestIndex);
+    }
+    
+    setupTouchHandlers() {
+        if (!this.carousel) return;
+        this.carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
     }
     
     setupScrollTracking() {
-        let scrollTimeout;
+        if (!this.carousel) return;
         
         this.carousel.addEventListener('scroll', () => {
-            // Update current index while scrolling
-            this.currentIndex = this.getCurrentCardIndex();
-            this.updateDots();
+            // Update dots while scrolling on mobile
+            this.updateDotsFromScroll();
             
-            // Clear previous timeout
-            clearTimeout(scrollTimeout);
+            // Clear existing timeout
+            clearTimeout(this.scrollTimeout);
             
-            // Snap to card after scroll ends
-            scrollTimeout = setTimeout(() => {
-                this.snapToCard();
+            // Snap to nearest card after scroll ends
+            this.scrollTimeout = setTimeout(() => {
+                this.snapToNearestCard();
             }, 150);
         }, { passive: true });
     }
     
-    setupTouchHandlers() {
-        this.carousel.addEventListener('touchstart', (e) => {
-            this.isDragging = true;
-            this.startX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        this.carousel.addEventListener('touchend', (e) => {
-            if (!this.isDragging) return;
-            
-            this.isDragging = false;
-            const endX = e.changedTouches[0].clientX;
-            const diff = this.startX - endX;
-            
-            // Swipe threshold
-            if (Math.abs(diff) > 30) {
-                if (diff > 0) {
-                    // Swipe left - next card
-                    this.scrollToCard(this.currentIndex + 1, true);
-                } else {
-                    // Swipe right - previous card
-                    this.scrollToCard(this.currentIndex - 1, true);
-                }
-            } else {
-                // Snap to nearest card
-                this.snapToCard();
-            }
-        }, { passive: true });
+    setupDotClickHandlers() {
+        this.indicators.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.scrollToCard(index);
+            });
+        });
     }
     
     setupResizeHandler() {
         window.addEventListener('resize', () => {
-            // Reposition on resize
-            this.scrollToCard(this.currentIndex, false);
+            // Reset scroll position on resize if in mobile view
+            if (this.isMobile()) {
+                this.scrollToCard(this.index);
+            }
             this.updateDots();
         });
+    }
+    
+    init() {
+        if (!this.carousel) return;
+        
+        this.setupTouchHandlers();
+        this.setupScrollTracking();
+        this.setupDotClickHandlers();
+        this.setupResizeHandler();
+        
+        // Initial update
+        this.updateDots();
     }
 }
 
 /* ========================================
-   INITIALIZE CAROUSELS
+   BUNDLES CAROUSEL - Mobile Only Dots
    ======================================== */
-
-function initializeCarousels() {
-    // Products carousel
-    const productsCarousel = new CarouselController({
-        carouselSelector: '.products-carousel',
-        trackSelector: '.products-track',
-        dotsSelector: '#products-dots .carousel-dot'
-    });
+class BundlesCarouselController {
+    constructor() {
+        this.carousel = document.querySelector(".bundles-carousel");
+        this.track = document.querySelector(".bundles-track");
+        this.cards = document.querySelectorAll(".bundles-track .bundle-card");
+        this.indicators = document.querySelectorAll("#bundles-dots .carousel-dot");
+        this.index = 0;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isDragging = false;
+        this.lastScrollLeft = 0;
+        this.scrollTimeout = null;
+        
+        if (!this.carousel || this.cards.length === 0) return;
+        
+        this.init();
+    }
     
-    // Bundles carousel
-    const bundlesCarousel = new CarouselController({
-        carouselSelector: '.bundles-carousel',
-        trackSelector: '.bundles-track',
-        dotsSelector: '#bundles-dots .carousel-dot'
-    });
+    isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    getCardDimensions() {
+        if (!this.cards[0]) return { cardWidth: 0, gap: 0 };
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = parseInt(window.getComputedStyle(this.track).gap) || 16;
+        return { cardWidth, gap };
+    }
+    
+    updateDots() {
+        const dotsContainer = document.getElementById('bundles-dots');
+        if (!dotsContainer) return;
+        
+        if (this.isMobile()) {
+            dotsContainer.classList.add('mobile-visible');
+            // Update active dot based on current index
+            this.indicators.forEach((dot, i) => {
+                dot.classList.toggle('active', i === this.index);
+            });
+        } else {
+            dotsContainer.classList.remove('mobile-visible');
+        }
+    }
+    
+    updateDotsFromScroll() {
+        if (!this.isMobile() || !this.carousel) return;
+        
+        const { cardWidth, gap } = this.getCardDimensions();
+        if (cardWidth === 0) return;
+        
+        const scrollLeft = this.carousel.scrollLeft;
+        const cardStep = cardWidth + gap;
+        
+        // Calculate which card is currently visible (closest to left edge)
+        let newIndex = Math.round(scrollLeft / cardStep);
+        newIndex = Math.max(0, Math.min(newIndex, this.cards.length - 1));
+        
+        if (newIndex !== this.index) {
+            this.index = newIndex;
+            this.updateDots();
+        }
+    }
+    
+    scrollToCard(index) {
+        if (!this.carousel) return;
+        
+        this.index = Math.max(0, Math.min(index, this.cards.length - 1));
+        const { cardWidth, gap } = this.getCardDimensions();
+        
+        if (cardWidth === 0) return;
+        
+        const scrollAmount = this.index * (cardWidth + gap);
+        
+        this.carousel.scrollTo({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+        
+        // Update dots immediately for better UX
+        this.updateDots();
+    }
+    
+    handleTouchStart(e) {
+        if (!this.isMobile()) return;
+        this.touchStartX = e.touches[0].clientX;
+        this.isDragging = true;
+    }
+    
+    handleTouchEnd(e) {
+        if (!this.isMobile()) return;
+        this.touchEndX = e.changedTouches[0].clientX;
+        this.isDragging = false;
+        this.handleSwipe();
+    }
+    
+    handleSwipe() {
+        const swipeThreshold = 30; // Reduced threshold for better responsiveness
+        const diff = this.touchStartX - this.touchEndX;
+        
+        // Only advance one card per swipe
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swiped left - show next card
+                this.scrollToCard(this.index + 1);
+            } else {
+                // Swiped right - show previous card
+                this.scrollToCard(this.index - 1);
+            }
+        } else {
+            // Snap to nearest card if swipe threshold not met
+            this.snapToNearestCard();
+        }
+    }
+    
+    snapToNearestCard() {
+        if (!this.carousel) return;
+        
+        const { cardWidth, gap } = this.getCardDimensions();
+        if (cardWidth === 0) return;
+        
+        const scrollLeft = this.carousel.scrollLeft;
+        const cardStep = cardWidth + gap;
+        
+        // Snap to the nearest card
+        const nearestIndex = Math.round(scrollLeft / cardStep);
+        this.scrollToCard(nearestIndex);
+    }
+    
+    setupTouchHandlers() {
+        if (!this.carousel) return;
+        this.carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
+    }
+    
+    setupScrollTracking() {
+        if (!this.carousel) return;
+        
+        this.carousel.addEventListener('scroll', () => {
+            // Update dots while scrolling on mobile
+            this.updateDotsFromScroll();
+            
+            // Clear existing timeout
+            clearTimeout(this.scrollTimeout);
+            
+            // Snap to nearest card after scroll ends
+            this.scrollTimeout = setTimeout(() => {
+                this.snapToNearestCard();
+            }, 150);
+        }, { passive: true });
+    }
+    
+    setupDotClickHandlers() {
+        this.indicators.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.scrollToCard(index);
+            });
+        });
+    }
+    
+    setupResizeHandler() {
+        window.addEventListener('resize', () => {
+            // Reset scroll position on resize if in mobile view
+            if (this.isMobile()) {
+                this.scrollToCard(this.index);
+            }
+            this.updateDots();
+        });
+    }
+    
+    init() {
+        if (!this.carousel) return;
+        
+        this.setupTouchHandlers();
+        this.setupScrollTracking();
+        this.setupDotClickHandlers();
+        this.setupResizeHandler();
+        
+        // Initial update
+        this.updateDots();
+    }
 }
 
 /* ========================================
