@@ -322,35 +322,55 @@ function initProductCarousels() {
     if (!carousel || !track || cards.length === 0) return;
 
     let currentIndex = 0;
-    const cardWidth = 220; // Card width + gap
-    const gap = 20;
-    const itemWidth = cardWidth + gap;
+    let isMobileView = window.innerWidth <= 768;
 
-    // Mobile/responsive
+    // Determine visible cards based on screen width
     function getVisibleCards() {
         const width = window.innerWidth;
         if (width < 480) return 1;
-        if (width < 768) return 2;
+        if (width < 768) return 1; // Mobile shows 1 card with scroll snap
         if (width < 1024) return 3;
         return 4;
     }
 
+    // Get actual card width from DOM
+    function getCardWidth() {
+        if (cards.length === 0) return 0;
+        const card = cards[0];
+        const style = window.getComputedStyle(card);
+        const width = card.offsetWidth;
+        const marginRight = parseFloat(style.marginRight) || 0;
+        const gap = 16; // var(--spacing-md) = 2rem = 32px, divided by 2
+        return width + gap;
+    }
+
     function updateArrowStates() {
+        if (isMobileView) {
+            // Hide arrows on mobile
+            if (leftArrow) leftArrow.style.display = 'none';
+            if (rightArrow) rightArrow.style.display = 'none';
+            return;
+        }
+
         const visibleCards = getVisibleCards();
         const maxIndex = Math.max(0, cards.length - visibleCards);
 
         if (leftArrow) {
             leftArrow.disabled = currentIndex === 0;
-            leftArrow.style.display = visibleCards >= cards.length ? 'none' : '';
+            leftArrow.style.display = '';
         }
         if (rightArrow) {
             rightArrow.disabled = currentIndex >= maxIndex;
-            rightArrow.style.display = visibleCards >= cards.length ? 'none' : '';
+            rightArrow.style.display = '';
         }
     }
 
     function scrollToIndex(index) {
-        const scrollAmount = index * itemWidth;
+        if (isMobileView) return; // Mobile uses native scroll snap
+
+        const cardWidth = getCardWidth();
+        const scrollAmount = index * cardWidth;
+
         carousel.scrollTo({
             left: scrollAmount,
             behavior: 'smooth'
@@ -366,7 +386,7 @@ function initProductCarousels() {
         });
     }
 
-    // Arrow click handlers
+    // Arrow click handlers (desktop only)
     if (leftArrow) {
         leftArrow.addEventListener('click', () => {
             if (currentIndex > 0) {
@@ -388,15 +408,22 @@ function initProductCarousels() {
     // Dot click handlers
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
-            scrollToIndex(index);
+            if (!isMobileView) {
+                scrollToIndex(index);
+            }
         });
     });
 
     // Update on resize
     window.addEventListener('resize', () => {
-        currentIndex = 0;
-        updateArrowStates();
-        updateDots();
+        const wasMobile = isMobileView;
+        isMobileView = window.innerWidth <= 768;
+        
+        if (wasMobile !== isMobileView) {
+            currentIndex = 0;
+            updateArrowStates();
+            updateDots();
+        }
     });
 
     updateArrowStates();
@@ -417,34 +444,52 @@ function initBundleCarousels() {
     if (!carousel || !track || cards.length === 0) return;
 
     let currentIndex = 0;
-    const cardWidth = 220;
-    const gap = 20;
-    const itemWidth = cardWidth + gap;
+    let isMobileView = window.innerWidth <= 768;
 
     function getVisibleCards() {
         const width = window.innerWidth;
         if (width < 480) return 1;
-        if (width < 768) return 2;
+        if (width < 768) return 1; // Mobile shows 1 card with scroll snap
         if (width < 1024) return 3;
         return 4;
     }
 
+    // Get actual card width from DOM
+    function getCardWidth() {
+        if (cards.length === 0) return 0;
+        const card = cards[0];
+        const width = card.offsetWidth;
+        const gap = 16; // var(--spacing-md) = 2rem = 32px, divided by 2
+        return width + gap;
+    }
+
     function updateArrowStates() {
+        if (isMobileView) {
+            // Hide arrows on mobile
+            if (leftArrow) leftArrow.style.display = 'none';
+            if (rightArrow) rightArrow.style.display = 'none';
+            return;
+        }
+
         const visibleCards = getVisibleCards();
         const maxIndex = Math.max(0, cards.length - visibleCards);
 
         if (leftArrow) {
             leftArrow.disabled = currentIndex === 0;
-            leftArrow.style.display = visibleCards >= cards.length ? 'none' : '';
+            leftArrow.style.display = '';
         }
         if (rightArrow) {
             rightArrow.disabled = currentIndex >= maxIndex;
-            rightArrow.style.display = visibleCards >= cards.length ? 'none' : '';
+            rightArrow.style.display = '';
         }
     }
 
     function scrollToIndex(index) {
-        const scrollAmount = index * itemWidth;
+        if (isMobileView) return; // Mobile uses native scroll snap
+
+        const cardWidth = getCardWidth();
+        const scrollAmount = index * cardWidth;
+
         carousel.scrollTo({
             left: scrollAmount,
             behavior: 'smooth'
@@ -480,14 +525,21 @@ function initBundleCarousels() {
 
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
-            scrollToIndex(index);
+            if (!isMobileView) {
+                scrollToIndex(index);
+            }
         });
     });
 
     window.addEventListener('resize', () => {
-        currentIndex = 0;
-        updateArrowStates();
-        updateDots();
+        const wasMobile = isMobileView;
+        isMobileView = window.innerWidth <= 768;
+        
+        if (wasMobile !== isMobileView) {
+            currentIndex = 0;
+            updateArrowStates();
+            updateDots();
+        }
     });
 
     updateArrowStates();
