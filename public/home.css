@@ -937,7 +937,7 @@
 
     .products-track,
     .bundles-track {
-        gap: var(--spacing-xs);
+        gap: 0px;
         padding: 0;
         padding-right: 1rem;
     }
@@ -952,7 +952,7 @@
 
     .product-image,
     .bundle-image {
-        height: 160px;
+        height: 81%;
     }
 
     .product-name,
