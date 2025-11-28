@@ -773,12 +773,10 @@
         scroll-snap-align: start;
         opacity: 1;
         animation: none;
-        margin: 0 1rem;
+        /* margin: 0 1rem; */
     }
 
-    #card-5{
-        padding-right: 15px !important;
-    }
+ 
 
     .product-image,
     .bundle-image {
@@ -858,7 +856,10 @@
     .featured-products {
         padding: var(--spacing-md) 0;
     }
-
+    .featured-products .container{
+            margin-right: 18px;
+    }
+   
     .featured-products .section-title {
         font-size: 1.6rem;
         margin-bottom: 1.5rem;
