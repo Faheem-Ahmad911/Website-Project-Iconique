@@ -109,12 +109,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const cartIcon = document.querySelector(".cart-icon");
     const cartCount = document.querySelector(".cart-count");
     
-    if (cartIcon) {
-        cartIcon.addEventListener("click", function() {
-            console.log("Cart clicked");
-            // Add cart functionality here
+    // Update cart count from localStorage
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+        if (cartCount) {
+            cartCount.textContent = count;
         }
-        );
+    }
+    
+    // Initialize cart count on page load
+    updateCartCount();
+    
+    // Listen for storage changes from other tabs
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'cart') {
+            updateCartCount();
+        }
+    });
+    
+    if (cartIcon) {
+        cartIcon.addEventListener("click", function(e) {
+            e.preventDefault();
+            window.location.href = 'cart/cart.html';
+        });
     }
     
     // ========================================
