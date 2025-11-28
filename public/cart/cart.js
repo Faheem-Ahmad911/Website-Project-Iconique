@@ -7,7 +7,6 @@ class CartManager {
     constructor() {
         this.storageKey = 'cart'; // Using same key as products.js
         this.cart = this.getCartFromStorage() || [];
-        this.taxRate = 0.18; // 18% GST
         this.init();
     }
 
@@ -149,10 +148,7 @@ class CartManager {
         }, 0);
     }
 
-    // Calculate tax
-    calculateTax(subtotal) {
-        return subtotal * this.taxRate;
-    }
+
 
     // Apply promo code
     applyPromoCode() {
@@ -260,15 +256,15 @@ class CartManager {
         const promoDiscount = parseFloat(localStorage.getItem('promo_discount') || 0);
         const discountAmount = subtotal * promoDiscount;
         const discountedSubtotal = subtotal - discountAmount;
-        const tax = this.calculateTax(discountedSubtotal);
-        const total = discountedSubtotal + tax;
+        const shippingFee = subtotal > 3000 ? 250 : 0;
+        const total = discountedSubtotal + shippingFee;
 
         const subtotalEl = document.getElementById('subtotal');
-        const taxEl = document.getElementById('tax');
+        const shippingEl = document.getElementById('shipping');
         const totalEl = document.getElementById('total');
 
         if (subtotalEl) subtotalEl.textContent = `Rs. ${subtotal.toFixed(2)}`;
-        if (taxEl) taxEl.textContent = `Rs. ${tax.toFixed(2)}`;
+        if (shippingEl) shippingEl.textContent = shippingFee > 0 ? `Rs. ${shippingFee.toFixed(2)}` : 'Free';
         if (totalEl) totalEl.textContent = `Rs. ${total.toFixed(2)}`;
 
         // Show discount if applied
