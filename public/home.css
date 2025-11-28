@@ -211,8 +211,7 @@
 .products-track {
     display: flex;
     gap: var(--spacing-md);
-    transition: transform var(--transition-slow);
-    
+    transition: none;
 }
 
 /* ========================================
@@ -233,8 +232,8 @@
     display: block;
     text-decoration: none;
     color: inherit;
-    width: 280px;
-    min-width: 280px;
+    width: 100%;
+    min-width: 100%;
     cursor: pointer;
 }
 
@@ -560,8 +559,8 @@
     display: block;
     text-decoration: none;
     color: inherit;
-    width: 280px;
-    min-width: 280px;
+    width: 100%;
+    min-width: 100%;
     cursor: pointer;
 }
 
@@ -630,16 +629,47 @@
         height: 600px;
     }
     
+    .products-carousel-wrapper,
+    .bundles-carousel-wrapper {
+        overflow: visible;
+        padding: 0;
+    }
+    
+    .products-carousel,
+    .bundles-carousel {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scroll-snap-type: x mandatory;
+    }
+    
+    .products-carousel::-webkit-scrollbar,
+    .bundles-carousel::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .carousel-arrow,
+    .bundle-arrow {
+        display: none;
+    }
+    
     .product-card,
     .bundle-card {
-        flex: 0 0 calc((100% - 48px) / 3);
-        min-width: 380px;
+        width: calc((100% - 48px) / 3);
+        min-width: calc((100% - 48px) / 3);
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        flex: none;
     }
     
     .products-track,
     .bundles-track {
         gap: 24px;
-       
+        padding: 0;
+        padding-right: 1rem;
     }
     
     .product-image,
@@ -662,20 +692,48 @@
         margin-bottom: 2rem;
     }
 
-    .products-carousel-wrapper {
+    .products-carousel-wrapper,
+    .bundles-carousel-wrapper {
         gap: var(--spacing-xs);
+        overflow: visible;
+        padding: 0;
     }
 
-    .carousel-arrow {
-        width: 45px;
-        height: 45px;
-        font-size: 1.1rem;
+    .products-carousel,
+    .bundles-carousel {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scroll-snap-type: x mandatory;
+    }
+
+    .products-carousel::-webkit-scrollbar,
+    .bundles-carousel::-webkit-scrollbar {
+        display: none;
+    }
+
+    .carousel-arrow,
+    .bundle-arrow {
+        display: none;
     }
 
     .product-card,
     .bundle-card {
-        width: 240px;
-        min-width: 240px;
+        width: calc((100% - 24px) / 2);
+        min-width: calc((100% - 24px) / 2);
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        flex: none;
+    }
+
+    .products-track,
+    .bundles-track {
+        gap: 24px;
+        padding: 0;
+        padding-right: 1rem;
     }
 
     .product-image,
