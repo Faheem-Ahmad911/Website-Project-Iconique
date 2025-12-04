@@ -264,12 +264,12 @@
 /* Mobile Screens (Below 640px) */
 @media screen and (max-width: 640px) {
     .collections-header {
-        padding: 40px var(--spacing-sm) 30px;
+        padding: 60px var(--spacing-sm) 40px;
     }
 
     .collections-title {
-        font-size: 1.8rem;
-        margin-bottom: var(--spacing-sm);
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing-md);
     }
 
     .collections-subtitle {
@@ -312,11 +312,12 @@
 /* Extra Small Screens (Below 480px) */
 @media screen and (max-width: 480px) {
     .collections-header {
-        padding: 30px var(--spacing-sm) 20px;
+        padding: 40px var(--spacing-sm) 30px;
     }
 
     .collections-title {
-        font-size: 1.5rem;
+        font-size: 2rem;
+        margin-bottom: 1rem;
     }
 
     .collections-section {
