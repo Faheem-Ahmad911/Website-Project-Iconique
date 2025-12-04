@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TheIconique - Shopping Cart">
-    <title>Cart - TheIconique</title>
+    <meta name="description" content="Contact TheIconique - Get in touch with our team">
+    <title>Contact Us - TheIconique</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="../images/faviconimages/favicon.jpg">
     
-    <!-- CSS Stylesheet -->
+    <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="contact.css">
     
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,16 +20,13 @@
 </head>
 <body>
     <!-- ========================================
-         HEADER SECTION - White background with logo and navigation
+         HEADER SECTION
          ======================================== -->
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <!-- Logo -->
                 <div class="logo">
-                    <!-- <a href="index.html">
-                        <img src="images/faviconimages/favicon.jpg" alt="TheIconique Logo">
-                    </a> -->
                     <span class="logo-text">TheIconique</span>
                 </div>
                 
@@ -37,10 +34,10 @@
                 <nav class="nav-desktop">
                     <ul class="nav-menu">
                         <li><a href="../index.html">Home</a></li>
-                        <li><a href="../collections.html">Collection</a></li>
+                        <li><a href="../collections.html">Collections</a></li>
                         <li><a href="../aboutus.html">About Us</a></li>
                         <li><a href="#" class="disabled">Blogs</a></li>
-                        <li><a href="../contact/contact.html">Contact</a></li>
+                        <li><a href="contact.html" class="active">Contact</a></li>
                     </ul>
                 </nav>
                 
@@ -52,10 +49,10 @@
                     </div>
                     
                     <!-- Shopping Cart Icon -->
-                    <a href="cart.html" class="cart-icon">
+                    <div class="cart-icon">
                         <i class="fas fa-shopping-bag"></i>
                         <span class="cart-count">0</span>
-                    </a>
+                    </div>
                 </div>
                 
                 <!-- Mobile Menu Toggle Button -->
@@ -69,7 +66,7 @@
     </header>
     
     <!-- ========================================
-         MOBILE NAVIGATION SIDEBAR - Slides from right
+         MOBILE NAVIGATION SIDEBAR
          ======================================== -->
     <div class="mobile-nav-overlay"></div>
     <nav class="mobile-nav">
@@ -79,15 +76,16 @@
         <div class="mobile-nav-title">TheIconique</div>
         <ul class="mobile-nav-menu">
             <li><a href="../index.html">Home</a></li>
-            <li><a href="../collections.html">Collection</a></li>
+            <li><a href="../products/products.html">Products</a></li>
+            <li><a href="../collections.html">Collections</a></li>
             <li><a href="../aboutus.html">About Us</a></li>
             <li><a href="#" class="disabled">Blogs</a></li>
-            <li><a href="#" class="disabled">Contact</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
         </ul>
     </nav>
     
     <!-- ========================================
-         SEARCH MODAL - Full screen search overlay
+         SEARCH MODAL
          ======================================== -->
     <div class="search-overlay">
         <div class="search-modal">
@@ -102,114 +100,142 @@
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-                <div class="search-suggestions">
-                    <div class="popular-searches">
-                        <h3>Popular Searches</h3>
-                        <div class="search-tags">
-                            <span class="search-tag">Lipstick</span>
-                            <span class="search-tag">Foundation</span>
-                            <span class="search-tag">Eyeshadow</span>
-                            <span class="search-tag">Serum</span>
-                            <span class="search-tag">Mascara</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="search-results" id="searchResults">
-                    <!-- Search results will be populated here -->
-                </div>
+                <div id="searchResults" class="search-results"></div>
             </div>
         </div>
     </div>
-
+    
     <!-- ========================================
-         CART PAGE CONTENT
+         PAGE TITLE SECTION
          ======================================== -->
-    <main class="cart-main">
+    <section class="contact-title-section">
         <div class="container">
-            <!-- Page Title -->
-            <div class="cart-header">
-                <h1>Shopping Cart</h1>
-                <!-- <p class="breadcrumb"><a href="../index.html">Home</a> / Cart</p> -->
-            </div>
-
-            <div class="cart-content">
-                <!-- Cart Items Section -->
-                <div class="cart-items-section">
-                    <div class="cart-items-container" id="cartItemsContainer">
-                        <!-- Empty State -->
-                        <div class="empty-cart" id="emptyCart">
-                            <div class="empty-cart-icon">
-                                <i class="fas fa-shopping-bag"></i>
-                            </div>
-                            <h2>Your Cart is Empty</h2>
-                            <p>Discover our amazing collection of premium cosmetic products</p>
-                            <a href="../index.html" class="btn btn-primary">Continue Shopping</a>
+            <h1 class="contact-page-title">Contact</h1>
+        </div>
+    </section>
+    
+    <!-- ========================================
+         CONTACT PAGE SECTION
+         ======================================== -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-wrapper">
+                <!-- Left Side: Contact Form -->
+                <div class="contact-form-wrapper">
+                    <h1 class="contact-title">Get in Touch</h1>
+                    <p class="contact-subtitle">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                    
+                    <form id="contactForm" class="contact-form">
+                        <!-- Name Field -->
+                        <div class="form-group">
+                            <label for="contactName" class="form-label">Name <span class="required">*</span></label>
+                            <input 
+                                type="text" 
+                                id="contactName" 
+                                name="name"
+                                placeholder="Your name"
+                                required
+                                class="form-input"
+                            >
+                            <span class="error-message" id="nameError"></span>
                         </div>
+                        
+                        <!-- Email Field -->
+                        <div class="form-group">
+                            <label for="contactEmail" class="form-label">Email <span class="required">*</span></label>
+                            <input 
+                                type="email" 
+                                id="contactEmail" 
+                                name="email"
+                                placeholder="your.email@example.com"
+                                required
+                                class="form-input"
+                            >
+                            <span class="error-message" id="emailError"></span>
+                        </div>
+                        
+                        <!-- Phone Number Field -->
+                        <div class="form-group">
+                            <label for="contactPhone" class="form-label">Phone Number <span class="required">*</span></label>
+                            <input 
+                                type="tel" 
+                                id="contactPhone" 
+                                name="phone"
+                                placeholder="Your phone number"
+                                required
+                                class="form-input"
+                            >
+                            <span class="error-message" id="phoneError"></span>
+                        </div>
+                        
+                        <!-- Message Field -->
+                        <div class="form-group">
+                            <label for="contactMessage" class="form-label">Message <span class="required">*</span></label>
+                            <textarea 
+                                id="contactMessage" 
+                                name="message"
+                                placeholder="Your message here..."
+                                required
+                                class="form-textarea"
+                                rows="6"
+                            ></textarea>
+                            <span class="error-message" id="messageError"></span>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn-submit">Send</button>
+                        
+                        <!-- Form Message -->
+                        <p id="formMessage" class="form-message"></p>
+                    </form>
+                </div>
+                
+                <!-- Right Side: Contact Information -->
+                <div class="contact-info-wrapper">
+                    <!-- Phone Section -->
+                    <div class="contact-info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3 class="info-title">Phone</h3>
+                        <p class="info-text">
+                            <a href="tel:+923260720251">+92 3260720251</a>
+                        </p>
                     </div>
-
-                    <!-- Cart Table Header - Hidden when empty -->
-                    <div class="cart-table-wrapper" id="cartTableWrapper" style="display: none;">
-                        <table class="cart-table">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cartTableBody">
-                                <!-- Cart items will be inserted here -->
-                            </tbody>
-                        </table>
+                    
+                    <!-- Email Section -->
+                    <div class="contact-info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3 class="info-title">Email</h3>
+                        <p class="info-text">
+                            <a href="mailto:customercare@organiclapbk.com">customercare@organiclapbk.com</a>
+                        </p>
+                    </div>
+                    
+                    <!-- Follow Us Section -->
+                    <div class="contact-info-card follow-section">
+                        <h3 class="info-title">Follow us</h3>
+                        <div class="social-links-contact">
+                            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook" class="social-link">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok" class="social-link">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Cart Summary Section -->
-                <aside class="cart-summary" id="cartSummary" style="display: none;">
-                    <div class="summary-card">
-                        <h3>Order Summary</h3>
-                        
-                        <div class="summary-row">
-                            <span>Subtotal:</span>
-                            <span id="subtotal">Rs. 0</span>
-                        </div>
-                        
-                        <div class="summary-row">
-                            <span>Shipping:</span>
-                            <span id="shipping">Free</span>
-                        </div>
-                        
-                        <div class="summary-divider"></div>
-                        
-                        <div class="summary-row total">
-                            <span>Total:</span>
-                            <span id="total">Rs. 0</span>
-                        </div>
-
-                        <div class="summary-actions">
-                            <button class="btn btn-primary btn-checkout" id="checkoutBtn">Proceed to Checkout</button>
-                            <a href="../index.html" class="btn btn-secondary btn-continue-shopping">Continue Shopping</a>
-                        </div>
-
-                        <!-- Promo Code Section -->
-                        <div class="promo-section">
-                            <h4>Have a Promo Code?</h4>
-                            <div class="promo-input-group">
-                                <input type="text" id="promoCode" placeholder="Enter promo code" class="promo-input">
-                                <button class="btn-apply-promo" id="applyPromo">Apply</button>
-                            </div>
-                            <div class="promo-message" id="promoMessage"></div>
-                        </div>
-                    </div>
-                </aside>
             </div>
         </div>
-    </main>
-
+    </section>
+    
     <!-- ========================================
-         FOOTER SECTION - Newsletter, Links, Social Media
+         FOOTER SECTION
          ======================================== -->
     <footer class="footer">
         <!-- Newsletter Section -->
@@ -260,9 +286,10 @@
                     <div class="footer-column">
                         <h4>Shop</h4>
                         <ul class="footer-links">
-                            <li><a href="#" class="disabled">Collection</a></li>
-                            <li><a href="#" class="disabled">About Us</a></li>
-                            <li><a href="#" class="disabled">Contact</a></li>
+                            <li><a href="../products/products.html">Products</a></li>
+                            <li><a href="../collections.html">Collections</a></li>
+                            <li><a href="../aboutus.html">About Us</a></li>
+                            <li><a href="contact.html">Contact</a></li>
                         </ul>
                     </div>
                     
@@ -285,20 +312,9 @@
             </div>
         </div>
     </footer>
-
-    <!-- ========================================
-         FIREBASE CONFIGURATION
-         ======================================== -->
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
-    <!-- Main JavaScript -->
+    
+    <!-- JavaScript -->
     <script src="../script.js"></script>
-    
-    <!-- Mobile Navigation and Search JavaScript -->
-    <script src="../home.js"></script>
-    
-    <script src="cart.js"></script>
+    <script src="contact.js"></script>
 </body>
 </html>
