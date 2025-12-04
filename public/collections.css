@@ -150,6 +150,7 @@
     margin-bottom: var(--spacing-md);
     line-height: 1.6;
     font-family: var(--font-secondary);
+    display: none;
 }
 
 .collection-link {
@@ -285,25 +286,26 @@
     }
 
     .collection-card-bg {
-        height: 350px;
+        height: 300px;
     }
 
     .collection-card-content {
-        padding: var(--spacing-sm) var(--spacing-sm);
+        padding: 1.2rem var(--spacing-sm);
     }
 
     .collection-name {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
     }
 
     .collection-description {
-        font-size: 0.8rem;
-        margin-bottom: var(--spacing-sm);
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
     }
 
     .collection-link {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 }
 
@@ -326,20 +328,26 @@
     }
 
     .collection-card-bg {
-        height: 180px;
+        height: 280px;
     }
 
     .collection-card-content {
-        padding: var(--spacing-md) var(--spacing-sm);
+        padding: 1rem var(--spacing-sm);
     }
 
     .collection-name {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
     }
 
     .collection-description {
-        font-size: 0.75rem;
-        line-height: 1.4;
+        font-size: 0.7rem;
+        line-height: 1.3;
+        margin-bottom: 0.4rem;
+    }
+
+    .collection-link {
+        font-size: 0.85rem;
     }
 }
 
