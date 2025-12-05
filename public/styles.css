@@ -496,7 +496,7 @@ img[src="#"]::before {
     box-shadow: 0 8px 20px rgba(196, 137, 154, 0.3);
 }
 
-/* Logo text if needed */
+/* Logo text - Two-line brand name */
 .logo-text {
     font-family: var(--font-secondary);
     font-size: 1.5rem;
@@ -504,6 +504,21 @@ img[src="#"]::before {
     color: var(--color-text-dark);
     margin-left: 0.8rem;
     letter-spacing: -0.5px;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.logo-text .logo-the {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: -2px;
+}
+
+.logo-text .logo-iconique {
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 /* Desktop Navigation */
@@ -719,6 +734,7 @@ img[src="#"]::before {
     margin-top: var(--spacing-xl);
     margin-bottom: var(--spacing-lg);
     padding: 0 var(--spacing-sm);
+    line-height: 1.2;
 }
 
 .mobile-nav-menu {

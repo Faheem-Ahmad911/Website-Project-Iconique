@@ -1,4 +1,4 @@
-# Image Placeholder Guide for TheIconique Website
+# Image Placeholder Guide for The Iconique. Website
 
 This folder should contain all images for the homepage. Below are the required images and their specifications:
 
@@ -8,7 +8,7 @@ This folder should contain all images for the homepage. Below are the required i
 - **File**: `logo.png` or use the provided `logo.svg`
 - **Recommended Size**: 200x50px (or higher resolution maintaining aspect ratio)
 - **Format**: PNG with transparent background or SVG
-- **Description**: TheIconique logo
+- **Description**: The Iconique. logo
 
 ### 2. Hero Section Images (Auto-scrolling carousel)
 - **Files**: `hero1.jpg`, `hero2.jpg`, `hero3.jpg`, `hero4.jpg`
