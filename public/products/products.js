@@ -194,24 +194,23 @@ function handleAddToCart(e) {
         image: mainImage
     };
     
-    // Add to cart using global cart manager if available
-    if (typeof globalCartManager !== 'undefined' && globalCartManager) {
-        globalCartManager.addToCart(productData);
+    // Add to cart using CartManager
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingProduct = cart.find(item => item.id === productData.id);
+    
+    if (existingProduct) {
+        // If product exists, increment its quantity
+        existingProduct.quantity += quantity;
     } else {
-        // Fallback to direct localStorage (for compatibility)
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingProduct = cart.find(item => item.id === productData.id);
-        if (existingProduct) {
-            existingProduct.quantity += quantity;
-        } else {
-            cart.push(productData);
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
+        // If product doesn't exist, add it to cart (maintain insertion order)
+        cart.push(productData);
     }
     
+    // Save to storage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    
     // Show feedback with cart count
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const totalQuantity = cart.reduce((total, item) => total + (item.quantity || 1), 0);
     showNotification(`✓ ${productName} added to cart! (Total items: ${totalQuantity})`, 'success');
     

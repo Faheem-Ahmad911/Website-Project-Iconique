@@ -5,15 +5,16 @@
 // Cart Manager Class
 class CartManager {
     constructor() {
-        this.storageKey = 'cart'; // Using same key as products.js
+        this.storageKey = 'cart';
         this.cart = this.getCartFromStorage() || [];
         this.init();
     }
 
     init() {
-        this.setupEventListeners();
         this.renderCart();
         this.updateCartCount();
+        this.setupEventListeners();
+        
         // Listen for storage changes from other tabs/windows
         window.addEventListener('storage', (e) => {
             if (e.key === this.storageKey) {
@@ -24,7 +25,7 @@ class CartManager {
         });
     }
 
-    // Get cart from localStorage (synchronized with products.js)
+    // Get cart from localStorage
     getCartFromStorage() {
         const stored = localStorage.getItem(this.storageKey);
         return stored ? JSON.parse(stored) : [];
@@ -34,23 +35,14 @@ class CartManager {
     saveCartToStorage() {
         localStorage.setItem(this.storageKey, JSON.stringify(this.cart));
         this.updateCartCount();
-        // Trigger storage event for other tabs
-        window.dispatchEvent(new StorageEvent('storage', {
-            key: this.storageKey,
-            newValue: JSON.stringify(this.cart),
-            oldValue: JSON.stringify(this.cart),
-            storageArea: localStorage
-        }));
     }
 
     // Update cart count in header
     updateCartCount() {
         const cartCountElements = document.querySelectorAll('.cart-count');
-        // Calculate total quantity of all items in cart
         const count = this.cart.reduce((total, item) => total + (item.quantity || 1), 0);
         cartCountElements.forEach(el => {
             el.textContent = count;
-            // Add animation
             if (count > 0) {
                 el.classList.add('bounce');
                 setTimeout(() => el.classList.remove('bounce'), 300);
@@ -58,46 +50,59 @@ class CartManager {
         });
     }
 
-    // Setup event listeners
+    // Setup event listeners using event delegation
     setupEventListeners() {
-        // Remove item buttons
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.btn-remove')) {
-                const row = e.target.closest('tr') || e.target.closest('[data-item-index]');
-                const index = row?.dataset.index !== undefined ? row.dataset.index : row?.dataset.itemIndex;
-                if (index !== undefined) {
-                    this.removeItem(parseInt(index));
-                }
+        const tableBody = document.getElementById('cartTableBody');
+        if (!tableBody) return;
+
+        // Use event delegation on the table body for better performance
+        tableBody.addEventListener('click', (e) => {
+            const target = e.target;
+            
+            // Handle quantity decrease button
+            if (target.classList.contains('qty-decrease')) {
+                e.preventDefault();
+                const index = parseInt(target.dataset.index);
+                this.decreaseQuantity(index);
+                return;
+            }
+            
+            // Handle quantity increase button
+            if (target.classList.contains('qty-increase')) {
+                e.preventDefault();
+                const index = parseInt(target.dataset.index);
+                this.increaseQuantity(index);
+                return;
+            }
+            
+            // Handle remove button
+            if (target.closest('.btn-remove')) {
+                const index = parseInt(target.closest('.btn-remove').dataset.index);
+                this.removeItem(index);
+                return;
             }
         });
 
-        // Quantity change
-        document.addEventListener('change', (e) => {
+        // Handle direct quantity input changes
+        tableBody.addEventListener('change', (e) => {
             if (e.target.classList.contains('qty-input')) {
-                const row = e.target.closest('tr') || e.target.closest('[data-item-index]');
-                const index = row?.dataset.index !== undefined ? row.dataset.index : row?.dataset.itemIndex;
-                const newQuantity = parseInt(e.target.value);
-                if (newQuantity > 0 && index !== undefined) {
-                    this.updateQuantity(parseInt(index), newQuantity);
-                }
+                const index = parseInt(e.target.dataset.index);
+                const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
+                this.updateQuantity(index, newQuantity);
             }
         });
 
-        // Quantity buttons
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('qty-btn')) {
-                const isIncrease = e.target.textContent.trim() === '+';
-                const row = e.target.closest('tr') || e.target.closest('[data-item-index]');
-                const index = row?.dataset.index !== undefined ? row.dataset.index : row?.dataset.itemIndex;
-                
-                if (index !== undefined) {
-                    const item = this.cart[parseInt(index)];
-                    const newQuantity = item.quantity + (isIncrease ? 1 : -1);
-                    
-                    if (newQuantity > 0) {
-                        this.updateQuantity(parseInt(index), newQuantity);
-                    }
+        // Handle input validation
+        tableBody.addEventListener('input', (e) => {
+            if (e.target.classList.contains('qty-input')) {
+                let value = e.target.value;
+                // Remove non-numeric characters
+                value = value.replace(/[^0-9]/g, '');
+                // Ensure minimum value is 1
+                if (value === '' || parseInt(value) < 1) {
+                    value = '1';
                 }
+                e.target.value = value;
             }
         });
 
@@ -112,32 +117,43 @@ class CartManager {
         if (checkoutBtn) {
             checkoutBtn.addEventListener('click', () => this.checkout());
         }
+    }
 
-        // Cart icon navigation - redirect to cart page from header
-        const cartIcon = document.querySelector('.cart-icon');
-        if (cartIcon && !window.location.pathname.includes('/cart/')) {
-            cartIcon.addEventListener('click', () => {
-                window.location.href = 'cart/cart.html';
-            });
+    // Increase quantity by 1
+    increaseQuantity(index) {
+        if (this.cart[index]) {
+            this.cart[index].quantity += 1;
+            this.saveCartToStorage();
+            this.renderCart();
+        }
+    }
+
+    // Decrease quantity by 1
+    decreaseQuantity(index) {
+        if (this.cart[index] && this.cart[index].quantity > 1) {
+            this.cart[index].quantity -= 1;
+            this.saveCartToStorage();
+            this.renderCart();
         }
     }
 
     // Remove item from cart
     removeItem(index) {
-        const itemName = this.cart[index].name;
-        this.cart.splice(index, 1);
-        this.saveCartToStorage();
-        this.renderCart();
-        this.showNotification(`${itemName} removed from cart`, 'success');
+        if (this.cart[index]) {
+            const itemName = this.cart[index].name;
+            this.cart.splice(index, 1);
+            this.saveCartToStorage();
+            this.renderCart();
+            this.showNotification(`${itemName} removed from cart`, 'success');
+        }
     }
 
-    // Update quantity
+    // Update quantity to specific value
     updateQuantity(index, quantity) {
         if (this.cart[index]) {
             this.cart[index].quantity = Math.max(1, quantity);
             this.saveCartToStorage();
             this.renderCart();
-            this.updateSummary();
         }
     }
 
@@ -148,20 +164,17 @@ class CartManager {
         }, 0);
     }
 
-
-
     // Apply promo code
     applyPromoCode() {
         const promoInput = document.getElementById('promoCode');
         const code = promoInput.value.trim().toUpperCase();
         const messageDiv = document.getElementById('promoMessage');
 
-        // Sample promo codes
         const promoCodes = {
             'WELCOME10': 0.10,
             'SAVE20': 0.20,
             'BEAUTY15': 0.15,
-            'PINK50': 0.50 // 50% off
+            'PINK50': 0.50
         };
 
         messageDiv.textContent = '';
@@ -188,36 +201,32 @@ class CartManager {
 
     // Render cart
     renderCart() {
-        const cartItemsContainer = document.getElementById('cartItemsContainer');
         const cartTableWrapper = document.getElementById('cartTableWrapper');
         const cartSummary = document.getElementById('cartSummary');
         const emptyCart = document.getElementById('emptyCart');
+        const tableBody = document.getElementById('cartTableBody');
 
         if (this.cart.length === 0) {
-            // Show empty state
-            if (emptyCart) {
-                emptyCart.style.display = 'block';
-            }
+            if (emptyCart) emptyCart.style.display = 'block';
             if (cartTableWrapper) cartTableWrapper.style.display = 'none';
             if (cartSummary) cartSummary.style.display = 'none';
             return;
         }
 
-        // Hide empty state, show cart table
         if (emptyCart) emptyCart.style.display = 'none';
         if (cartTableWrapper) cartTableWrapper.style.display = 'block';
         if (cartSummary) cartSummary.style.display = 'block';
 
-        // Render table rows
-        const tableBody = document.getElementById('cartTableBody');
         if (!tableBody) return;
         
+        // Clear existing content
         tableBody.innerHTML = '';
 
+        // Render each cart item
         this.cart.forEach((item, index) => {
             const itemTotal = parseFloat(item.price) * item.quantity;
             const row = document.createElement('tr');
-            row.dataset.index = index;
+            
             row.innerHTML = `
                 <td data-label="Product">
                     <div class="cart-item-product">
@@ -231,22 +240,22 @@ class CartManager {
                 <td class="price-cell" data-label="Price">Rs. ${parseFloat(item.price).toFixed(2)}</td>
                 <td data-label="Quantity">
                     <div class="quantity-controls">
-                        <button class="qty-btn" type="button">−</button>
-                        <input type="number" class="qty-input" value="${item.quantity}" min="1">
-                        <button class="qty-btn" type="button">+</button>
+                        <button class="qty-btn qty-decrease" type="button" data-index="${index}">−</button>
+                        <input type="number" class="qty-input" value="${item.quantity}" min="1" data-index="${index}">
+                        <button class="qty-btn qty-increase" type="button" data-index="${index}">+</button>
                     </div>
                 </td>
                 <td class="total-cell" data-label="Total">Rs. ${itemTotal.toFixed(2)}</td>
                 <td data-label="Action">
-                    <button class="btn-remove" type="button" title="Remove item">
+                    <button class="btn-remove" type="button" title="Remove item" data-index="${index}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
             `;
+            
             tableBody.appendChild(row);
         });
 
-        // Update summary
         this.updateSummary();
     }
 
@@ -256,7 +265,7 @@ class CartManager {
         const promoDiscount = parseFloat(localStorage.getItem('promo_discount') || 0);
         const discountAmount = subtotal * promoDiscount;
         const discountedSubtotal = subtotal - discountAmount;
-        const shippingFee = subtotal > 3000 ? 250 : 0;
+        const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
         const total = discountedSubtotal + shippingFee;
 
         const subtotalEl = document.getElementById('subtotal');
@@ -300,11 +309,8 @@ class CartManager {
         }
 
         this.showNotification('Proceeding to checkout...', 'success');
-        
-        // Store cart for checkout page
         localStorage.setItem('checkout_cart', JSON.stringify(this.cart));
         
-        // Redirect to checkout page (create this page later)
         setTimeout(() => {
             window.location.href = '../checkout/checkout.html';
         }, 1000);
@@ -336,15 +342,6 @@ class CartManager {
     }
 }
 
-// Initialize cart manager when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new CartManager();
-
-    // Handle mobile navigation and search (from main script.js)
-    setupMobileNavigation();
-    setupSearchFunctionality();
-});
-
 // Mobile Navigation Setup
 function setupMobileNavigation() {
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
@@ -373,7 +370,6 @@ function setupMobileNavigation() {
         });
     }
 
-    // Close on link click
     const mobileNavLinks = document.querySelectorAll('.mobile-nav-menu a');
     mobileNavLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -409,12 +405,19 @@ function setupSearchFunctionality() {
         });
     }
 
-    // Cart icon navigation - already on cart page
     const cartIcon = document.querySelector('.cart-icon');
     if (cartIcon) {
         cartIcon.addEventListener('click', () => {
-            // Already on cart page, so just scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 }
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const cartManager = new CartManager();
+    window.cartManager = cartManager;
+    
+    setupMobileNavigation();
+    setupSearchFunctionality();
+});
