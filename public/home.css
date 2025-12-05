@@ -26,6 +26,35 @@
     overflow: hidden;
 }
 
+.hero-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.hero-link::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 2;
+}
+
+.hero-link:hover::before {
+    opacity: 1;
+}
+
+
+
 .hero-image {
     width: 100%;
     height: 100%;
@@ -35,7 +64,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
 }
 
 /* Desktop Hero Image - Hidden on mobile */
@@ -48,8 +77,8 @@
     display: none;
 }
 
-.hero-image:hover {
-    transform: scale(1.02);
+.hero-link:hover .hero-image {
+    transform: scale(1.05);
 }
 
 /* Loading state for hero image */
