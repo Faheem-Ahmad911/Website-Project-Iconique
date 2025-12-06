@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Iconique. - Checkout">
+    <title>Checkout - The Iconique.</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="../images/faviconimages/favicon.jpg">
+    
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="checkout.css">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Font: Times New Roman (system font) -->
+</head>
+<body>
+    <!-- ========================================
+         HEADER SECTION - White background with logo and navigation
+         ======================================== -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <span class="logo-text">
+                        <span class="logo-the">The</span>
+                        <span class="logo-iconique">Iconique.</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="nav-desktop">
+                    <ul class="nav-menu">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../collections.html">Collections</a></li>
+                        <li><a href="../aboutus.html">About Us</a></li>
+                        <li><a href="#" class="disabled">Blogs</a></li>
+                        <li><a href="../contact/contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Search Icon -->
+                    <div class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    <!-- Shopping Cart Icon -->
+                    <div class="cart-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Toggle Button -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ========================================
+         MOBILE NAVIGATION SIDEBAR
+         ======================================== -->
+    <div class="mobile-nav-overlay"></div>
+    <nav class="mobile-nav">
+        <button class="mobile-nav-close" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mobile-nav-title">
+            <span style="font-weight: 700; display: block; font-size: 0.9rem;">The</span>
+            <span style="font-weight: 700; display: block; font-size: 1.5rem;">Iconique.</span>
+        </div>
+        <ul class="mobile-nav-menu">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../collections.html">Collections</a></li>
+            <li><a href="../aboutus.html">About Us</a></li>
+            <li><a href="#" class="disabled">Blogs</a></li>
+            <li><a href="../contact/contact.html">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <!-- ========================================
+         SEARCH MODAL
+         ======================================== -->
+    <div class="search-overlay">
+        <div class="search-modal">
+            <button class="search-close" aria-label="Close search">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="search-content">
+                <h2>Search Products</h2>
+                <div class="search-form">
+                    <input type="text" id="searchInput" placeholder="Search for products, brands, categories..." autocomplete="off">
+                    <button type="button" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="search-suggestions">
+                    <div class="popular-searches">
+                        <h3>Popular Searches</h3>
+                        <div class="search-tags">
+                            <span class="search-tag">Lipstick</span>
+                            <span class="search-tag">Foundation</span>
+                            <span class="search-tag">Eyeshadow</span>
+                            <span class="search-tag">Serum</span>
+                            <span class="search-tag">Mascara</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-results" id="searchResults">
+                    <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         CHECKOUT PAGE CONTENT
+         ======================================== -->
+    <main class="checkout-main">
+        <div class="container">
+            <!-- Page Title -->
+            <div class="checkout-header">
+                <h1>Checkout</h1>
+            </div>
+
+            <div class="checkout-content">
+                <!-- Left Section - Unified Form -->
+                <form class="checkout-form-section" id="checkoutForm">
+                    <!-- Contact & Delivery Information -->
+                    <div class="checkout-section">
+                        <div class="section-title">Contact & Delivery Information</div>
+                        
+                        <div class="form-row">
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                placeholder="First name"
+                                class="form-input"
+                                required
+                            >
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                placeholder="Last name"
+                                class="form-input"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <input 
+                                type="tel" 
+                                id="phone" 
+                                placeholder="Phone number"
+                                class="form-input"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <input 
+                                type="email" 
+                                id="contactEmail" 
+                                placeholder="Email address"
+                                class="form-input"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <select id="country" class="form-input" required>
+                                <option value="">Country/Region</option>
+                                <option value="pakistan">Pakistan</option>
+                                <option value="usa">USA</option>
+                                <option value="uk">UK</option>
+                                <option value="canada">Canada</option>
+                                <option value="australia">Australia</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <input 
+                                type="text" 
+                                id="city" 
+                                placeholder="City"
+                                class="form-input"
+                                required
+                            >
+                            <input 
+                                type="text" 
+                                id="postalCode" 
+                                placeholder="Postal code (optional)"
+                                class="form-input"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                id="address" 
+                                placeholder="Address"
+                                class="form-input"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                id="apartment" 
+                                placeholder="Apartment, suite, etc. (optional)"
+                                class="form-input"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Shipping & Payment -->
+                    <div class="checkout-section">
+                        <div class="section-title">Shipping & Payment</div>
+                        
+                        <!-- Shipping -->
+                        <div class="form-group-compact">
+                            <label class="compact-label">Shipping Method</label>
+                            <div class="option-compact">
+                                <input 
+                                    type="radio" 
+                                    id="shippingOption" 
+                                    name="shipping" 
+                                    value="free"
+                                    class="form-radio"
+                                    checked
+                                >
+                                <label for="shippingOption" class="option-label">Standard shipping - FREE</label>
+                            </div>
+                        </div>
+
+                        <!-- Payment -->
+                        <div class="form-group-compact">
+                            <label class="compact-label">Payment Method</label>
+                            <div class="option-compact">
+                                <input 
+                                    type="radio" 
+                                    id="paymentCOD" 
+                                    name="payment" 
+                                    value="cash_on_delivery"
+                                    class="form-radio"
+                                    checked
+                                    disabled
+                                >
+                                <label for="paymentCOD" class="option-label">
+                                    <i class="fas fa-money-bill-wave"></i> Cash on Delivery
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-checkbox">
+                            <input 
+                                type="checkbox" 
+                                id="saveInfo" 
+                                class="form-checkbox-input"
+                            >
+                            <label for="saveInfo" class="form-checkbox-label">I Agree with our Terms and Policies.</label>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Right Section - Order Summary -->
+                <aside class="checkout-summary">
+                    <div class="summary-card">
+                        <h3>Order Summary</h3>
+                        
+                        <!-- Order Items -->
+                        <div class="summary-items" id="summaryItems">
+                            <!-- Items will be populated here -->
+                            <div class="empty-summary">
+                                <p>Your cart is empty</p>
+                                <a href="../cart/cart.html" class="btn btn-secondary btn-small">Go to Cart</a>
+                            </div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+                        
+                        <!-- Summary Rows -->
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotalAmount">Rs. 0</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Shipping:</span>
+                            <span id="shippingAmount">FREE</span>
+                        </div>
+
+                        <!-- Discount Code -->
+                        <div class="discount-section">
+                            <div class="discount-header">
+                                <input 
+                                    type="text" 
+                                    id="discountCode" 
+                                    placeholder="Discount code"
+                                    class="discount-input"
+                                >
+                                <button class="btn-apply-discount" id="applyDiscountBtn">Apply</button>
+                            </div>
+                            <div class="discount-message" id="discountMessage"></div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+                        
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="totalAmount">Rs. 0</span>
+                        </div>
+
+                        <!-- Complete Order Button -->
+                        <button class="btn btn-primary btn-complete-order" id="completeOrderBtn">
+                            Complete Order
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================
+         FOOTER SECTION - Newsletter, Links, Social Media
+         ======================================== -->
+    <footer class="footer">
+        <!-- Newsletter Section -->
+        <div class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-header">
+                        <h2>Subscribe to our Newsletter</h2>
+                        <p>Be the first one to know about our new products & exclusive offers.</p>
+                    </div>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div class="input-group">
+                            <input 
+                                type="email" 
+                                id="newsletterEmail" 
+                                placeholder="Email" 
+                                required
+                            >
+                            <button type="submit" class="btn-subscribe">subscribe</button>
+                        </div>
+                    </form>
+                    <p id="newsletterMessage" class="newsletter-message"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Main Content -->
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- Let's Connect Section -->
+                    <div class="footer-column">
+                        <h4>Let's Connect</h4>
+                        <div class="social-links">
+                            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Shop Section -->
+                    <div class="footer-column">
+                        <h4>Shop</h4>
+                        <ul class="footer-links">
+                            <li><a href="../collections.html">Collection</a></li>
+                            <li><a href="../aboutus.html">About Us</a></li>
+                            <li><a href="../contact/contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Brand Section -->
+                    <div class="footer-column">
+                        <h4>
+                            <span style="font-weight: 700; display: block; font-size: 0.9rem;">The</span>
+                            <span style="font-weight: 700; display: block; font-size: 1.2rem;">Iconique.</span>
+                        </h4>
+                        <p class="footer-description">
+                            Premium cosmetic products for the modern woman. 
+                            Elevate your beauty routine with our curated collection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright Section -->
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2025 The Iconique. All rights reserved. | Developed by DevPy Technologies</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================
+         FIREBASE CONFIGURATION
+         ======================================== -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Main JavaScript -->
+    <script src="../script.js"></script>
+    
+    <!-- Mobile Navigation and Search JavaScript -->
+    <script src="../home.js"></script>
+    
+    <!-- Checkout Page JavaScript -->
+    <script src="checkout.js"></script>
+</body>
+</html>
