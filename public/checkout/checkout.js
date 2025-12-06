@@ -99,13 +99,31 @@ function updateOrderSummary() {
         subtotal += item.price * item.quantity;
     });
 
-    // Shipping is free
-    const shipping = 0;
-    const total = subtotal + shipping;
+    // Get applied discount if any
+    let discountAmount = 0;
+    const appliedDiscount = sessionStorage.getItem('appliedDiscount');
+    if (appliedDiscount) {
+        const discount = JSON.parse(appliedDiscount);
+        discountAmount = discount.amount;
+    }
+
+    // Calculate discounted subtotal
+    const discountedSubtotal = subtotal - discountAmount;
+
+    // Calculate shipping fee based on discounted subtotal
+    // Rs. 250 shipping if subtotal >= 3000, otherwise FREE
+    const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
+    const total = discountedSubtotal + shippingFee;
 
     // Update display
     document.getElementById('subtotalAmount').textContent = `Rs. ${subtotal.toFixed(2)}`;
-    document.getElementById('shippingAmount').textContent = 'FREE';
+    
+    if (shippingFee > 0) {
+        document.getElementById('shippingAmount').textContent = `Rs. ${shippingFee.toFixed(2)}`;
+    } else {
+        document.getElementById('shippingAmount').textContent = 'FREE';
+    }
+    
     document.getElementById('totalAmount').textContent = `Rs. ${total.toFixed(2)}`;
 }
 
@@ -285,6 +303,22 @@ function collectOrderData() {
         subtotal += item.price * item.quantity;
     });
 
+    // Get applied discount if any
+    let discountAmount = 0;
+    const appliedDiscount = sessionStorage.getItem('appliedDiscount');
+    if (appliedDiscount) {
+        const discount = JSON.parse(appliedDiscount);
+        discountAmount = discount.amount;
+    }
+
+    // Calculate discounted subtotal
+    const discountedSubtotal = subtotal - discountAmount;
+
+    // Calculate shipping fee based on discounted subtotal
+    // Rs. 250 shipping if subtotal >= 3000, otherwise FREE
+    const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
+    const total = discountedSubtotal + shippingFee;
+
     return {
         orderId: generateOrderId(),
         email: document.getElementById('contactEmail').value.trim(),
@@ -298,8 +332,9 @@ function collectOrderData() {
         phone: document.getElementById('phone').value.trim(),
         items: cart,
         subtotal: subtotal,
-        shipping: 0,
-        total: subtotal,
+        discount: discountAmount,
+        shipping: shippingFee,
+        total: total,
         paymentMethod: 'cash_on_delivery',
         orderDate: new Date().toISOString(),
         status: 'pending'
@@ -447,10 +482,22 @@ function applyDiscountToOrder(discountPercentage, code) {
     });
 
     const discountAmount = subtotal * discountPercentage;
-    const newTotal = subtotal - discountAmount;
+    const discountedSubtotal = subtotal - discountAmount;
+
+    // Calculate shipping fee based on discounted subtotal
+    // Rs. 250 shipping if subtotal >= 3000, otherwise FREE
+    const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
+    const newTotal = discountedSubtotal + shippingFee;
 
     // Update display with discount
     document.getElementById('subtotalAmount').textContent = `Rs. ${subtotal.toFixed(2)}`;
+    
+    if (shippingFee > 0) {
+        document.getElementById('shippingAmount').textContent = `Rs. ${shippingFee.toFixed(2)}`;
+    } else {
+        document.getElementById('shippingAmount').textContent = 'FREE';
+    }
+    
     document.getElementById('totalAmount').innerHTML = `
         <span style="text-decoration: line-through; color: #999; font-size: 0.9em; margin-right: 0.5rem;">Rs. ${subtotal.toFixed(2)}</span>
         Rs. ${newTotal.toFixed(2)}
