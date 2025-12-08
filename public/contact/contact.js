@@ -1,4 +1,29 @@
 /* ========================================
+   FIREBASE INITIALIZATION
+   ======================================== */
+
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDSO7MfjAkKnEQvd3xxvyR_8NWFSUK_vzQ",
+  authDomain: "the-iconique.firebaseapp.com",
+  projectId: "the-iconique",
+  storageBucket: "the-iconique.firebasestorage.app",
+  messagingSenderId: "1031336694814",
+  appId: "1:1031336694814:web:ae29983685ef0fc3e40a0f",
+  measurementId: "G-DET1KW232D"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+/* ========================================
    CONTACT PAGE JAVASCRIPT
    ======================================== */
 
@@ -31,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 /**
  * Handle contact form submission
  */
-function handleContactFormSubmit(e) {
+async function handleContactFormSubmit(e) {
     e.preventDefault();
     
     const form = e.target;
@@ -61,7 +86,7 @@ function handleContactFormSubmit(e) {
         email: emailInput.value.trim(),
         phone: phoneInput.value.trim(),
         message: messageInput.value.trim(),
-        timestamp: new Date().toISOString()
+        timestamp: serverTimestamp()
     };
     
     // Show loading state
@@ -70,10 +95,11 @@ function handleContactFormSubmit(e) {
     submitBtn.textContent = 'Sending...';
     submitBtn.disabled = true;
     
-    // Simulate sending (replace with actual backend call)
-    setTimeout(() => {
-        // For now, we'll just show a success message
-        // In a real scenario, you would send this to a backend server
+    try {
+        // Add document to Firestore
+        const docRef = await addDoc(collection(db, 'contactMessages'), formData);
+        
+        console.log('Contact Form Data stored with ID:', docRef.id);
         
         showMessage(formMessage, 'Thank you for reaching out! We\'ll get back to you soon.', 'success');
         
@@ -84,9 +110,14 @@ function handleContactFormSubmit(e) {
         submitBtn.textContent = originalBtnText;
         submitBtn.disabled = false;
         
-        // Log the data (for development purposes)
-        console.log('Contact Form Data:', formData);
-    }, 1500);
+    } catch (error) {
+        console.error('Error storing contact data:', error);
+        showMessage(formMessage, 'Error sending message. Please try again later.', 'error');
+        
+        // Restore button
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
+    }
 }
 
 /**
