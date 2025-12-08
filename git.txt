@@ -5,3 +5,11 @@ git push --force
 git add .
 git commit -m "Your commit message"
 git push
+
+
+
+
+server
+Starting up http-server, serving ./public
+Available on:
+  http://127.0.0.1:8000

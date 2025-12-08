@@ -1,4 +1,29 @@
 /* ========================================
+   FIREBASE INITIALIZATION
+   ======================================== */
+
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDSO7MfjAkKnEQvd3xxvyR_8NWFSUK_vzQ",
+  authDomain: "the-iconique.firebaseapp.com",
+  projectId: "the-iconique",
+  storageBucket: "the-iconique.firebasestorage.app",
+  messagingSenderId: "1031336694814",
+  appId: "1:1031336694814:web:ae29983685ef0fc3e40a0f",
+  measurementId: "G-DET1KW232D"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+/* ========================================
    CHECKOUT PAGE JAVASCRIPT
    ======================================== */
 
@@ -168,16 +193,8 @@ function handleCheckoutSubmission(e) {
     // Collect form data
     const orderData = collectOrderData();
 
-    // Save order and clear cart
-    saveOrder(orderData);
-
-    // Show success message
-    showOrderSuccess();
-
-    // Redirect after delay
-    setTimeout(function() {
-        window.location.href = '../index.html';
-    }, 3000);
+    // Save order and clear cart (async)
+    saveOrderToFirebase(orderData);
 }
 
 function validateCheckoutForm() {
@@ -343,6 +360,68 @@ function collectOrderData() {
 
 function generateOrderId() {
     return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+}
+
+// ========================================
+// SAVE ORDER TO FIREBASE
+// ========================================
+
+async function saveOrderToFirebase(orderData) {
+    // Show loading state
+    const completeOrderBtn = document.getElementById('completeOrderBtn');
+    const originalBtnText = completeOrderBtn.textContent;
+    completeOrderBtn.textContent = 'Processing...';
+    completeOrderBtn.disabled = true;
+
+    try {
+        // Add order to Firestore
+        const docRef = await addDoc(collection(db, 'orders'), {
+            ...orderData,
+            timestamp: serverTimestamp()
+        });
+
+        console.log('Order stored with ID:', docRef.id);
+
+        // Save locally as well for backup
+        saveOrderLocally(orderData);
+
+        // Show success message
+        showOrderSuccess();
+
+        // Redirect after delay
+        setTimeout(function() {
+            window.location.href = '../index.html';
+        }, 3000);
+
+    } catch (error) {
+        console.error('Error saving order to Firebase:', error);
+        showErrorMessage('Error processing order. Please try again.');
+        completeOrderBtn.textContent = originalBtnText;
+        completeOrderBtn.disabled = false;
+    }
+}
+
+function saveOrderLocally(orderData) {
+    try {
+        // Get existing orders
+        let orders = localStorage.getItem('orders');
+        orders = orders ? JSON.parse(orders) : [];
+
+        // Add new order
+        orders.push(orderData);
+
+        // Save orders
+        localStorage.setItem('orders', JSON.stringify(orders));
+
+        // Clear cart
+        localStorage.removeItem('cart');
+
+        // Update cart count in header
+        updateCartCount();
+
+    } catch (error) {
+        console.error('Error saving order locally:', error);
+    }
 }
 
 function saveOrder(orderData) {
