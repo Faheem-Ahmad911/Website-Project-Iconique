@@ -385,6 +385,9 @@ async function saveOrderToFirebase(orderData) {
         // Save locally as well for backup
         saveOrderLocally(orderData);
 
+        // Send order confirmation emails
+        await sendOrderEmails(orderData);
+
         // Show success message
         showOrderSuccess();
 
@@ -398,6 +401,46 @@ async function saveOrderToFirebase(orderData) {
         showErrorMessage('Error processing order. Please try again.');
         completeOrderBtn.textContent = originalBtnText;
         completeOrderBtn.disabled = false;
+    }
+}
+
+// ========================================
+// SEND ORDER CONFIRMATION EMAILS
+// ========================================
+
+async function sendOrderEmails(orderData) {
+    try {
+        // Get the backend server URL dynamically
+        // For local development: http://localhost:5000
+        // For production: same origin (Vercel will handle routing)
+        const serverURL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000'
+            : window.location.origin;
+
+        const response = await fetch(`${serverURL}/api/send-order-emails`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log('✅ Order emails sent successfully:', result);
+            return true;
+        } else {
+            console.warn('⚠️ Email service warning:', result.message);
+            // Don't throw error, order is still processed even if email fails
+            return false;
+        }
+
+    } catch (error) {
+        console.error('❌ Error sending order emails:', error);
+        // Don't throw error, order is still processed even if email fails
+        showErrorMessage('Order placed successfully, but confirmation email could not be sent. Please check your email later.');
+        return false;
     }
 }
 
