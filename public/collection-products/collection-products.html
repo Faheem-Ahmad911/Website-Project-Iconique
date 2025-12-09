@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The Iconique. - Collections - Premium Cosmetic Products">
-    <title>Collections - The Iconique.</title>
+    <meta name="description" content="The Iconique. - Collection Products - Premium Cosmetic Products">
+    <title>Collection Products - The Iconique.</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="images/faviconimages/favicon.jpg">
+    <link rel="icon" type="image/jpeg" href="../images/faviconimages/favicon.jpg">
     
     <!-- CSS Stylesheets -->
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="collections.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../collections.css">
     
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,11 +34,11 @@
                 <!-- Desktop Navigation -->
                 <nav class="nav-desktop">
                     <ul class="nav-menu">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="collections.html" class="active">Collections</a></li>
-                        <li><a href="aboutus.html">About Us</a></li>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../collections.html">Collections</a></li>
+                        <li><a href="../aboutus.html">About Us</a></li>
                         <li><a href="#" class="disabled">Blogs</a></li>
-                        <li><a href="contact/contact.html">Contact</a></li>
+                        <li><a href="../contact/contact.html">Contact</a></li>
                     </ul>
                 </nav>
                 
@@ -79,11 +79,11 @@
             <span style="font-weight: 700; display: block; font-size: 1.5rem;">Iconique.</span>
         </div>
         <ul class="mobile-nav-menu">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="collections.html" class="active">Collections</a></li>
-            <li><a href="aboutus.html">About Us</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../collections.html">Collections</a></li>
+            <li><a href="../aboutus.html">About Us</a></li>
             <li><a href="#" class="disabled">Blogs</a></li>
-            <li><a href="contact/contact.html">Contact</a></li>
+            <li><a href="../contact/contact.html">Contact</a></li>
         </ul>
     </nav>
 
@@ -109,75 +109,21 @@
     </div>
 
     <!-- ========================================
-         COLLECTIONS PAGE SECTION
+         COLLECTION PRODUCTS PAGE SECTION
          ======================================== -->
     <main class="collections-main">
         <!-- Page Title -->
         <section class="collections-header">
             <div class="container">
-                <h1 class="collections-title">Collections</h1>
+                <h1 id="collectionTitle" class="collections-title">Collection Products</h1>
             </div>
         </section>
 
         <!-- Collections Grid -->
         <section class="collections-section">
             <div class="container">
-                <div class="collections-grid">
-                    <!-- Collection Card 1 -->
-                    <div class="collection-card">
-                        <div class="collection-card-bg collection-card-bg-yellow">
-                            <div class="collection-image-wrapper">
-                                <img src="images/collectionimages/product1.jpg" alt="Sunscreen Collection" class="collection-image">
-                            </div>
-                        </div>
-                        <div class="collection-card-content">
-                            <h3 class="collection-name">Sunscreen & Protection</h3>
-                            <p class="collection-description">Protect your skin with our premium UV-protection formulas</p>
-                            <a href="collection-products/collection-products.html?collection=sunscreen-protection" class="collection-link">Explore Collection <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-
-                    <!-- Collection Card 2 -->
-                    <div class="collection-card">
-                        <div class="collection-card-bg collection-card-bg-blue">
-                            <div class="collection-image-wrapper">
-                                <img src="images/collectionimages/product2.jpg" alt="Skincare Collection" class="collection-image">
-                            </div>
-                        </div>
-                        <div class="collection-card-content">
-                            <h3 class="collection-name">Hydrating Skincare</h3>
-                            <p class="collection-description">Restore moisture and glow with our hydrating collection</p>
-                            <a href="collection-products/collection-products.html?collection=hydrating-skincare" class="collection-link">Explore Collection <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-
-                    <!-- Collection Card 3 -->
-                    <div class="collection-card">
-                        <div class="collection-card-bg collection-card-bg-yellow-light">
-                            <div class="collection-image-wrapper">
-                                <img src="images/collectionimages/product3.jpg" alt="Beauty Essentials" class="collection-image">
-                            </div>
-                        </div>
-                        <div class="collection-card-content">
-                            <h3 class="collection-name">Beauty Essentials</h3>
-                            <p class="collection-description">Complete your beauty routine with our must-have essentials</p>
-                            <a href="collection-products/collection-products.html?collection=beauty-essentials" class="collection-link">Explore Collection <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-
-                    <!-- Collection Card 4 -->
-                    <div class="collection-card">
-                        <div class="collection-card-bg collection-card-bg-pink">
-                            <div class="collection-image-wrapper">
-                                <img src="images/collectionimages/product4.jpg" alt="Makeup Collection" class="collection-image">
-                            </div>
-                        </div>
-                        <div class="collection-card-content">
-                            <h3 class="collection-name">Makeup Magic</h3>
-                            <p class="collection-description">Express yourself with our vibrant makeup collection</p>
-                            <a href="collection-products/collection-products.html?collection=makeup-magic" class="collection-link">Explore Collection <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
+                <div id="productsGrid" class="collections-grid">
+                    <!-- Products will be loaded here by JavaScript -->
                 </div>
             </div>
         </section>
@@ -235,9 +181,9 @@
                     <div class="footer-column">
                         <h4>Shop</h4>
                         <ul class="footer-links">
-                            <li><a href="collections.html">Collections</a></li>
-                            <li><a href="aboutus.html">About Us</a></li>
-                            <li><a href="contact/contact.html">Contact</a></li>
+                            <li><a href="../collections.html">Collections</a></li>
+                            <li><a href="../aboutus.html">About Us</a></li>
+                            <li><a href="../contact/contact.html">Contact</a></li>
                         </ul>
                     </div>
                     
@@ -263,15 +209,9 @@
             </div>
         </div>
     </footer>
-    
-    <!-- ========================================
-         FIREBASE CONFIGURATION
-         ======================================== -->
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <!-- Scripts -->
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
+    <script src="collection-products.js"></script>
 </body>
 </html>
