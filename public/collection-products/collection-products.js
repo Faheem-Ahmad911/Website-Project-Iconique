@@ -87,7 +87,7 @@ function renderProducts(products) {
     };
     
     grid.innerHTML = products.map((product, index) => `
-        <div class="collection-card">
+        <a href="${productPaths[product.id]}" class="collection-card" style="text-decoration: none; color: inherit;">
             <div class="collection-card-bg" style="background: linear-gradient(135deg, #FFF9E6 0%, #FFEB99 100%); position: relative;">
                 <div class="collection-image-wrapper">
                     <img src="${product.image}" alt="${product.name}" class="collection-image">
@@ -104,8 +104,8 @@ function renderProducts(products) {
                     Rs. ${product.price.toFixed(2)} 
                     <span style="font-size: 0.85rem; color: #999; text-decoration: line-through; margin-left: 8px;">Rs. ${product.original.toFixed(2)}</span>
                 </p>
-                <a href="${productPaths[product.id]}" class="collection-link">View Product <i class="fas fa-arrow-right"></i></a>
+                <span class="collection-link" style="pointer-events: none;">View Product <i class="fas fa-arrow-right"></i></span>
             </div>
-        </div>
+        </a>
     `).join('');
 }
