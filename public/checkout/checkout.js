@@ -136,8 +136,8 @@ function updateOrderSummary() {
     const discountedSubtotal = subtotal - discountAmount;
 
     // Calculate shipping fee based on discounted subtotal
-    // Rs. 250 shipping if subtotal >= 3000, otherwise FREE
-    const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
+    // Rs. 250 shipping if subtotal <= 3000, otherwise FREE
+    const shippingFee = discountedSubtotal <= 3000 ? 250 : 0;
     const total = discountedSubtotal + shippingFee;
 
     // Update display
@@ -332,8 +332,8 @@ function collectOrderData() {
     const discountedSubtotal = subtotal - discountAmount;
 
     // Calculate shipping fee based on discounted subtotal
-    // Rs. 250 shipping if subtotal >= 3000, otherwise FREE
-    const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
+    // Rs. 250 shipping if subtotal <= 3000, otherwise FREE
+    const shippingFee = discountedSubtotal <= 3000 ? 250 : 0;
     const total = discountedSubtotal + shippingFee;
 
     return {
@@ -607,8 +607,8 @@ function applyDiscountToOrder(discountPercentage, code) {
     const discountedSubtotal = subtotal - discountAmount;
 
     // Calculate shipping fee based on discounted subtotal
-    // Rs. 250 shipping if subtotal >= 3000, otherwise FREE
-    const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
+    // Rs. 250 shipping if subtotal <= 3000, otherwise FREE
+    const shippingFee = discountedSubtotal <= 3000 ? 250 : 0;
     const newTotal = discountedSubtotal + shippingFee;
 
     // Update display with discount

@@ -265,7 +265,7 @@ class CartManager {
         const promoDiscount = parseFloat(localStorage.getItem('promo_discount') || 0);
         const discountAmount = subtotal * promoDiscount;
         const discountedSubtotal = subtotal - discountAmount;
-        const shippingFee = discountedSubtotal >= 3000 ? 250 : 0;
+        const shippingFee = discountedSubtotal <= 3000 ? 250 : 0;
         const total = discountedSubtotal + shippingFee;
 
         const subtotalEl = document.getElementById('subtotal');
