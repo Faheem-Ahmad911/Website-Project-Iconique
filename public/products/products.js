@@ -393,7 +393,7 @@ function showNotification(message, type = 'info') {
     
     // Remove after 3 seconds
     setTimeout(() => {
-        notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+        notification.style.animation = 'slideInUp 0.3s ease-out reverse';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }

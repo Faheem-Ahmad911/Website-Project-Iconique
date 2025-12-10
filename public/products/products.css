@@ -617,44 +617,68 @@
 
 .notification {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
     z-index: 10000;
-    animation: slideInRight var(--transition-fast) ease-out;
+    animation: slideInUp var(--transition-normal) ease-out;
     font-size: 0.95rem;
+    font-family: var(--font-primary);
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
 }
 
 .notification-content {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.notification-content i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
 }
 
 .notification-success {
-    background: #d4edda;
-    color: #155724;
-    border-left: 4px solid #28a745;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 182, 193, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(255, 105, 180, 0.3);
 }
 
 .notification-info {
-    background: #d1ecf1;
-    color: #0c5460;
-    border-left: 4px solid #17a2b8;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.95), rgba(41, 128, 185, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(52, 152, 219, 0.3);
 }
 
 .notification-warning {
-    background: #fff3cd;
-    color: #856404;
-    border-left: 4px solid #ffc107;
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.95), rgba(230, 126, 34, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(241, 196, 15, 0.3);
 }
 
 .notification-error {
-    background: #f8d7da;
-    color: #721c24;
-    border-left: 4px solid #dc3545;
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.95), rgba(192, 57, 43, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 /* ========================================

@@ -320,25 +320,29 @@ class CartManager {
     showNotification(message, type) {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: ${type === 'success' ? '#4caf50' : '#f44336'};
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            animation: slideInRight 0.3s ease-out;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas fa-${this.getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+            </div>
         `;
         document.body.appendChild(notification);
 
         setTimeout(() => {
-            notification.style.animation = 'fadeOut 0.3s ease-out';
+            notification.style.animation = 'slideInUp 0.3s ease-out reverse';
             setTimeout(() => notification.remove(), 300);
         }, 3000);
+    }
+
+    // Get notification icon
+    getNotificationIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            info: 'info-circle',
+            warning: 'exclamation-circle',
+            error: 'times-circle'
+        };
+        return icons[type] || 'info-circle';
     }
 }
 

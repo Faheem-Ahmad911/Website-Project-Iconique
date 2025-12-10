@@ -3434,3 +3434,62 @@ img[src="#"]::before {
         perspective: 1000px;
     }
 }
+
+/* ========================================
+   NOTIFICATION STYLES - GLOBAL
+   ======================================== */
+
+.notification {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    z-index: 10000;
+    animation: slideInUp var(--transition-normal) ease-out;
+    font-size: 0.95rem;
+    font-family: var(--font-primary);
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.notification-content i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.notification-success {
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.95), rgba(255, 182, 193, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(255, 105, 180, 0.3);
+}
+
+.notification-info {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.95), rgba(41, 128, 185, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.notification-warning {
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.95), rgba(230, 126, 34, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.notification-error {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.95), rgba(192, 57, 43, 0.95));
+    color: #ffffff;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
