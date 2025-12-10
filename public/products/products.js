@@ -235,11 +235,30 @@ function handleBuyNow(e) {
         image: mainImage
     };
     
-    // Save to localStorage
-    localStorage.setItem('selectedProduct', JSON.stringify(productData));
+    // Create a cart with only the selected product
+    const cart = [productData];
     
-    // Redirect to checkout
-    window.location.href = '#checkout';
+    // Save to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Show success notification
+    showNotification(`✓ Proceeding to checkout...`, 'success');
+    
+    // Redirect to checkout page
+    // Calculate relative path based on current location
+    const currentPath = window.location.pathname;
+    let checkoutPath = '';
+    
+    // Determine relative path to checkout
+    if (currentPath.includes('/products/product')) {
+        checkoutPath = '../../checkout/checkout.html';
+    } else {
+        checkoutPath = '../checkout/checkout.html';
+    }
+    
+    setTimeout(() => {
+        window.location.href = checkoutPath;
+    }, 500);
 }
 
 // ========================================
