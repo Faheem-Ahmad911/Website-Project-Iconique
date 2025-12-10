@@ -330,11 +330,15 @@ function updateWishlistStatus() {
 
 function updateWishlistCount() {
     const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    const wishlistCount = document.getElementById('wishlist-count');
+    const wishlistCountElements = document.querySelectorAll('.wishlist-count');
     
-    if (wishlistCount) {
-        wishlistCount.textContent = wishlist.length;
-    }
+    wishlistCountElements.forEach(el => {
+        el.textContent = wishlist.length;
+        if (wishlist.length > 0) {
+            el.classList.add('bounce');
+            setTimeout(() => el.classList.remove('bounce'), 300);
+        }
+    });
 }
 
 // ========================================

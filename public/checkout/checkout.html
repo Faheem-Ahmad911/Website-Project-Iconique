@@ -51,6 +51,12 @@
                         <i class="fas fa-search"></i>
                     </div>
                     
+                    <!-- Wishlist Icon -->
+                    <div class="wishlist-icon">
+                        <i class="far fa-heart"></i>
+                        <span class="wishlist-count">0</span>
+                    </div>
+                    
                     <!-- Shopping Cart Icon -->
                     <div class="cart-icon">
                         <i class="fas fa-shopping-bag"></i>
@@ -120,6 +126,23 @@
                 <div class="search-results" id="searchResults">
                     <!-- Search results will be populated here -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         WISHLIST MODAL - Displays saved wishlist items
+         ======================================== -->
+    <div class="wishlist-overlay">
+        <div class="wishlist-modal">
+            <div class="wishlist-header">
+                <h2>My Wishlist</h2>
+                <button class="wishlist-close" aria-label="Close wishlist">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="wishlist-content" id="wishlistContent">
+                <!-- Wishlist items will be loaded here -->
             </div>
         </div>
     </div>

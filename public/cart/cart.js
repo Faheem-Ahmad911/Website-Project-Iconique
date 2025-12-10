@@ -13,6 +13,7 @@ class CartManager {
     init() {
         this.renderCart();
         this.updateCartCount();
+        this.updateWishlistCount();
         this.setupEventListeners();
         
         // Listen for storage changes from other tabs/windows
@@ -21,6 +22,8 @@ class CartManager {
                 this.cart = JSON.parse(e.newValue) || [];
                 this.renderCart();
                 this.updateCartCount();
+            } else if (e.key === 'wishlist') {
+                this.updateWishlistCount();
             }
         });
     }
@@ -42,6 +45,20 @@ class CartManager {
         const cartCountElements = document.querySelectorAll('.cart-count');
         const count = this.cart.reduce((total, item) => total + (item.quantity || 1), 0);
         cartCountElements.forEach(el => {
+            el.textContent = count;
+            if (count > 0) {
+                el.classList.add('bounce');
+                setTimeout(() => el.classList.remove('bounce'), 300);
+            }
+        });
+    }
+
+    // Update wishlist count in header
+    updateWishlistCount() {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+        const count = wishlist.length;
+        wishlistCountElements.forEach(el => {
             el.textContent = count;
             if (count > 0) {
                 el.classList.add('bounce');
